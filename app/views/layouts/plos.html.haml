@@ -24,7 +24,7 @@
     %meta{ :charset => "utf-8" }
     %title
       = "(#{Rails.env}) " unless Rails.env.production?
-      Article Level Metrics
+      Author Level Metrics
     %link{ :type => "image/x-icon", :href => "/favicon.ico", :rel => "shortcut icon" }
     = stylesheet_link_tag 'plos'
     = javascript_include_tag 'http://code.jquery.com/jquery.min.js'
@@ -36,7 +36,7 @@
     $('.border').corner('10px');
   %header
     .inner
-      %h1 Article Level Metrics
+      %h1 Author Level Metrics
     %nav
       .inner
         %ul

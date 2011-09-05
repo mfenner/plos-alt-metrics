@@ -181,6 +181,24 @@ class Retriever
     end
     result
   end
+  
+  def update_author(author)
+    Rails.logger.info "Updating author #{author.inspect}..."
+    
+    results = Author.fetch_articles(author)
+    
+    results.each do |result|
+      # Only add articles with DOI and title
+      unless result["DOI"].nil? or result["Title"].nil?
+        article = Article.find_or_create_by_doi(result["DOI"], :title => result["Title"])
+        author.articles << article
+        Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+      end
+    end
+    
+    author.refreshed!.save!
+    Rails.logger.info "Refreshed author #{author.mas_id}"
+  end
 
   def self.update_articles(articles, adjective=nil, timeout_period=50.minutes)
     require 'timeout'
@@ -215,4 +233,38 @@ class Retriever
       raise e
     end
   end
+  
+  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes)
+    require 'timeout'
+    begin
+
+      # user can pass in the timeout value. expecting an integer value in minutes
+      timeout_passed_in = ENV.fetch("TIMEOUT", 0).to_i
+      if (timeout_passed_in > 0)
+        timeout_period = timeout_passed_in.minutes
+      end
+
+      Rails.logger.info "Timeout value is #{timeout_period.to_i} seconds"
+      
+      Timeout::timeout timeout_period.to_i, RetrieverTimeout do
+        lazy = ENV.fetch("LAZY", "1") == "1"
+        Rails.logger.debug ["Updating", authors.size.to_s,
+              lazy ? "stale" : nil, adjective,
+              authors.size == 1 ? "author" : "authors"].compact.join(" ")
+        retriever = self.new(:lazy => lazy,
+          :raise_on_error => ENV["RAISE_ON_ERROR"])
+
+        authors.each do |author|
+          old_count = author.articles_count || 0
+          retriever.update_author(author)
+          new_count = author.articles_count || 0
+          Rails.logger.debug "MAS: #{author.mas_id} count now #{new_count} (#{new_count - old_count})"
+        end
+      end
+    rescue RetrieverTimeout => e
+      Rails.logger.error "Timeout exceeded on author update" + e.backtrace.join("\n")
+      raise e
+    end
+  end
+  
 end

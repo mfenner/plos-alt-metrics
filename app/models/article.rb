@@ -21,6 +21,8 @@ class Article < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy
   has_many :sources, :through => :retrievals
   has_many :citations, :through => :retrievals
+  
+  has_and_belongs_to_many :authors
 
   validates_format_of :doi, :with => DOI::FORMAT
   validates_uniqueness_of :doi

@@ -24,7 +24,7 @@
     %meta{ :charset => "utf-8" }
     %title
       = "(#{Rails.env}) " unless Rails.env.production?
-      Article Level Metrics
+      Author-Level Metrics
     %link{ :type => "image/x-icon", :href => "/favicon.ico", :rel => "shortcut icon" }
     = stylesheet_link_tag 'application'
     = javascript_include_tag 'http://code.jquery.com/jquery.min.js'
@@ -36,7 +36,7 @@
 %body{ :class => "#{params[:controller]} #{params[:controller]}-#{params[:action]}" }
   %header
     .inner
-      %h1 Article Level Metrics
+      %h1 Author-Level Metrics
     %nav
       .inner
         %ul
@@ -45,6 +45,8 @@
           %li= link_to "Docs", docs_path, :class => current_page?(docs_path(params[:action])) ? 'current' : ''
           |
           %li= link_to "Articles", articles_path, :class => current_page?(articles_path) ? 'current' : ''
+          |
+          %li= link_to "Authors", authors_path, :class => current_page?(authors_path) ? 'current' : ''
           |
           %li= link_to "Sources", sources_path, :class => current_page?(sources_path) ? 'current' : ''
           |
