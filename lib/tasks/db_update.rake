@@ -68,6 +68,14 @@ namespace :db do
       ENV["LAZY"] ||= "0"
       Retriever.update_articles([article])
     end
+    
+    desc "Update all authors"
+    task :authors => :environment do
+      ENV["LAZY"] = "0"
+      limit = (ENV["LIMIT"] || 0).to_i
+      authors = Author.limit(limit)
+      Retriever.update_authors(authors)
+    end
 
     desc "Count stale articles"
     task :count => :environment do

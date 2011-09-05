@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110509214246) do
+ActiveRecord::Schema.define(:version => 20110904132812) do
 
   create_table "articles", :force => true do |t|
     t.string   "doi",                                                :null => false
@@ -23,6 +23,19 @@ ActiveRecord::Schema.define(:version => 20110509214246) do
   end
 
   add_index "articles", ["doi"], :name => "index_articles_on_doi", :unique => true
+
+  create_table "articles_authors", :id => false, :force => true do |t|
+    t.integer "article_id"
+    t.integer "author_id"
+  end
+
+  create_table "authors", :force => true do |t|
+    t.string   "name"
+    t.string   "mas_id"
+    t.integer  "staleness",  :default => 1209600
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "citations", :force => true do |t|
     t.integer  "retrieval_id"
