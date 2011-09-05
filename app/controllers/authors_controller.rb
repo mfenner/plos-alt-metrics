@@ -43,10 +43,10 @@ class AuthorsController < ApplicationController
       format.html # show.html.erb
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @author.to_xml(format_options)
+        render :xml => @author.articles.to_xml
       end
       format.csv  { render :csv => @author }
-      format.json { render :json => @author.to_json(format_options), :callback => params[:callback] }
+      format.json { render :json => @author.articles, :callback => params[:callback] }
     end
   end
 
@@ -80,7 +80,7 @@ class AuthorsController < ApplicationController
          # Retrieval.find_or_create_by_author_id_and_source_id(@author.id, source.id)
         #end    
 
-        format.html { redirect_to(@author) }
+        format.html { redirect_to authors_path }
         format.xml  { render :xml => @author, :status => :created, :location => @author }
         format.json { render :json => @author, :status => :created, :location => @author }
       else

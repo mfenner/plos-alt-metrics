@@ -149,7 +149,7 @@ class Article < ActiveRecord::Base
     sources = (options.delete(:source) || '').downcase.split(',')
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
     xml.instruct! unless options[:skip_instruct]
-    xml.tag!("article", :doi => doi, :title => title, :citations_count => citations_count,:pub_med => pub_med,:pub_med_central => pub_med_central, :updated_at => retrieved_at, :published => published_on.to_time) do
+    xml.tag!("article", :doi => doi, :title => title, :citations_count => citations_count,:pub_med => pub_med,:pub_med_central => pub_med_central, :updated_at => retrieved_at, :published => (published_on.blank? ? nil : published_on.to_time)) do
       if options[:citations] or options[:history]
         retrieval_options = options.merge!(:dasherize => false, 
                                            :skip_instruct => true)
@@ -178,7 +178,7 @@ class Article < ActiveRecord::Base
         :pub_med => pub_med,
         :pub_med_central => pub_med_central,
         :citations_count => citations_count,
-        :published => published_on.to_time,
+        :published => (published_on.blank? ? nil : published_on.to_time),
         :updated_at => retrieved_at
       }
     }

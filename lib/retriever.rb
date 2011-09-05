@@ -185,16 +185,25 @@ class Retriever
   def update_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
-    results = Author.fetch_articles(author)
+    # Fetch and update author information
+    properties = Author.fetch_properties(author)
+    author_name = (properties["FirstName"].to_s.blank? ? "" : properties["FirstName"].to_s + " ") + (properties["MiddleName"].to_s.blank? ? "" : properties["MiddleName"].to_s + " ") + (properties["LastName"].to_s.blank? ? "" : properties["LastName"].to_s)
+    author.update_attributes(:name => author_name)
     
-    results.each do |result|
-      # Only add articles with DOI and title
-      unless result["DOI"].nil? or result["Title"].nil?
-        article = Article.find_or_create_by_doi(result["DOI"], :title => result["Title"])
-        author.articles << article
-        Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+    # Fetch articles from author
+    results = Author.fetch_articles(author)
+    unless results.empty?
+      results.each do |result|
+        # Only add articles with DOI and title
+        unless result["DOI"].nil? or result["Title"].nil?
+          article = Article.find_or_create_by_doi(:doi  => result["DOI"], :title => result["Title"])
+          if article.valid?  
+            author.articles << article
+            Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+          end
+        end
       end
-    end
+    end  
     
     author.refreshed!.save!
     Rails.logger.info "Refreshed author #{author.mas_id}"
