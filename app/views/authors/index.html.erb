@@ -26,7 +26,7 @@
     <% for author in @authors %>
     <div class="author">
       <span class="mas_id"><%= link_to author.mas_id, :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span>
-      <span class="details">
+      <span class="details"><%=" <strong>#{h(author.name)}</strong>" unless author.name.blank? %>
         <%= pluralize author.articles_count, "article" %>  
         <%= (author.updated_at.year < 2000) ? 
           "never updated" : "updated #{author.updated_at.to_s(:friendly)}" %>
