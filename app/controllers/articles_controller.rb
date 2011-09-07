@@ -17,7 +17,7 @@
 # limitations under the License.
 
 class ArticlesController < ApplicationController
-  before_filter :login_required, :except => [ :index, :show ]
+  before_filter :login_required, :except => [ :index, :show, :search ]
   before_filter :load_article, 
                 :only => [ :edit, :update, :destroy ]
 
@@ -33,7 +33,7 @@ class ArticlesController < ApplicationController
     collection = collection.query(params[:query])  if params[:query]
     collection = collection.order(params[:order])  if params[:order]
 
-    @articles = collection.paginate :page => params[:page], :per_page => params[:per_page], :include => :retrievals
+    @articles = collection.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.published_on desc"
     @source = Source.find_by_type(params[:source]) if params[:source]
 
     respond_to do |format|
@@ -134,6 +134,23 @@ class ArticlesController < ApplicationController
       format.html { redirect_to(articles_url) }
       format.xml  { head :ok }
       format.json { head :ok }
+    end
+  end
+  
+  def search
+    unless params[:search].blank?
+      @authors = Article.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["CONCAT(articles.title, ' ', articles.doi) REGEXP ?", params['search']],
+        :include => :retrievals,
+        :order => "retrievals.citations_count desc, articles.published_on desc"
+    else
+      index
+    end
+    if request.xhr?
+      render :partial => 'index'
+    else
+      render :index
     end
   end
 

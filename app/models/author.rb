@@ -15,8 +15,17 @@
 class Author < ActiveRecord::Base
   extend SourceHelper
   
-  has_and_belongs_to_many :articles
+  has_and_belongs_to_many :articles, :order => "retrievals.citations_count desc, articles.published_on desc", :include => :retrievals
+  has_many :positions
   
+  # Check that no duplicate position is created
+  has_many :affiliations, :through => :positions do
+    def <<(*items)
+      super( items - proxy_owner.affiliations )
+    end
+  end
+  
+  validates_numericality_of :mas_id
   validates_uniqueness_of :mas_id
   
   default_scope :order => 'authors.mas_id'
@@ -58,20 +67,44 @@ class Author < ActiveRecord::Base
     self.articles.count
   end
   
+  def citations_count
+    0 #retrievals.inject(0) {|sum, r| sum + r.total_citations_count }
+  end
+  
   def self.fetch_properties(author, options={})
-    
+    # Fetch author information, return nil if no response 
     url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Author&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=1"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
+    result = get_json(url, options)["d"]["Author"]
+    return nil if result.nil?
     
-    properties = get_json(url, options)["d"]["Author"]["Result"][0]
+    properties = result["Result"][0]
+  end
+  
+  def self.update_properties(author, properties, options={})
+   # Update author information
+    author_name = (properties["FirstName"].to_s.blank? ? "" : properties["FirstName"].to_s.capitalize + " ") + (properties["MiddleName"].to_s.blank? ? "" : properties["MiddleName"].to_s.capitalize + " ") + (properties["LastName"].to_s.blank? ? "" : properties["LastName"].to_s.capitalize)
+    sort_name = properties["LastName"].to_s.capitalize
+    author.update_attributes(:name => author_name, :sort_name => sort_name)
+    
+    # Update affiliation information
+    af_properties = properties["Affiliation"]
+    unless af_properties.nil?
+      affiliation = Affiliation.find_or_create_by_mas_id(:mas_id  => af_properties["ID"], :name => af_properties["Name"])
+      author.affiliations << affiliation
+    end
+    author
   end
   
   def self.fetch_articles(author, options={})
-    
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=50"
+    # Fetch articles, return nil if no response 
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=2"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
-    articles = get_json(url, options)["d"]["Publication"]["Result"]
+    result = get_json(url, options)["d"]["Publication"]
+    return nil if result.nil?
+    
+    articles = result["Result"]
   end
   
 end

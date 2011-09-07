@@ -40,6 +40,12 @@ input[type=submit], input[type=button], button {
 input[type=submit]:active, input[type=button]:active, button:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.2)), to(transparent)); }
 
+header .inner form {
+  position: absolute;
+  top: 1.4em;
+  right: 1.4em;
+}
+
 body {
   text-align: center;
   padding: 0px;
@@ -53,8 +59,12 @@ a {
 .inner {
   display: block;
   text-align: left;
-  width: 800px;
+  padding-left: 150px;
   margin: 0px auto; }
+  
+ul.nav li {
+  font-size: large;
+}
 
 header {
   display: block;
@@ -64,8 +74,7 @@ header {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#3c3c3c), to(black)); }
   header h1 {
     margin-top: 0px;
-    color: transparent;
-    background: url("/images/logo.png") no-repeat 0px 0px;
+    color: #a5e583;
     height: 35px; }
   header nav {
     display: block;
@@ -87,12 +96,12 @@ header {
       -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8); }
   header ul {
     list-style-type: none;
-    padding: 0px;
+    padding: 3px;
     margin: 0px; }
     header ul li {
       display: inline; }
       header ul li.login {
-        float: right; }
+        padding-left:3em; }
 
 #content {
   padding-top: 1em;
@@ -134,3 +143,98 @@ body.index pre, body.docs pre {
   border: solid 1px rgba(0, 0, 0, 0.1);
   padding: 1em 0px 0px;
   overflow-x: auto; }
+  
+h2 {
+  font-size: x-large;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+h3 {
+  font-size: large;
+}
+
+table {
+  
+}
+
+td.name {
+  width: 750px;
+  padding-bottom: 1em;
+}
+
+span.name {
+  font-weight: bold;
+  font-size: large;
+}
+
+span.search {
+  font-size: large;
+}
+
+td.count {
+  width: 50px;
+  font-size: x-large;
+  text-align: right;
+  vertical-align: top;
+  padding-left: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+div.layout {
+  width: 100%;
+}
+
+div.affiliation {
+  margin-top: -0.5em;
+}
+
+/* digg_pagination from http://mislav.uniqpath.com/will_paginate/
+*
+*/
+.pagination {
+  background: white;
+  cursor: default;
+  /* self-clearing method: */ }
+  .pagination a, .pagination span, .pagination em {
+    padding: 0.2em 0.5em;
+    display: block;
+    float: left;
+    margin-right: 1px; }
+  .pagination .disabled {
+    color: #999999;
+    border: 1px solid #dddddd; }
+  .pagination .current {
+    font-style: normal;
+    font-weight: bold;
+    background: #438bd1;
+    color: white;
+    border: 1px solid #438bd1; }
+  .pagination a {
+    text-decoration: none;
+    color: #438bd1;
+    border: 1px solid #438bd1; }
+    .pagination a:hover, .pagination a:focus {
+      color: #000033;
+      border-color: #000033; }
+  .pagination .page_info {
+    background: #438bd1;
+    color: white;
+    padding: 0.4em 0.6em;
+    width: 22em;
+    margin-bottom: 0.3em;
+    text-align: center; }
+    .pagination .page_info b {
+      color: #000033;
+      background: #6aa6ed;
+      padding: 0.1em 0.25em; }
+  .pagination:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+  * html .pagination {
+    height: 1%; }
+  *:first-child + html .pagination {
+    overflow: hidden; }

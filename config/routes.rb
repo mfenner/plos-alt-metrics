@@ -17,10 +17,11 @@
 # limitations under the License.
 
 ActionController::Routing::Routes.draw do |map|
-  map.resources :articles, :requirements => { :id => /.+?/ }
+  map.resources :articles, :requirements => { :id => /.+?/ }, :collection => { :search => :get }
   map.resources :sources
   map.resources :groups
-  map.resources :authors
+  map.resources :authors, :collection => { :search => :get }
+  map.resources :affiliations, :collection => { :search => :get }
 
   #We originally wanted to make the "." part of the connect statement and not the regex. 
   #But we encountered some weirdness, and this seems to work.

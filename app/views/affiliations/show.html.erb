@@ -15,16 +15,8 @@
 -%>
 <div class="border">
 <div class="page">
-  <h2><%= h(@author.name.blank? ? @author.mas_id : @author.name) %></h2>
+  <h2><%= h(@affiliation.name.blank? ? @affiliation.mas_id : @affiliation.name) %></h2>
   
-  <% unless @author.affiliations.empty? %>
-    <div class="affiliation">
-	  <% @author.affiliations.each do |affiliation| %>
-	    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>
-      <% end %>
-    </div>
-  <% end %>
-
 <div id="index">
-  <%= render :partial => 'article'%>
+  <%= render :partial => 'author' %>
 </div>
