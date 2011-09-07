@@ -28,6 +28,7 @@
     %link{ :type => "image/x-icon", :href => "/favicon.ico", :rel => "shortcut icon" }
     = stylesheet_link_tag 'application'
     = javascript_include_tag 'http://code.jquery.com/jquery.min.js'
+    = javascript_include_tag :defaults
     = yield(:head)
     :javascript
       $(function() {
@@ -37,22 +38,25 @@
   %header
     .inner
       %h1 Author-Level Metrics
+      - if ["affiliations", "articles", "authors"].include?(controller.controller_name) and ["index", "search"].include?(controller.action_name)
+        - form_tag({:controller => controller.controller_name, :action => "search"}, :method => "get", :class => "inline") do
+          %span.search Search
+          = text_field_tag :search, params[:search]
     %nav
       .inner
-        %ul
+        %ul.nav
           %li= link_to "Home", root_path, :class => current_page?(root_path) ? 'current' : ''
-          |
-          %li= link_to "Docs", docs_path, :class => current_page?(docs_path(params[:action])) ? 'current' : ''
-          |
           %li= link_to "Articles", articles_path, :class => current_page?(articles_path) ? 'current' : ''
-          |
           %li= link_to "Authors", authors_path, :class => current_page?(authors_path) ? 'current' : ''
-          |
-          %li= link_to "Sources", sources_path, :class => current_page?(sources_path) ? 'current' : ''
-          |
-          %li= link_to "Groups", groups_path, :class => current_page?(groups_path) ? 'current' : ''
+          %li= link_to "Affiliations", affiliations_path, :class => current_page?(affiliations_path) ? 'current' : ''
+          - if logged_in?
+            %li= link_to "Docs", docs_path, :class => current_page?(docs_path(params[:action])) ? 'current' : ''
+            %li= link_to "Sources", sources_path, :class => current_page?(sources_path) ? 'current' : ''
+            %li= link_to "Groups", groups_path, :class => current_page?(groups_path) ? 'current' : ''
           %li.login
             - if logged_in?
+              - if controller.controller_name == "authors" and controller.action_name != "new"
+                = link_to "New Author", new_author_path
               = link_to "Logout", logout_path
             - else
               = link_to_setup_or_login
@@ -62,8 +66,8 @@
         - if flash[name]
           .flash{ :id => name, :class => name }
             %span= flash[name]
-
-      = yield
+      %div
+        = yield
 
   /
     = (File.read("REVISION") rescue "development").strip

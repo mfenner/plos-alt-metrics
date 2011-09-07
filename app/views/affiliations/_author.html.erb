@@ -13,18 +13,26 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div class="border">
-<div class="page">
-  <h2><%= h(@author.name.blank? ? @author.mas_id : @author.name) %></h2>
-  
-  <% unless @author.affiliations.empty? %>
-    <div class="affiliation">
-	  <% @author.affiliations.each do |affiliation| %>
-	    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>
-      <% end %>
+<div class="layout">     
+  <% unless @affiliation.authors.empty? %>
+    <h3>
+    <%= pluralize(@affiliation.authors.count, 'Author') %>
+    </h3>
+	<table>
+    <% for author in @affiliation.authors %>
+      <tr>
+      	<td class="name">
+      	  <span class="name"><%= link_to (author.name.blank? ? author.mas_id : h(author.name)), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span>
+      	</td>
+      	<td class="count">
+	      <%= author.articles_count == 0 ? "&nbsp;" : author.articles_count %>
+	    </td>
+	  </tr>
+    <% end %>
+	</table>
     </div>
+  <% else %>
+    <h3>No authors found</3>
   <% end %>
 
-<div id="index">
-  <%= render :partial => 'article'%>
 </div>

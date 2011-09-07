@@ -18,7 +18,7 @@
 
 class Article < ActiveRecord::Base
   
-  has_many :retrievals, :dependent => :destroy
+  has_many :retrievals, :dependent => :destroy, :order => "retrievals.citations_count desc"
   has_many :sources, :through => :retrievals
   has_many :citations, :through => :retrievals
   

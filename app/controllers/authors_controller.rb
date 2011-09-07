@@ -13,16 +13,15 @@
 # limitations under the License.
 
 class AuthorsController < ApplicationController
-  before_filter :login_required, :except => [ :index, :show ]
+  before_filter :login_required, :except => [ :index, :show, :search ]
 
   # GET /authors
   # GET /authors.xml
   def index
-
-    @authors = Author.paginate :page => params[:page], :per_page => params[:per_page]
-
+    @authors = Author.paginate :page => params[:page], :per_page => 10, :order => 'sort_name'
+    
     respond_to do |format|
-      format.html
+      format.html { render :partial => "index" if request.xhr? }
       format.xml  { render :xml => @authors }
       format.json { render :json => @authors, :callback => params[:callback] }
       format.csv  { render :csv => @authors }
@@ -70,17 +69,17 @@ class AuthorsController < ApplicationController
   # POST /authors
   # POST /authors.xml
   def create
-    @author = Author.new(params[:author])
+    # Get author if it exists, otherwise create new one
+    @author = Author.find_or_initialize_by_mas_id(:mas_id  => params[:author][:mas_id])
 
     respond_to do |format|
       if @author.save
-        flash[:notice] = 'Author was successfully created.'
+        # Fetch author information and update author
+        properties = Author.fetch_properties(@author)
+        @author = Author.update_properties(@author, properties)
+        flash[:notice] = 'Author was successfully created.' if @author.new_record?
 
-        #Source.all.each do |source|
-         # Retrieval.find_or_create_by_author_id_and_source_id(@author.id, source.id)
-        #end    
-
-        format.html { redirect_to authors_path }
+        format.html { redirect_to author_path(@author.mas_id, :format => :html) }
         format.xml  { render :xml => @author, :status => :created, :location => @author }
         format.json { render :json => @author, :status => :created, :location => @author }
       else
@@ -117,6 +116,23 @@ class AuthorsController < ApplicationController
       format.html { redirect_to(authors_url) }
       format.xml  { head :ok }
       format.json { head :ok }
+    end
+  end
+  
+  def search
+    unless params[:search].blank?
+      @authors = Author.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["CONCAT(authors.name, ' ', authors.mas_id) REGEXP ?", params['search']],
+        :include => :affiliations,
+        :order => 'authors.sort_name' 
+    else
+      index
+    end
+    if request.xhr?
+      render :partial => 'index'
+    else
+      render :index
     end
   end
 

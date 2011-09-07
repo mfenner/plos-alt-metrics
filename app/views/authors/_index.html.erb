@@ -1,0 +1,46 @@
+<%#
+  # Copyright (c) 2011 Martin Fenner
+  #
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #     http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
+-%>
+<div class="layout">  
+  <% unless @authors.empty? %>
+    <h2>
+      <%= pluralize(@authors.total_entries, 'Author') %>
+    </h2>
+	<table>
+    <% for author in @authors %>
+      <tr>
+      	<td class="name">
+      	  <span class="name"><%= link_to (author.name.blank? ? author.mas_id : h(author.name)), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span><br/>
+			<% unless author.affiliations.empty? %>
+          	  <% author.affiliations.each do |affiliation| %>
+          	    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>
+              <% end %>
+            <% end %>
+      	</td>
+      	<td class="count">
+	      <%= author.articles_count == 0 ? "&nbsp;" : author.articles_count %>
+	    </td>
+	  </tr>
+    <% end %>
+	</table>
+    </div>
+  <% else %>
+    <h2>No authors found</h2>
+  <% end %>
+
+  <div class="pagination">
+    <%= will_paginate @authors %>
+  </div>
+</div>

@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110904132812) do
+ActiveRecord::Schema.define(:version => 20110906162824) do
+
+  create_table "affiliations", :force => true do |t|
+    t.string   "name"
+    t.string   "mas_id"
+    t.integer  "staleness",  :default => 1209600
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "articles", :force => true do |t|
     t.string   "doi",                                                :null => false
@@ -35,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20110904132812) do
     t.integer  "staleness",  :default => 1209600
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "sort_name"
   end
 
   create_table "citations", :force => true do |t|
@@ -64,6 +73,15 @@ ActiveRecord::Schema.define(:version => 20110904132812) do
   end
 
   add_index "histories", ["retrieval_id", "year", "month"], :name => "index_histories_on_retrieval_id_and_year_and_month", :unique => true
+
+  create_table "positions", :force => true do |t|
+    t.integer  "author_id"
+    t.integer  "affiliation_id"
+    t.boolean  "is_active"
+    t.integer  "staleness",      :default => 1209600
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "retrievals", :force => true do |t|
     t.integer  "article_id",                                               :null => false

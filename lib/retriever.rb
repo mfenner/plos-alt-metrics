@@ -185,25 +185,41 @@ class Retriever
   def update_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
-    # Fetch and update author information
-    properties = Author.fetch_properties(author)
-    author_name = (properties["FirstName"].to_s.blank? ? "" : properties["FirstName"].to_s + " ") + (properties["MiddleName"].to_s.blank? ? "" : properties["MiddleName"].to_s + " ") + (properties["LastName"].to_s.blank? ? "" : properties["LastName"].to_s)
-    author.update_attributes(:name => author_name)
-    
-    # Fetch articles from author
+    # Fetch articles from author, return nil if no response
     results = Author.fetch_articles(author)
-    unless results.empty?
-      results.each do |result|
-        # Only add articles with DOI and title
-        unless result["DOI"].nil? or result["Title"].nil?
-          article = Article.find_or_create_by_doi(:doi  => result["DOI"], :title => result["Title"])
-          if article.valid?  
-            author.articles << article
-            Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+    return nil if results.nil?
+    
+    results.each do |result|
+      # Only add articles with DOI and title
+      unless result["DOI"].nil? or result["Title"].nil?
+        article = Article.find_or_create_by_doi(:doi  => result["DOI"], :title => result["Title"])
+        # Check that DOI is valid
+        if article.valid?
+          author.articles << article unless author.articles.include?(article)
+          # Add coauthors
+          unless result["Author"].empty?
+            result["Author"].each do |properties|
+              coauthor = Author.find_or_create_by_mas_id(:mas_id  => properties["ID"])
+              coauthor = Author.update_properties(coauthor, properties)
+            end
           end
+          Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
         end
       end
     end  
+    
+    author.refreshed!.save!
+    Rails.logger.info "Refreshed author #{author.mas_id}"
+  end
+  
+  def update_affiliation(author)
+    Rails.logger.info "Updating author #{author.inspect}..."
+    
+    # Fetch properties from author, return nil if no response
+    properties = Author.fetch_properties(author)
+    return nil if properties.nil?
+    
+    author = Author.update_properties(author, properties) 
     
     author.refreshed!.save!
     Rails.logger.info "Refreshed author #{author.mas_id}"
@@ -243,7 +259,7 @@ class Retriever
     end
   end
   
-  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes)
+  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes, include_articles=false)
     require 'timeout'
     begin
 
@@ -264,10 +280,13 @@ class Retriever
           :raise_on_error => ENV["RAISE_ON_ERROR"])
 
         authors.each do |author|
-          old_count = author.articles_count || 0
-          retriever.update_author(author)
-          new_count = author.articles_count || 0
-          Rails.logger.debug "MAS: #{author.mas_id} count now #{new_count} (#{new_count - old_count})"
+          retriever.update_affiliation(author)
+          if include_articles
+            old_count = author.articles_count || 0
+            retriever.update_author(author)
+            new_count = author.articles_count || 0
+            Rails.logger.debug "MAS: #{author.mas_id} count now #{new_count} (#{new_count - old_count})"
+          end
         end
       end
     rescue RetrieverTimeout => e
