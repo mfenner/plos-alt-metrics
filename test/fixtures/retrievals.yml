@@ -21,7 +21,7 @@ not_stale_crossref:
   source: crossref
   citations_count: 1
   other_citations_count: 0
-  retrieved_at: <%= Time.zone.today - 1.day %>
+  retrieved_at: <%= Date.today - 1.day %>
 
 not_stale_connotea:
   article: not_stale
@@ -33,13 +33,13 @@ stale_crossref:
   article: stale
   source: crossref
   citations_count: 1
-  retrieved_at: <%= Time.zone.today - 2.years %>
+  retrieved_at: <%= Date.today - 2.years %>
 
 stale_connotea:
   article: stale
   source: connotea
   citations_count: 1
-  retrieved_at: <%= Time.zone.today - 2.years %>
+  retrieved_at: <%= Date.today - 2.years %>
 
 uncited_with_no_retrievals_crossref:
   article: uncited_with_no_retrievals

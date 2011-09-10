@@ -29,7 +29,7 @@ class Retriever
 
   def update(article)
     Rails.logger.info "Updating article #{article.inspect}..."
-    if lazy and article.published_on and article.published_on >= Time.zone.today
+    if lazy and article.published_on and article.published_on >= Date.today
       Rails.logger.info "Skipping: article not published yet"
       return
     end
