@@ -58,6 +58,7 @@ DEPENDENCIES
   mocha
   mysql
   rails (= 2.3.8)
+  rake (= 0.8.7)
   rdiscount
   ruby-debug
   soap4r (>= 1.5.8)
