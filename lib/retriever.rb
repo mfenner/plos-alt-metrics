@@ -50,6 +50,11 @@ class Retriever
     sources_count = 0
     
     sources.each do |source|
+      # Check if source only works for specific DOI prefix
+      if source.uses_prefix
+        next unless article.doi.match(/^#{source.prefix}/)
+      end
+
       retrieval = Retrieval.find_or_create_by_article_id_and_source_id(article.id, source.id)
       Rails.logger.debug "Retrieval is#{" (new)" if retrieval.new_record?} #{retrieval.inspect} (lazy=#{lazy.inspect}, stale?=#{retrieval.stale?.inspect})"
 
@@ -182,7 +187,7 @@ class Retriever
     result
   end
   
-  def update_author(author)
+  def update_articles_by_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
     # Fetch articles from author, return nil if no response
@@ -192,17 +197,10 @@ class Retriever
     results.each do |result|
       # Only add articles with DOI and title
       unless result["DOI"].nil? or result["Title"].nil?
-        article = Article.find_or_create_by_doi(:doi  => result["DOI"], :title => result["Title"])
+        article = Article.find_or_create_by_doi(:doi  => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
         if article.valid?
           author.articles << article unless author.articles.include?(article)
-          # Add coauthors
-          unless result["Author"].empty?
-            result["Author"].each do |properties|
-              coauthor = Author.find_or_create_by_mas_id(:mas_id  => properties["ID"])
-              coauthor = Author.update_properties(coauthor, properties)
-            end
-          end
           Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
         end
       end
@@ -212,7 +210,7 @@ class Retriever
     Rails.logger.info "Refreshed author #{author.mas_id}"
   end
   
-  def update_affiliation(author)
+  def update_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
     # Fetch properties from author, return nil if no response
@@ -259,7 +257,7 @@ class Retriever
     end
   end
   
-  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes, include_articles=false)
+  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes, include_articles=true)
     require 'timeout'
     begin
 
@@ -280,10 +278,10 @@ class Retriever
           :raise_on_error => ENV["RAISE_ON_ERROR"])
 
         authors.each do |author|
-          retriever.update_affiliation(author)
+          retriever.update_author(author)
           if include_articles
             old_count = author.articles_count || 0
-            retriever.update_author(author)
+            retriever.update_articles_by_author(author)
             new_count = author.articles_count || 0
             Rails.logger.debug "MAS: #{author.mas_id} count now #{new_count} (#{new_count - old_count})"
           end

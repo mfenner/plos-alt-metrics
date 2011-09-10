@@ -1,0 +1,28 @@
+<table>
+	<tr>
+		<% active_groups.each do |group| %>
+	    <td class="source_title" colspan="<%= group.sources.active.count %>">
+		    <h2><%= h(group.name) %></h2>
+		    <%= h(group.author_description) %>
+	    </td>
+    <% end %>
+	</tr>
+	<tr>
+	  <% active_groups.each do |group| %>
+	    <% group.sources.active.each do |source| %>
+	      <td class="source">
+			    <%= image_tag source.class.to_s.downcase + ".gif" %>
+		    </td>
+		  <% end %>
+    <% end %>
+	</tr>
+	<tr>
+		 <% active_groups.each do |group| %>
+		    <% group.sources.active.each do |source| %>
+	      <td class="source_count">
+			    <%= @author.citations_count(source) %>
+		    </td>
+	    <% end %>
+    <% end %>
+	</tr>
+</table>

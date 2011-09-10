@@ -19,23 +19,35 @@
 -%>
 <div class="layout">
   <% unless @articles.empty? %>
-    <h2>
-      <%= pluralize(@articles.total_entries, 'Article') %>
-    </h2>
 	<table>
+		<th class="name">
+			<h2><%= pluralize(@articles.total_entries, 'Article') %></h2>
+		</th>
+		<% active_groups.each do |group| %>
+	    <% group.sources.active.each do |source| %>
+	      <th class="count">
+			    <%= image_tag source.class.to_s.downcase + "_sm.gif" %>
+		    </th>
+		  <% end %>
+    <% end %>
     <% @articles.each do |article| %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), :controller => "articles", :action => "show", :id => article.doi, :format => :html %></span><br/>
+      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), "http://dx.doi.org/" + h(article.doi) %></span><br/>
 			<% unless article.authors.empty? %>
           	  <% article.authors.each do |author| %>
-          	    <%= link_to h(author.name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %>, 
+          	    <%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %>
               <% end %>
             <% end %>
+          <strong><%= h(article.year.blank? ? "" : article.year) %></strong>
       	</td>
-      	<td class="count">
-	      <%= article.citations_count == 0 ? "&nbsp;" : article.citations_count %>
-	    </td>
+	      	<% article.citations_by_group.each do |citations| %>  
+            <% citations[:sources].each do |citation| %>
+    	        <td class="count">
+               <%= link_to citation[:total], citation[:public_url] if citation[:total] > 0 %>
+             </td>
+         <% end %>
+   	  <% end %>
 	  </tr>
     <% end %>
 	</table>

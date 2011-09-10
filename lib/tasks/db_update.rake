@@ -77,6 +77,14 @@ namespace :db do
       Retriever.update_authors(authors)
     end
     
+    desc "Update one specified author"
+    task :one_author => :environment do
+      mas_id = ENV["mas_id"] or abort("mas_id not specified (eg, 'mas_id=12779261')")
+      author = Author.find_by_mas_id(mas_id) or abort("Author not found: #{mas_id}")
+      ENV["LAZY"] ||= "0"
+      Retriever.update_authors([author])
+    end
+    
     desc "Update all affiliations"
     task :affiliations => :environment do
       ENV["LAZY"] = "0"

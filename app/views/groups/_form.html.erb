@@ -27,6 +27,16 @@
   </p>
 
   <p>
+    <%= f.label :article_description %><br />
+    <%= f.text_area :article_description, :size => "50x3" %>
+  </p>
+
+  <p>
+    <%= f.label :author_description %><br />
+    <%= f.text_area :author_description, :size => "50x3" %>
+  </p>
+
+  <p>
     <%= f.submit(group.new_record? ? "Create" : "Update") %>
   </p>
 <% end %>

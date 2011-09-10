@@ -55,8 +55,6 @@
             %li= link_to "Groups", groups_path, :class => current_page?(groups_path) ? 'current' : ''
           %li.login
             - if logged_in?
-              - if controller.controller_name == "authors" and controller.action_name != "new"
-                = link_to "New Author", new_author_path
               = link_to "Logout", logout_path
             - else
               = link_to_setup_or_login

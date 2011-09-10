@@ -146,6 +146,7 @@ class Source < ActiveRecord::Base
   def uses_salt; false; end
   def uses_partner_id; false; end
   def uses_misc; false; end
+  def uses_prefix; false; end
 
   private
     def create_retrievals

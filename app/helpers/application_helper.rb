@@ -26,5 +26,9 @@ module ApplicationHelper
       link_to 'Setup', new_user_path, :class => current_page?(new_user_path) ? 'current' : ''
     end
   end
+  
+  def active_groups
+    @groups = Group.find :all, :conditions => ["sources.active=1"], :include => :sources
+  end
 
 end
