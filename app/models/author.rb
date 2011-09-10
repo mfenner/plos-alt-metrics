@@ -37,7 +37,7 @@ class Author < ActiveRecord::Base
   end
 
   def refreshed!
-    self.updated_at = Time.zone.now
+    self.updated_at = Time.now
     self
   end
   
