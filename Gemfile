@@ -4,6 +4,7 @@ gem 'rails', '2.3.8'
 gem 'mysql'
 
 gem 'bundler'
+gem 'rake'
 gem 'daemons'
 gem 'fastercsv'
 gem 'haml'
