@@ -1,14 +1,25 @@
 set :application, "alm"
-set :repository,  "http://svn.ambraproject.org/svn/plos/alm/head"
-set :scm, :subversion
+set :deploy_to, "/var/www/#{application}"
+set :deploy_via, :remote_cache
+set :repository_cache, "git_cache"
 
-set :user, "app"
-set :use_sudo, false
+set :user, "fennerm"
+set :group, "fennerm"
+set :repository, "git@github.com:mfenner/plos-alt-metrics.git"
 
 # Change these to point to the servers you wish to deploy to.
-role :web, "alm.yoursite.org"
-role :app, "alm.yoursite.org"
-role :db,  "alm.yoursite.org", :primary => true
+role :web, "alm.xartrials.org"
+role :app, "alm.xartrials.org"
+role :db,  "alm.xartrials.org", :primary => true
+
+# If you aren't using Subversion to manage your source code, specify
+# your SCM below:
+set :scm, :git
+   
+set :ruby_vm_type,      :ree        # :ree, :mri
+set :web_server_type,   :apache     # :apache, :nginx
+set :app_server_type,   :passenger  # :passenger, :mongrel
+set :db_server_type,    :mysql      # :mysql, :postgresql, :sqlite
 
 namespace :deploy do
   task :start do ; end
