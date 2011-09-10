@@ -67,9 +67,9 @@ class Author < ActiveRecord::Base
     self.articles.count
   end
   
-  def citations_count
-    0 #retrievals.inject(0) {|sum, r| sum + r.total_citations_count }
-  end
+  def display_name
+  	(self.native_name.blank? ? "" : self.native_name + " (") + (self.name.blank? ? self.mas_id : self.name) +  (self.native_name.blank? ? "" : ")")
+	end
   
   def self.fetch_properties(author, options={})
     # Fetch author information, return nil if no response 
@@ -85,12 +85,12 @@ class Author < ActiveRecord::Base
    # Update author information
     author_name = (properties["FirstName"].to_s.blank? ? "" : properties["FirstName"].to_s.capitalize + " ") + (properties["MiddleName"].to_s.blank? ? "" : properties["MiddleName"].to_s.capitalize + " ") + (properties["LastName"].to_s.blank? ? "" : properties["LastName"].to_s.capitalize)
     sort_name = properties["LastName"].to_s.capitalize
-    author.update_attributes(:name => author_name, :sort_name => sort_name)
+    author.update_attributes(:name => author_name, :sort_name => sort_name, :native_name => properties["NativeName"], :homepageURL => properties["HomepageURL"], :photoURL => properties["DisplayPhotoURL"])
     
     # Update affiliation information
     af_properties = properties["Affiliation"]
     unless af_properties.nil?
-      affiliation = Affiliation.find_or_create_by_mas_id(:mas_id  => af_properties["ID"], :name => af_properties["Name"])
+      affiliation = Affiliation.find_or_create_by_mas_id(:mas_id  => af_properties["ID"], :name => af_properties["Name"], :homepageURL => af_properties["HomepageURL"])
       author.affiliations << affiliation
     end
     author
@@ -98,7 +98,7 @@ class Author < ActiveRecord::Base
   
   def self.fetch_articles(author, options={})
     # Fetch articles, return nil if no response 
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=2"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=50"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
     result = get_json(url, options)["d"]["Publication"]
@@ -107,4 +107,11 @@ class Author < ActiveRecord::Base
     articles = result["Result"]
   end
   
+  def citations_count(source, options={})
+    citations = []
+    self.articles.each do |article|
+      citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+    end
+    citations = citations.sum
+  end
 end

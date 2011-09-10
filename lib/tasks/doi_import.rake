@@ -63,3 +63,71 @@ task :doi_import => :environment do
   end
   puts "Saved #{created.size} new articles, updated #{updated.size} articles, ignored #{duplicate.size} other existing articles"
 end
+
+desc "Bulk-import authors from standard input using mas_id"
+task :author_import => :environment do
+  puts "Reading mas_ids from standard input..."
+  valid = []
+  invalid = []
+  duplicate = []
+  created = []
+  updated = []
+  
+  while (line = STDIN.gets)
+    mas_id, raw_name = line.strip.split(" ", 2)
+    name = raw_name.strip if raw_name
+    if mas_id.to_i.to_s == mas_id
+      valid << [mas_id, name]
+    else
+      puts "Ignoring mas_id: #{mas_id}"
+      invalid << [mas_id, name]
+    end
+  end
+  puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
+  if valid.size > 0
+    valid.each do |mas_id, name|
+      existing = Author.find_by_mas_id(mas_id)
+      unless existing
+        author = Author.create(:mas_id => mas_id, :name => name)
+        created << mas_id
+      else
+        duplicate << mas_id
+      end
+    end
+  end
+  puts "Saved #{created.size} new authors, updated #{updated.size} authors, ignored #{duplicate.size} other existing authors"
+end
+
+desc "Bulk-import affiliations from standard input using mas_id"
+task :affiliation_import => :environment do
+  puts "Reading mas_ids from standard input..."
+  valid = []
+  invalid = []
+  duplicate = []
+  created = []
+  updated = []
+  
+  while (line = STDIN.gets)
+    mas_id, raw_name = line.strip.split(" ", 2)
+    name = raw_name.strip if raw_name
+    if mas_id.to_i.to_s == mas_id
+      valid << [mas_id, name]
+    else
+      puts "Ignoring mas_id: #{mas_id}"
+      invalid << [mas_id, name]
+    end
+  end
+  puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
+  if valid.size > 0
+    valid.each do |mas_id, name|
+      existing = Affiliation.find_by_mas_id(mas_id)
+      unless existing
+        affiliation = Affiliation.create(:mas_id => mas_id, :name => name)
+        created << mas_id
+      else
+        duplicate << mas_id
+      end
+    end
+  end
+  puts "Saved #{created.size} new affiliations, updated #{updated.size} affiliations, ignored #{duplicate.size} other existing affiliations"
+end

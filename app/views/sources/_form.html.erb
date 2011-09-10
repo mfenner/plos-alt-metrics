@@ -87,6 +87,13 @@
       <%= f.label :live_mode %>
     </p>
   <% end %>
+
+  <% if source.uses_prefix %>
+    <p>
+      <%= f.label :prefix %><br />
+      <%= f.text_field :prefix %>
+    </p>
+  <% end %>
   
   <% if Group.find(:all).size > 0 %>
     <p>

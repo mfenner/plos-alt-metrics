@@ -38,6 +38,8 @@ class AuthorsController < ApplicationController
 
     load_author
     
+    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml do
@@ -123,11 +125,11 @@ class AuthorsController < ApplicationController
     unless params[:search].blank?
       @authors = Author.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["CONCAT(authors.name, ' ', authors.mas_id) REGEXP ?", params['search']],
+        :conditions => ["authors.name REGEXP ? or authors.mas_id REGEXP ? or affiliations.name REGEXP ?", params['search'],params['search'],params['search']],
         :include => :affiliations,
         :order => 'authors.sort_name' 
     else
-      index
+      redirect_to :action => :index and return
     end
     if request.xhr?
       render :partial => 'index'

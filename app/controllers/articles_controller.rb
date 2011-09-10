@@ -33,7 +33,7 @@ class ArticlesController < ApplicationController
     collection = collection.query(params[:query])  if params[:query]
     collection = collection.order(params[:order])  if params[:order]
 
-    @articles = collection.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.published_on desc"
+    @articles = collection.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
     @source = Source.find_by_type(params[:source]) if params[:source]
 
     respond_to do |format|
@@ -139,18 +139,22 @@ class ArticlesController < ApplicationController
   
   def search
     unless params[:search].blank?
-      @authors = Article.paginate :page => params[:page], 
+      @articles = Article.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["CONCAT(articles.title, ' ', articles.doi) REGEXP ?", params['search']],
-        :include => :retrievals,
-        :order => "retrievals.citations_count desc, articles.published_on desc"
+        :conditions => ["CONCAT(authors.name, articles.title, ' ', articles.doi) REGEXP ?", params['search']],
+        :include => [:authors, :retrievals],
+        :order => "retrievals.citations_count desc, articles.year desc"
     else
-      index
+      redirect_to :action => :index and return
     end
-    if request.xhr?
-      render :partial => 'index'
-    else
-      render :index
+    
+    render :partial => 'index' if request.xhr?
+    
+    respond_to do |format|
+      format.html { render :action => :index }
+      format.xml  { render :xml => @articles }
+      format.json { render :json => @articles, :callback => params[:callback] }
+      format.csv  { render :csv => @articles }
     end
   end
 

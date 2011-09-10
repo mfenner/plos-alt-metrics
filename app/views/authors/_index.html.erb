@@ -22,7 +22,7 @@
     <% for author in @authors %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (author.name.blank? ? author.mas_id : h(author.name)), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span><br/>
+      	  <span class="name"><%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span><br/>
 			<% unless author.affiliations.empty? %>
           	  <% author.affiliations.each do |affiliation| %>
           	    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>

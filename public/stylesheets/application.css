@@ -172,8 +172,8 @@ span.search {
   font-size: large;
 }
 
-td.count {
-  width: 50px;
+td.count, th.count {
+  width: 30px;
   font-size: x-large;
   text-align: right;
   vertical-align: top;
@@ -186,7 +186,48 @@ div.layout {
 }
 
 div.affiliation {
-  margin-top: -0.5em;
+  margin-top: -1em;
+}
+
+.photo {
+  float: left;
+  padding-right: 1em;
+}
+
+.homepage {
+  margin-top: 1em;
+}
+
+.summary {
+  clear: both;
+}
+
+.personal_info {
+  margin-bottom: 1em;
+}
+td.source_title {
+  width: 200px;
+  padding-left: 2em;
+  padding-bottom: 1em;
+  vertical-align: top;
+  font-size: smaller;
+}
+
+td.source_count {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+  font-size: xx-large;
+  text-align: center;
+}
+
+td.source {
+  width: 200px;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.article {
+  clear: both;
 }
 
 /* digg_pagination from http://mislav.uniqpath.com/will_paginate/

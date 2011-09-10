@@ -12,30 +12,41 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div class="layout">
-  <% unless @author.articles.empty? %>
-    <h3>
-      <%= pluralize(@author.articles.count, 'Article') %>
-    </h3>
+<div class="article">
 	<table>
-    <% for article in @author.articles %>
+		<th class="name">
+			<h2><%= pluralize(@author.articles.count, 'Article') %></h2>
+		</th>
+		<% active_groups.each do |group| %>
+	    <% group.sources.active.each do |source| %>
+	      <th class="count">
+			    <%= image_tag source.class.to_s.downcase + "_sm.gif" %>
+		    </th>
+		  <% end %>
+    <% end %>
+    <% for article in @articles %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), :controller => "articles", :action => "show", :id => article.doi, :format => :html %></span><br/>
-			<% unless article.authors.empty? %>
+      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), "http://dx.doi.org/" + h(article.doi) %></span><br/>
+			    <% unless article.authors.empty? %>
           	  <% article.authors.each do |author| %>
-          	    <%= link_to_unless_current(h(author.name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html) %>, 
+          	    <%= link_to_unless_current(h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html) %>  
               <% end %>
             <% end %>
+          <strong><%= h(article.year.blank? ? "" : article.year) %></strong>
       	</td>
-      	<td class="count">
-	      <%= article.citations_count == 0 ? "&nbsp;" : article.citations_count %>
-	    </td>
+          <% article.citations_by_group.each do |citations| %>  
+            <% citations[:sources].each do |citation| %>
+    	        <td class="count">
+               <%= link_to citation[:total], citation[:public_url] if citation[:total] > 0 %>
+             </td>
+         <% end %>
+   	  <% end %>
 	  </tr>
     <% end %>
 	</table>
-  <% else %>
-    <h3>No articles found</h3>
-  <% end %>
-
+	
+	<div class="pagination">
+    <%= will_paginate @articles %>
+  </div>
 </div>

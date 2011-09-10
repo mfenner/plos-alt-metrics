@@ -9,14 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110906162824) do
+ActiveRecord::Schema.define(:version => 20110910031412) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
     t.string   "mas_id"
-    t.integer  "staleness",  :default => 1209600
+    t.integer  "staleness",   :default => 1209600
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "homepageURL"
   end
 
   create_table "articles", :force => true do |t|
@@ -28,6 +29,13 @@ ActiveRecord::Schema.define(:version => 20110906162824) do
     t.string   "pub_med_central"
     t.date     "published_on"
     t.text     "title"
+    t.integer  "journal_id"
+    t.text     "volume"
+    t.text     "issue"
+    t.text     "first_page"
+    t.text     "last_page"
+    t.integer  "year"
+    t.integer  "mas"
   end
 
   add_index "articles", ["doi"], :name => "index_articles_on_doi", :unique => true
@@ -40,10 +48,13 @@ ActiveRecord::Schema.define(:version => 20110906162824) do
   create_table "authors", :force => true do |t|
     t.string   "name"
     t.string   "mas_id"
-    t.integer  "staleness",  :default => 1209600
+    t.integer  "staleness",   :default => 1209600
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "sort_name"
+    t.text     "photoURL"
+    t.text     "homepageURL"
+    t.text     "native_name"
   end
 
   create_table "citations", :force => true do |t|
@@ -61,6 +72,8 @@ ActiveRecord::Schema.define(:version => 20110906162824) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "article_description"
+    t.text     "author_description"
   end
 
   create_table "histories", :force => true do |t|
@@ -117,6 +130,7 @@ ActiveRecord::Schema.define(:version => 20110906162824) do
     t.integer  "disable_delay", :default => 10,     :null => false
     t.string   "partner_id"
     t.text     "misc"
+    t.text     "prefix"
   end
 
   add_index "sources", ["type"], :name => "index_sources_on_type", :unique => true

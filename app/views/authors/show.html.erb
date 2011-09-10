@@ -15,16 +15,41 @@
 -%>
 <div class="border">
 <div class="page">
-  <h2><%= h(@author.name.blank? ? @author.mas_id : @author.name) %></h2>
+  <% unless @author.photoURL.blank? %>
+    <%= image_tag h(@author.photoURL), :class => "photo" %>
+  <% end %>
+
+  <h1><%= h(@author.display_name) %></h1>
   
-  <% unless @author.affiliations.empty? %>
-    <div class="affiliation">
-	  <% @author.affiliations.each do |affiliation| %>
-	    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>
-      <% end %>
+  <div class="personal_info">
+  	<% unless @author.affiliations.empty? %>
+	    <div class="affiliation">
+		  <% @author.affiliations.each do |affiliation| %>
+		    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>
+	      <% end %>
+	    </div>
+	  <% end %>
+
+	  <% unless @author.homepageURL.blank? %>
+	    <div class="homepage">
+	      <%= link_to "Homepage", h(@author.homepageURL), :class => "photo" %>
+	    </div>
+	  <% end %>
+		<div class="summary">
+
+		</div>
+  </div>
+
+<% unless @author.articles.empty? %>
+  <% unless active_groups.empty? %>
+    <div id="source">
+	    <%= render :partial => 'source'%>
     </div>
   <% end %>
 
-<div id="index">
-  <%= render :partial => 'article'%>
-</div>
+  <div id="article">
+	  <%= render :partial => 'article'%>
+  </div>
+<% else %>
+  <h3>No articles found</h3>
+<% end %>
