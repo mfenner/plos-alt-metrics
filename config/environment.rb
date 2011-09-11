@@ -40,6 +40,9 @@ Rails::Initializer.run do |config|
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
+  
+  # Load will_paginate from here because of problems with bundler
+  config.gem 'will_paginate', :version => '~> 2.3.16'
 
   # Make Time.zone default to the specified zone, and make Active Record store time values
   # in the database in UTC, and return them converted to the specified local zone.
