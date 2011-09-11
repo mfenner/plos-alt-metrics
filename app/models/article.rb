@@ -46,7 +46,7 @@ class Article < ActiveRecord::Base
     end
   }
 
-  named_scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
+  # named_scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
 
   named_scope :order, lambda { |order|
     if order == 'published_on'
