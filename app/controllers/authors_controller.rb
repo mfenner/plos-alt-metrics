@@ -127,7 +127,7 @@ class AuthorsController < ApplicationController
     unless params[:search].blank?
       @authors = Author.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["authors.name REGEXP ? or authors.mas_id REGEXP ? or affiliations.name REGEXP ?", params['search'],params['search'],params['search']],
+        :conditions => ["authors.name REGEXP ? or authors.native_name REGEXP ? or authors.mas_id REGEXP ? or affiliations.name REGEXP ?", params['search'],params['search'],params['search'],params['search']],
         :include => :affiliations,
         :order => 'authors.sort_name' 
     else
