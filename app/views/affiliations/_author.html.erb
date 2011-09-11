@@ -15,14 +15,14 @@
 -%>
 <div class="layout">     
   <% unless @affiliation.authors.empty? %>
-    <h3>
-    <%= pluralize(@affiliation.authors.count, 'Author') %>
-    </h3>
 	<table>
+		<th class="name">
+			<h2><%= pluralize(@affiliation.authors.count, 'Author') %></h2>
+	  </th>
     <% for author in @affiliation.authors %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (author.name.blank? ? author.mas_id : h(author.name)), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span>
+      	  <span class="name"><%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span>
       	</td>
       	<td class="count">
 	      <%= author.articles_count == 0 ? "&nbsp;" : author.articles_count %>
