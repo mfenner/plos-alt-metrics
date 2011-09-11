@@ -14,6 +14,8 @@
 
 class AuthorsController < ApplicationController
   before_filter :login_required, :except => [ :index, :show, :search ]
+  
+  require "will_paginate"
 
   # GET /authors
   # GET /authors.xml
