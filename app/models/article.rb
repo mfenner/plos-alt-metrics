@@ -85,7 +85,7 @@ class Article < ActiveRecord::Base
   end
 
   def refreshed!
-    self.retrieved_at = Time.zone.now
+    self.retrieved_at = Time.now
     self
   end
   
