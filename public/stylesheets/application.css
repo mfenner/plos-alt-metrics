@@ -59,7 +59,8 @@ a {
 .inner {
   display: block;
   text-align: left;
-  padding-left: 100px;
+  padding-left: 4em;
+  padding-right: 2em;
   margin: 0px auto; }
   
 ul.nav li {
