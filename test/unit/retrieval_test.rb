@@ -27,13 +27,13 @@ class RetrievalTest < ActiveSupport::TestCase
     retriever = Retriever.new(:lazy => true)
 
     # First time we'll call it on the publication date - it should skip out.
-    Time.zone.stubs(:today).returns(today)
+    Date.stubs(:today).returns(today)
     Source.expects(:active).never
     retriever.update(article)
 
     # Second time we'll call it on the day after that - it should look for
     # sources.
-    Time.zone.stubs(:today).returns(today + 1)
+    Date.stubs(:today).returns(today + 1)
     Source.expects(:active).returns([])
     retriever.update(article)
   end

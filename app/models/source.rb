@@ -95,7 +95,7 @@ class Source < ActiveRecord::Base
   end
 
   def query article, options = {}
-    if disable_until and disable_until > Time.zone.now
+    if disable_until and disable_until > Time.now
       Rails.logger.info "#{name} is disabled until #{disable_until}. Skipping."
       return false
     end
@@ -110,7 +110,7 @@ class Source < ActiveRecord::Base
   rescue Exception => e
     Rails.logger.info "#{name} had an error. Disabling for #{SecondsToDuration::convert(disable_delay).inspect}."
     Notifier.deliver_long_delay_warning(self)  if disable_delay > 1.day
-    self.disable_until = Time.zone.now + disable_delay.seconds
+    self.disable_until = Time.now + disable_delay.seconds
     self.disable_delay *= 2
     raise e
   ensure
