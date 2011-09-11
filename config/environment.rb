@@ -59,6 +59,8 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+  
+  config.gem 'will_paginate', :version => '~> 2.3.16'
 end
 
 require Rails.root + 'lib/log4j_style_logger'
