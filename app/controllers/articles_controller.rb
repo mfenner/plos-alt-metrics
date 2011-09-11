@@ -21,6 +21,8 @@ class ArticlesController < ApplicationController
   before_filter :load_article, 
                 :only => [ :edit, :update, :destroy ]
 
+  require "will_paginate"
+  
   # GET /articles
   # GET /articles.xml
   def index
