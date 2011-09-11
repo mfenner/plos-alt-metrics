@@ -22,8 +22,8 @@ class Retrieval < ActiveRecord::Base
   has_many :citations, :dependent => :destroy
   has_many :histories, :dependent => :destroy
 
-  named_scope :most_cited_sample, :limit => 5,
-    :order => "(citations_count + other_citations_count) desc"
+  # named_scope :most_cited_sample, :limit => 5,
+  #  :order => "(citations_count + other_citations_count) desc"
 
   named_scope :active_sources,
     :conditions => "source_id in (select id from sources where active = 1)"

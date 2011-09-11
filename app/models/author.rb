@@ -30,7 +30,7 @@ class Author < ActiveRecord::Base
   
   default_scope :order => 'authors.mas_id'
   
-  named_scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
+  # named_scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
   
   def stale?
     new_record? or author.articles.empty?
