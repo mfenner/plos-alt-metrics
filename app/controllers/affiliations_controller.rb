@@ -14,6 +14,8 @@
 
 class AffiliationsController < ApplicationController
   before_filter :login_required, :except => [ :index, :show, :search ]
+  
+  require "will_paginate"
 
   # GET /affiliations
   # GET /affiliations.xml
