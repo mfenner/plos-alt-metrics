@@ -49,7 +49,7 @@ class AuthorsController < ApplicationController
         render :xml => @author.articles.to_xml
       end
       format.csv  { render :csv => @author }
-      format.json { render :json => @author.articles, :callback => params[:callback] }
+      format.json { render :json => @author.to_json, :callback => params[:callback] }
     end
   end
 
