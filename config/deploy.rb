@@ -4,6 +4,7 @@ set :deploy_via, :remote_cache
 set :repository_cache, "git_cache"
 
 set :user, "fennerm"
+set :password, "26kj33"
 set :group, "fennerm"
 set :repository, "git@github.com:mfenner/plos-alt-metrics.git"
 
