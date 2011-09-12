@@ -50,16 +50,36 @@ class Author < ActiveRecord::Base
         :updated_at => updated_at
       }
     }
-    sources = (options.delete(:source) || '').downcase.split(',')
-    if options[:citations] or options[:history]
-      result[:article][:source] = retrievals.map do |r|
-        r.to_included_json(options) \
-          if (sources.empty? or sources.include?(r.source.class.to_s.downcase))
-             #If the result set is empty, lets not return any information about the source at all
-             #\
-             #and (r.total_citations_count > 0)
-      end.compact
+    
+    @groups = Group.find :all, :conditions => ["sources.active=1"], :include => :sources, :order => :group_id
+    result[:author][:citations] = []
+    @groups.each do |group|
+		  group.sources.active.each do |source|
+	      result[:author][:citations] << [:source_id => source.id, :source_name => source.name, :count => self.citations_count(source)]
+	    end
     end
+    
+    result[:author][:affiliations] = []
+    self.affiliations.each do |affiliation|
+      result[:author][:affiliations] << {:mas_id => affiliation.mas_id, 
+        :name => affiliation.name, 
+        :homepageURL => affiliation.homepageURL,
+        :updated_at => updated_at}
+    end
+    
+    result[:author][:articles] = []
+    self.articles.each do |article|
+      result[:author][:articles] << {:doi => article.doi, 
+        :title => article.title, 
+        :year => article.year,
+        :pub_med => article.pub_med,
+        :pub_med_central => article.pub_med_central,
+        :mas => article.mas,
+        :citations_count => article.citations_count,
+        :published => (article.published_on.blank? ? nil : article.published_on.to_time),
+        :updated_at => article.retrieved_at}
+    end
+    
     result.to_json(options)
   end
   

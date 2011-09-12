@@ -175,8 +175,10 @@ class Article < ActiveRecord::Base
       :article => { 
         :doi => doi, 
         :title => title, 
+        :year => year,
         :pub_med => pub_med,
         :pub_med_central => pub_med_central,
+        :mas => mas,
         :citations_count => citations_count,
         :published => (published_on.blank? ? nil : published_on.to_time),
         :updated_at => retrieved_at
