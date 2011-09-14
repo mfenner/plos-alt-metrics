@@ -35,11 +35,12 @@
       	<td class="name">
       	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), "http://dx.doi.org/" + h(article.doi) %></span><br/>
 			<% unless article.authors.empty? %>
-          	  <% article.authors.each do |author| %>
-          	    <%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %>
-              <% end %>
-            <% end %>
-          <strong><%= h(article.year.blank? ? "" : article.year) %></strong>
+			  <% if article.authors.count > 0 %>
+	        <% article.authors.each do |author| %>
+          	<%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %>
+         <% end %>
+       <% end %>
+     <% end %>
       	</td>
 	      	<% article.citations_by_group.each do |citations| %>  
             <% citations[:sources].each do |citation| %>
