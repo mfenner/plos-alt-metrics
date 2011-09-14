@@ -24,7 +24,7 @@
 		    </th>
 		  <% end %>
     <% end %>
-    <% for article in @articles %>
+    <% @articles.each do |article| %>
       <tr>
       	<td class="name">
       	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), "http://dx.doi.org/" + h(article.doi) %></span><br/>
@@ -35,12 +35,19 @@
             <% end %>
           <strong><%= h(article.year.blank? ? "" : article.year) %></strong>
       	</td>
-          <% article.citations_by_group.each do |citations| %>  
-            <% citations[:sources].each do |citation| %>
-    	        <td class="count">
-               <%= link_to citation[:total], citation[:public_url] if citation[:total] > 0 %>
-             </td>
-         <% end %>
+          <% active_groups.each do |group| %>
+				    <% group.sources.active.each do |source| %>
+			        <td class="count">
+				        <% citation = article.citations_by_source(source) %>
+							  <% if citation[:total] > 0 %>
+                 <% if citation[:public_url] %>
+                   <%= link_to h(citation[:total]), citation[:public_url]  %>
+                 <% else %>
+                   <%= h(citation[:total]) %>
+                 <% end %>
+               <% end %>
+				    </td>
+			    <% end %>
    	  <% end %>
 	  </tr>
     <% end %>

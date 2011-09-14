@@ -18,6 +18,7 @@
 
 class Source < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy
+  has_many :articles, :through => :retrievals
   belongs_to :group
   
   validates_presence_of :name

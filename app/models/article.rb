@@ -18,7 +18,7 @@
 
 class Article < ActiveRecord::Base
   
-  has_many :retrievals, :dependent => :destroy, :order => "retrievals.citations_count desc"
+  has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals
   has_many :citations, :through => :retrievals
   
@@ -94,24 +94,27 @@ class Article < ActiveRecord::Base
     results = {}
     
     for ret in retrievals
-      if results[ret.source.group_id] == nil then
-        results[ret.source.group_id] = {
-          :name => ret.source.group && ret.source.group.name.downcase,
-          :total => ret.citations_count + ret.other_citations_count,
-          :sources => []
-        }
-        results[ret.source.group_id][:sources] << {
-          :name => ret.source.name,
-          :total => ret.citations_count + ret.other_citations_count,
-          :public_url => ret.source.public_url(ret)
-        }
-      else
-        results[ret.source.group_id][:total] = results[ret.source.group_id][:total] + ret.citations_count + ret.other_citations_count
-        results[ret.source.group_id][:sources] << {
-          :name => ret.source.name,
-          :total => ret.citations_count + ret.other_citations_count,
-          :public_url => ret.source.public_url(ret)
-        }
+      # Only get citations for active sources
+      if ret.source.active
+        if results[ret.source.group_id] == nil then
+          results[ret.source.group_id] = {
+            :name => ret.source.group && ret.source.group.name.downcase,
+            :total => ret.citations_count + ret.other_citations_count,
+            :sources => []
+          }
+          results[ret.source.group_id][:sources] << {
+            :name => ret.source.name,
+            :total => ret.citations_count + ret.other_citations_count,
+            :public_url => ret.source.public_url(ret)
+          }
+        else
+          results[ret.source.group_id][:total] = results[ret.source.group_id][:total] + ret.citations_count + ret.other_citations_count
+          results[ret.source.group_id][:sources] << {
+            :name => ret.source.name,
+            :total => ret.citations_count + ret.other_citations_count,
+            :public_url => ret.source.public_url(ret)
+          }
+        end
       end
     end
     
@@ -122,6 +125,20 @@ class Article < ActiveRecord::Base
     end
     
     groupsCount
+  end
+  
+  #Get citation count by source from the activerecord data
+  def citations_by_source(source)
+    
+    return nil unless source.active
+    ret = self.retrievals.by_source(source.id).first
+    return if ret.nil?
+    
+    result = {
+          :total => ret.citations_count + ret.other_citations_count,
+          :public_url => ret.source.public_url(ret)
+        }
+    result
   end
   
   #Get cites for the given source from the activeRecord data
