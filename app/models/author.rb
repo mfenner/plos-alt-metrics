@@ -131,6 +131,7 @@ class Author < ActiveRecord::Base
     citations = []
     self.articles.each do |article|
       citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+      citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
     end
     citations = citations.sum
   end
