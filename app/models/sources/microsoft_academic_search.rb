@@ -16,37 +16,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Only return citation count unless specified in options with { :with_citations => true }
+# Specify range of citations returned with { :startidx => 1, :endidx => 50 }
+
 class MicrosoftAcademicSearch < Source
   include SourceHelper
   
   def uses_partner_id; true; end
 
-  def perform_query(article, options={})
+  def perform_query(article, options = {})
     
     return nil if article.mas.blank?
     
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId="
-    search_string = "&PublicationID="
-    other_string = "&ResultObjects=Publication&ReferenceType=Citation&StartIdx=1&EndIdx=100&OrderBy=Year"
-    
+    options[:startidx] ||= 1
+    options[:endidx] ||= 50
+  
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=" + partner_id.to_s
+    publication_id = "&PublicationID=" + article.mas.to_s + "&ResultObjects=Publication"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
-    results = get_json(url + partner_id.to_s + search_string + article.mas.to_s + other_string, options)["d"]["Publication"]
-    return nil if results.nil?
+    if options[:with_citations].nil?
+
+      result_string = "&PublicationContent=MetaOnly&StartIdx=1&EndIdx=1"
+      results = get_json(url + publication_id + result_string, options)["d"]["Publication"]
+      return nil if results.nil?
+
+      results = results["Result"][0]
+      return nil if results.nil?
+
+      Rails.logger.debug "MAS got #{results.inspect} for #{article.inspect}"
+
+      citations = results["CitationCount"].to_i
+    else
+      result_string = "&ReferenceType=Citation&StartIdx=" + options[:startidx].to_s + "&EndIdx=" + options[:endidx].to_s + "&OrderBy=Year"
+      results = get_json(url + publication_id + result_string, options)["d"]["Publication"]
+      return nil if results.nil?
     
-    results = results["Result"]
-    return nil if results.nil?
+      results = results["Result"]
+      return nil if results.nil?
     
-    Rails.logger.debug "MAS got #{results.inspect} for #{article.inspect}"
-    if results
-      citations = []
-      results.each do |result|
-        mas = result['ID']
-        if mas
-          citation = {
-            :uri => "http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=" + mas.to_s
-          }
-          citations << citation
+      Rails.logger.debug "MAS got #{results.inspect} for #{article.inspect}"
+      if results
+        citations = []
+        results.each do |result|
+          mas = result['ID']
+          if mas
+            citation = {
+              :uri => "http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=" + mas.to_s
+            }
+            citations << citation
+          end
         end
       end
     end

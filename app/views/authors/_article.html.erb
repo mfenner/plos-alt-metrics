@@ -28,12 +28,14 @@
       <tr>
       	<td class="name">
       	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), "http://dx.doi.org/" + h(article.doi) %></span><br/>
-			    <% unless article.authors.empty? %>
-          	  <% article.authors.each do |author| %>
-          	    <%= link_to_unless_current(h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html) %>  
-              <% end %>
+			    <% if article.authors.count > 1 %>
+			      Coauthors: 
+          	<% article.authors.each do |author| %>
+              <% unless author == @author %>
+          	    <%= link_to(h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html) %>
+              <% end %> 
             <% end %>
-          <strong><%= h(article.year.blank? ? "" : article.year) %></strong>
+          <% end %>
       	</td>
           <% active_groups.each do |group| %>
 				    <% group.sources.active.each do |source| %>
