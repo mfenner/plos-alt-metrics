@@ -28,6 +28,8 @@ class Retrieval < ActiveRecord::Base
   named_scope :active_sources,
     :conditions => "source_id in (select id from sources where active = 1)"
 
+  named_scope :by_source, lambda { |source_id| {:conditions => ['source_id = ?', source_id] } }
+  
   def total_citations_count
     citations_count + other_citations_count
   end
