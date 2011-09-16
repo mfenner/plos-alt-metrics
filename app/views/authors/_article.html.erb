@@ -27,7 +27,7 @@
     <% @articles.each do |article| %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), "http://dx.doi.org/" + h(article.doi) %></span><br/>
+      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), article_path(article.doi) %></span><br/>
 			    <% if article.authors.count > 1 %>
 			      Coauthors: 
           	<% article.authors.each do |author| %>

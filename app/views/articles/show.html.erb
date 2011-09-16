@@ -19,34 +19,22 @@
 -%>
 <div class="border">
 <div class="page">
-  <h2><%=h @article.doi %><%=h ": \"#{@article.title}\"" unless @article.title.blank? %></h2>
+  <h1><%=h @article.title unless @article.title.blank? %></h1>
+  <div class="article">
+	  <%= link_to "doi:" + h(@article.doi), "http://dx.doi.org/" + h(@article.doi) %>
+	</div>
 
-  <div><%= "published #{@article.published_on.to_datetime.to_s(:friendly_date)}, " if @article.published_on %><%= pluralize(@article.citations_count, "citation") %>, 
-      <%= (@article.retrieved_at.year < 2000) ? "never updated" : 
-          "updated #{@article.retrieved_at.to_s(:friendly)}" %></div>
-  <% if logged_in? %>
-  <%= content_tag(:div, "PubMed ID = '#{@article.pub_med}'") if @article.pub_med %>
-  <%= content_tag(:div, "PubMedCentral ID = '#{@article.pub_med_central}'") if @article.pub_med_central %>
+	<% unless @article.authors.empty? %>
+	  <% if @article.authors.count > 0 %>
+      <% @article.authors.each do |author| %>
+      	<%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %>
+     <% end %>
+   <% end %>
   <% end %>
-  <ul>
-  <% @article.retrievals.each do |retrieval| %>
-    <% if retrieval.total_citations_count > 0 %>
-      <li>
-        <% 
-        public_url = retrieval.source.public_url(retrieval)
-        details = [ retrieval.total_citations_count ]
-        details << retrieval.local_id if retrieval.local_id and logged_in?
-        -%>
-        <%= link_to_unless public_url.nil?, retrieval.source.name, public_url, :target => "_blank" %> 
-        (<%= details.join(', ') %>)<% unless retrieval.citations.empty? %>:<ul>
-        <% retrieval.citations.each do |citation| %>
-          <li><%= link_to h(citation.details.inspect), citation.uri %></li>
-        <% end %>
-        </ul><% end %>
-      </li>
-    <% end %>
-  <% end %>
-  </ul>
+
+	<div id="source">
+    <%= render :partial => 'source'%>
+  </div>
 
   <% if logged_in? %>
     Refresh: <%= link_to 'now', article_path(@article, :refresh => "now") %> |
@@ -55,6 +43,5 @@
     <%= link_to 'Delete', @article, :confirm => 'Are you sure?', :method => :delete %>
     <br/>
   <% end %>
-  <%= link_to 'Back to list', articles_path %>
 </div>
 </div>
