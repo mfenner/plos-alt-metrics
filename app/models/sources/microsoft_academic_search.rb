@@ -1,8 +1,4 @@
-# $HeadURL$
-# $Id$
-#
-# Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
-# http://www.plos.org/
+# Copyright (c) 2011 Martin Fenner
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

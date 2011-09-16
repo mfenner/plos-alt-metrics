@@ -45,12 +45,12 @@
     %nav
       .inner
         %ul.nav
-          %li= link_to "Home", root_path, :class => current_page?(root_path) ? 'current' : ''
-          %li= link_to "Articles", articles_path, :class => current_page?(articles_path) ? 'current' : ''
+          %li= link_to "Home", root_path, :class => current_page?(root_path) ? 'current' : ''          
           %li= link_to "Authors", authors_path, :class => current_page?(authors_path) ? 'current' : ''
-          %li= link_to "Affiliations", affiliations_path, :class => current_page?(affiliations_path) ? 'current' : ''
+          %li= link_to "Articles", articles_path, :class => current_page?(articles_path) ? 'current' : ''
           - if logged_in?
             %li= link_to "Docs", docs_path, :class => current_page?(docs_path(params[:action])) ? 'current' : ''
+            %li= link_to "Affiliations", affiliations_path, :class => current_page?(affiliations_path) ? 'current' : ''
             %li= link_to "Sources", sources_path, :class => current_page?(sources_path) ? 'current' : ''
             %li= link_to "Groups", groups_path, :class => current_page?(groups_path) ? 'current' : ''
           %li.login

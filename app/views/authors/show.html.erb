@@ -25,7 +25,7 @@
   	<% unless @author.affiliations.empty? %>
 	    <div class="affiliation">
 		  <% @author.affiliations.each do |affiliation| %>
-		    <%= link_to h(affiliation.name), :controller => "affiliations", :action => "show", :id => affiliation.mas_id, :format => :html %><br/>
+		    <%= h(affiliation.name) %><br/>
 	      <% end %>
 	    </div>
 	  <% end %>
