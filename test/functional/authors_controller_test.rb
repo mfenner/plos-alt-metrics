@@ -19,7 +19,7 @@
 require 'test_helper'
 
 class AuthorsControllerTest < ActionController::TestCase
-  include SourceHelper
+  include Fetcher
 
   def setup
     login_as(:quentin)

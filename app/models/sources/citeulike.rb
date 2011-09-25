@@ -17,7 +17,6 @@
 # limitations under the License.
 
 class Citeulike < Source
-  include SourceHelper
   
   def uses_search_url; true; end
 
@@ -27,7 +26,7 @@ class Citeulike < Source
     
     Rails.logger.info "Citeulike query: #{url}"
     
-    get_xml(url, options) do |document|
+    SourceHelper.get_xml(url, options) do |document|
       citations = []
       document.find("//posts/post").each do |cite|
         link = cite.find_first("link")

@@ -7,8 +7,8 @@ class ApplicationController < ActionController::Base
 
   # Redirect to profile page when author first creates account
   def after_sign_in_path_for(resource)
-    if resource.mas.nil?
-      author_path(resource.username)
+    if resource.mas.blank? and resource.mendeley.blank?
+      edit_author_path(resource.username, :partial => "mas")
     else
       super
     end

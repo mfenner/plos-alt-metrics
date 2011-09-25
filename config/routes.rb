@@ -16,15 +16,12 @@
 PlosAltMetrics::Application.routes.draw do
   devise_for :authors, :controllers => { :omniauth_callbacks => "authors/omniauth_callbacks" } do
     get '/authors/auth/:provider' => 'authors/omniauth_callbacks#passthru'
-    get 'sign_in', :to => 'authors/sessions#new', :as => :new_author_session
-    delete 'sign_out', :to => 'authors/sessions#destroy', :as => :destroy_author_session
-  end
-  devise_for :authors do
-    get "/sign_out" => "devise/sessions#destroy"
+    get '/sign_in', :to => 'devise/sessions#new', :as => :new_session
+    match '/sign_out', :to => 'authors/sessions#destroy', :as => :destroy_author_session, :via => [:get, :delete]
   end
   
   # Wildcard match for DOI
-  #get '/articles/*doi' => 'articles#show'
+  get '/articles/*doi' => 'articles#show'
   resources :articles, :requirements => { :id => /.+?/ }
   match "/group/articles(/:id)(.:format)" => "groups#groupArticleSummaries"
   
