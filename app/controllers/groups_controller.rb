@@ -17,7 +17,7 @@
 # limitations under the License.
 
 class GroupsController < ApplicationController
-  before_filter :login_required, :except => [ :index, :show, :groupArticleSummaries ]
+  before_filter :authenticate_author!
 
   #This is a way of excepting a list of DOIS and getting back summaries for them all.
   #Articles with no cites are not returned

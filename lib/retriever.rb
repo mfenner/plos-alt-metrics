@@ -207,7 +207,7 @@ class Retriever
     end  
     
     author.refreshed!.save!
-    Rails.logger.info "Refreshed author #{author.mas_id}"
+    Rails.logger.info "Refreshed author #{author.mas}"
   end
   
   def update_author(author)
@@ -220,7 +220,7 @@ class Retriever
     author = Author.update_properties(author, properties) 
     
     author.refreshed!.save!
-    Rails.logger.info "Refreshed author #{author.mas_id}"
+    Rails.logger.info "Refreshed author #{author.mas}"
   end
 
   def self.update_articles(articles, adjective=nil, timeout_period=50.minutes)
@@ -283,7 +283,7 @@ class Retriever
             old_count = author.articles_count || 0
             retriever.update_articles_by_author(author)
             new_count = author.articles_count || 0
-            Rails.logger.debug "MAS: #{author.mas_id} count now #{new_count} (#{new_count - old_count})"
+            Rails.logger.debug "MAS: #{author.mas} count now #{new_count} (#{new_count - old_count})"
           end
         end
       end

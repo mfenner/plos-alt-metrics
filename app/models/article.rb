@@ -29,11 +29,11 @@ class Article < ActiveRecord::Base
 
   after_create :create_retrievals
 
-  named_scope :query, lambda { |query|
+  scope :query, lambda { |query|
     { :conditions => [ "doi like ?", "%#{query}%" ] }
   }
   
-  named_scope :cited, lambda { |cited|
+  scope :cited, lambda { |cited|
     case cited
     when '1', 1
       { :include => :retrievals,
@@ -46,9 +46,9 @@ class Article < ActiveRecord::Base
     end
   }
 
-  named_scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
+  scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
 
-  named_scope :order, lambda { |order|
+  scope :order, lambda { |order|
     if order == 'published_on'
       { :order => 'published_on' }
     else
@@ -56,7 +56,7 @@ class Article < ActiveRecord::Base
     end
   }
 
-  named_scope :stale_and_published,
+  scope :stale_and_published,
     :conditions => ["articles.id IN (
 	SELECT DISTINCT article_id
 	FROM retrievals 

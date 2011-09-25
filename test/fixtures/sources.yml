@@ -19,18 +19,18 @@
 # Don't add a fixture for Bloglines - it'll break the tests in 
 # test/unit/source_test.
 
-crossref:
-  type: CrossRef
-  name: CrossRef
+pubmed:
+  type: PubMed
+  name: PubMed
   username: user
   password: pass
   staleness: <%= 1.year.to_i %>
   active: true
   group: cool_kids
 
-connotea:
-  type: Connotea
-  name: Connotea
+citeulike:
+  type: Citeulike
+  name: Citeulike
   username: user
   password: pass
   staleness: <%= 1.year.to_i %>

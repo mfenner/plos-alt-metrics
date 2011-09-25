@@ -13,17 +13,28 @@
 # limitations under the License.
 
 class AuthorsController < ApplicationController
-  before_filter :login_required, :except => [ :index, :show, :search ]
-  
-  require "will_paginate"
+  before_filter :authenticate_author!, :except => [ :index, :show ]
+  before_filter :load_author, 
+                :only => [ :edit, :update, :destroy ]
 
   # GET /authors
   # GET /authors.xml
   def index
-    @authors = Author.paginate :page => params[:page], :per_page => 10, :order => 'sort_name'
+    unless params[:q].blank?
+      @authors = Author.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or authors.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]],
+        :order => 'authors.sort_name, authors.username' 
+    else
+      @authors = Author.paginate :page => params[:page], :per_page => 10, :order => 'sort_name, username'
+    end
     
     respond_to do |format|
-      format.html { render :partial => "index" if request.xhr? }
+      format.html do 
+        if request.xhr?
+          render :partial => "index" 
+        end
+      end
       format.xml  { render :xml => @authors }
       format.json { render :json => @authors, :callback => params[:callback] }
       format.csv  { render :csv => @authors }
@@ -42,8 +53,13 @@ class AuthorsController < ApplicationController
     
     @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
     
+    
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do 
+        if request.xhr?
+          render :partial => params[:partial] 
+        end
+      end
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
         render :xml => @author.articles.to_xml
@@ -67,31 +83,31 @@ class AuthorsController < ApplicationController
   
   # GET /authors/1/edit
   def edit
-    @author = Author.find_by_mas_id(params[:id])
+    render :partial => params[:partial] if request.xhr?
   end
 
   # POST /authors
   # POST /authors.xml
   def create
     # Get author if it exists, otherwise create new one
-    @author = Author.find_or_initialize_by_mas_id(:mas_id  => params[:author][:mas_id])
+    #@author = Author.find_or_initialize_by_mas(:mas  => params[:author][:mas])
 
-    respond_to do |format|
-      if @author.save
-        # Fetch author information and update author
-        properties = Author.fetch_properties(@author)
-        @author = Author.update_properties(@author, properties)
-        flash[:notice] = 'Author was successfully created.' if @author.new_record?
-
-        format.html { redirect_to author_path(@author.mas_id, :format => :html) }
-        format.xml  { render :xml => @author, :status => :created, :location => @author }
-        format.json { render :json => @author, :status => :created, :location => @author }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @author.errors, :status => :unprocessable_entity }
-        format.json { render :json => @author.errors, :status => :unprocessable_entity }
-      end
-    end
+    #respond_to do |format|
+    #  if @author.save
+    #    # Fetch author information and update author
+    #    properties = Author.fetch_properties(@author)
+    #    @author = Author.update_properties(@author, properties)
+    #    flash[:notice] = 'Author was successfully created.' if @author.new_record?
+    
+    #    format.html { redirect_to author_path(@author.mas, :format => :html) }
+    #    format.xml  { render :xml => @author, :status => :created, :location => @author }
+    #    format.json { render :json => @author, :status => :created, :location => @author }
+    #  else
+    #    format.html { render :action => "new" }
+    #    format.xml  { render :xml => @author.errors, :status => :unprocessable_entity }
+    #    format.json { render :json => @author.errors, :status => :unprocessable_entity }
+    #  end
+    #end
   end
 
   # PUT /authors/1
@@ -100,11 +116,11 @@ class AuthorsController < ApplicationController
     respond_to do |format|
       if @author.update_attributes(params[:author])
         flash[:notice] = 'Author was successfully updated.'
-        format.html { redirect_to(@author) }
+        format.html { render :partial => params[:partial] if request.xhr? }
         format.xml  { head :ok }
         format.json { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { render :partial => params[:partial] if request.xhr? }
         format.xml  { render :xml => @author.errors, :status => :unprocessable_entity }
         format.json { render :json => @author.errors, :status => :unprocessable_entity }
       end
@@ -122,28 +138,14 @@ class AuthorsController < ApplicationController
       format.json { head :ok }
     end
   end
-  
-  def search
-    unless params[:search].blank?
-      @authors = Author.paginate :page => params[:page], 
-        :per_page => 10,
-        :conditions => ["authors.name REGEXP ? or authors.native_name REGEXP ? or authors.mas_id REGEXP ? or affiliations.name REGEXP ?", params['search'],params['search'],params['search'],params['search']],
-        :include => :affiliations,
-        :order => 'authors.sort_name' 
-    else
-      redirect_to :action => :index and return
-    end
-    if request.xhr?
-      render :partial => 'index'
-    else
-      render :index
-    end
-  end
 
 protected
   def load_author(options={})
     # Load one author given query params, for the non-#index actions
-    mas_id = params[:id]
-    @author = Author.find_by_mas_id!(mas_id, options)
+    # Use :username as :id
+    @author = Author.find_by_username!(params[:id], options)
+    if @author.nil?
+      redirect_to :action => 'index' and return
+    end
   end
 end

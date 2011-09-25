@@ -17,6 +17,8 @@
 # limitations under the License.
 
 class DocsController < ApplicationController
+  before_filter :authenticate_author!
+  
   def self.docs
     %w/ install capistrano formats development rake sources /
   end

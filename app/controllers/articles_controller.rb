@@ -17,11 +17,9 @@
 # limitations under the License.
 
 class ArticlesController < ApplicationController
-  before_filter :login_required, :except => [ :index, :show, :search ]
+  before_filter :authenticate_author!, :except => [ :index, :show ]
   before_filter :load_article, 
                 :only => [ :edit, :update, :destroy ]
-
-  require "will_paginate"
   
   # GET /articles
   # GET /articles.xml
@@ -30,16 +28,29 @@ class ArticlesController < ApplicationController
     # query=(doi fragment)
     # order=doi|published_on (whitelist, default to doi)
     # source=source_type
-    collection = Article
-    collection = collection.cited(params[:cited])  if params[:cited]
-    collection = collection.query(params[:query])  if params[:query]
-    collection = collection.order(params[:order])  if params[:order]
+    unless params[:q].blank?
+      @articles = Article.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["CONCAT(articles.title, ' ', articles.doi) REGEXP ?", params[:q]],
+        :include => [:retrievals],
+        :order => "retrievals.citations_count desc, articles.year desc"
+    else
+      collection = Article
+      collection = collection.cited(params[:cited])  if params[:cited]
+      collection = collection.query(params[:query])  if params[:query]
+      collection = collection.order(params[:order])  if params[:order]
 
-    @articles = collection.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+      @articles = collection.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    end
+    
     @source = Source.find_by_type(params[:source]) if params[:source]
 
     respond_to do |format|
-      format.html
+      format.html do 
+        if request.xhr?
+          render :partial => "index" 
+        end
+      end
       format.xml  { render :xml => @articles }
       format.json { render :json => @articles, :callback => params[:callback] }
       format.csv  { render :csv => @articles }
@@ -136,27 +147,6 @@ class ArticlesController < ApplicationController
       format.html { redirect_to(articles_url) }
       format.xml  { head :ok }
       format.json { head :ok }
-    end
-  end
-  
-  def search
-    unless params[:search].blank?
-      @articles = Article.paginate :page => params[:page], 
-        :per_page => 10,
-        :conditions => ["CONCAT(authors.name, articles.title, ' ', articles.doi) REGEXP ?", params['search']],
-        :include => [:authors, :retrievals],
-        :order => "retrievals.citations_count desc, articles.year desc"
-    else
-      redirect_to :action => :index and return
-    end
-    
-    render :partial => 'index' if request.xhr?
-    
-    respond_to do |format|
-      format.html { render :action => :index }
-      format.xml  { render :xml => @articles }
-      format.json { render :json => @articles, :callback => params[:callback] }
-      format.csv  { render :csv => @articles }
     end
   end
 

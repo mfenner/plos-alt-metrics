@@ -26,8 +26,7 @@
     :html => { :method => :put }
   }
 %>
-<% form_for :source, source, options do |f| %>
-  <%= f.error_messages %>
+<%= form_for :source, source, options do |f| %>
   <input type="hidden" name="source[class]" value="<%= source.class.name %>"/>
 
   <p>

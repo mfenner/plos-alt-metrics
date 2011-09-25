@@ -49,18 +49,18 @@ class AffiliationsControllerTest < ActionController::TestCase
 
   def test_should_create_affiliation
     assert_difference('Affiliation.count') do
-      post :create, :affiliation => { :mas_id => "1" }
+      post :create, :affiliation => { :mas => "1" }
     end
 
     assert_redirected_to affiliation_path(assigns(:affiliation))
   end
 
-  def test_should_require_mas_id
+  def test_should_require_mas
     post :create, :affiliation => {}
     assert_tag :tag => "div", 
                :attributes => { :class => "fieldWithErrors" },
                :descendant => { :tag => "input", 
-                                :attributes => { :id => "affiliation_mas_id" } }
+                                :attributes => { :id => "affiliation_mas" } }
   end
 
   def test_should_show_affiliation

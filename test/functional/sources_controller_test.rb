@@ -46,24 +46,24 @@ class SourcesControllerTest < ActionController::TestCase
   end
 
   def test_should_show_source
-    get :show, :id => sources(:crossref).id
+    get :show, :id => sources(:pubmed).id
     assert_response :success
   end
 
   def test_should_get_edit
-    get :edit, :id => sources(:crossref).id
+    get :edit, :id => sources(:pubmed).id
     assert_response :success
   end
 
   def test_should_update_source
-    put :update, :id => sources(:crossref).id, 
-                 :source => { :class => sources(:crossref).class.name }
+    put :update, :id => sources(:pubmed).id, 
+                 :source => { :class => sources(:pubmed).class.name }
     assert_redirected_to sources_path
   end
 
   def test_should_destroy_source
     assert_difference('Source.count', -1) do
-      delete :destroy, :id => sources(:crossref).id
+      delete :destroy, :id => sources(:pubmed).id
     end
 
     assert_redirected_to sources_path

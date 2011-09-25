@@ -33,11 +33,11 @@
     <% @articles.each do |article| %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), article_path(article.doi) %></span><br/>
+      	  <span class="name"><%= (article.title.blank? ? article.doi : article.title) %></span><br/>
 			<% unless article.authors.empty? %>
 			  <% if article.authors.count > 0 %>
 	        <% article.authors.each do |author| %>
-          	<%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %>
+          	<%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas, :format => :html %>
          <% end %>
        <% end %>
      <% end %>

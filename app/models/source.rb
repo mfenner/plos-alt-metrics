@@ -36,7 +36,7 @@ class Source < ActiveRecord::Base
 
   attr_accessor :staleness_days_before_type_cast
 
-  named_scope :active, :conditions => {:active => true}
+  scope :active, :conditions => {:active => true}
 
   def self.unconfigured_source_names
     # Collect source classnames based on the source file names we have
@@ -110,7 +110,7 @@ class Source < ActiveRecord::Base
     raise e
   rescue Exception => e
     Rails.logger.info "#{name} had an error. Disabling for #{SecondsToDuration::convert(disable_delay).inspect}."
-    Notifier.deliver_long_delay_warning(self)  if disable_delay > 1.day
+    Notifier.long_delay_warning.deliver(self)  if disable_delay > 1.day
     self.disable_until = Time.now + disable_delay.seconds
     self.disable_delay *= 2
     raise e

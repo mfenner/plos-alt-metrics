@@ -21,7 +21,7 @@ require 'test_helper'
 class SourceTest < ActiveSupport::TestCase
   def test_should_report_configured_sources
     assert_equal Source.all.to_set,
-      [sources(:connotea), sources(:crossref)].to_set
+      [sources(:citeulike), sources(:pubmed)].to_set
   end
 
   def test_should_report_unconfigured_subclasses
@@ -34,7 +34,7 @@ class SourceTest < ActiveSupport::TestCase
 
   def test_sources_degrade_on_error
     delay = 4
-    s = sources(:connotea)
+    s = sources(:citeulike)
     s.update_attribute :disable_delay, delay
     assert_nil s.disable_until
 
@@ -50,7 +50,7 @@ class SourceTest < ActiveSupport::TestCase
   end
 
   def test_source_sends_notification_email_on_long_delay
-    s = sources(:connotea)
+    s = sources(:citeulike)
     s.update_attribute :disable_delay, 2.days
     s.expects(:perform_query).raises.once
     assert_raise RuntimeError do

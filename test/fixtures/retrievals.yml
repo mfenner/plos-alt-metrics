@@ -16,37 +16,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-not_stale_crossref:
+not_stale_pubmed:
   article: not_stale
-  source: crossref
+  source: pubmed
   citations_count: 1
   other_citations_count: 0
   retrieved_at: <%= Date.today - 1.day %>
 
-not_stale_connotea:
+not_stale_citeulike:
   article: not_stale
-  source: connotea
+  source: citeulike
   citations_count: 0
   # default retrieved_at == 1970
 
-stale_crossref:
+stale_pubmed:
   article: stale
-  source: crossref
+  source: pubmed
   citations_count: 1
   retrieved_at: <%= Date.today - 2.years %>
 
-stale_connotea:
+stale_citeulike:
   article: stale
-  source: connotea
+  source: citeulike
   citations_count: 1
   retrieved_at: <%= Date.today - 2.years %>
 
-uncited_with_no_retrievals_crossref:
+uncited_with_no_retrievals_pubmed:
   article: uncited_with_no_retrievals
-  source: crossref
+  source: pubmed
   # default retrieved_at == 1970
 
-uncited_with_no_retrievals_connotea:
+uncited_with_no_retrievals_citeulike:
   article: uncited_with_no_retrievals
-  source: connotea
+  source: citeulike
   # default retrieved_at == 1970

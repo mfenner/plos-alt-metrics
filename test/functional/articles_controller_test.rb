@@ -116,20 +116,20 @@ class ArticlesControllerTest < ActionController::TestCase
 
   def test_should_show_article_csv_sources
     get :show, :id => articles(:stale).doi, :format => 'csv'
-    assert @response.body =~ /connotea/i
-    assert @response.body =~ /crossref/i
+    assert @response.body =~ /citeulike/i
+    assert @response.body =~ /pubmed/i
   end
 
-  def test_should_show_article_csv_sources_connotea
-    get :show, :id => articles(:stale).doi, :format => 'csv', :source => 'connotea'
-    assert @response.body =~ /connotea/i
-    assert @response.body !~ /crossref/i
+  def test_should_show_article_csv_sources_citeulike
+    get :show, :id => articles(:stale).doi, :format => 'csv', :source => 'citeulike'
+    assert @response.body =~ /citeulike/i
+    assert @response.body !~ /pubmed/i
   end
 
-  def test_should_show_article_csv_sources_crossref
-    get :show, :id => articles(:stale).doi, :format => 'csv', :source => 'crossref'
-    assert @response.body !~ /connotea/i
-    assert @response.body =~ /crossref/i, @response.body
+  def test_should_show_article_csv_sources_pubmed
+    get :show, :id => articles(:stale).doi, :format => 'csv', :source => 'pubmed'
+    assert @response.body !~ /citeulike/i
+    assert @response.body =~ /pubmed/i, @response.body
   end
 
   def test_should_get_edit

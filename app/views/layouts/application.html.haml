@@ -24,11 +24,11 @@
     %meta{ :charset => "utf-8" }
     %title
       = "(#{Rails.env}) " unless Rails.env.production?
-      Author-Level Metrics
+      = APP_CONFIG['application']
     %link{ :type => "image/x-icon", :href => "/favicon.ico", :rel => "shortcut icon" }
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'http://code.jquery.com/jquery.min.js'
     = javascript_include_tag :defaults
+    = csrf_meta_tag
     = yield(:head)
     :javascript
       $(function() {
@@ -37,27 +37,29 @@
 %body{ :class => "#{params[:controller]} #{params[:controller]}-#{params[:action]}" }
   %header
     .inner
-      %h1 Author-Level Metrics
-      - if ["affiliations", "articles", "authors"].include?(controller.controller_name) and ["index", "search"].include?(controller.action_name)
-        - form_tag({:controller => controller.controller_name, :action => "search"}, :method => "get", :class => "inline") do
+      %h1= APP_CONFIG['application']
+      %div.slogan= APP_CONFIG['slogan']
+      - if ["articles", "authors"].include?(controller.controller_name) and ["index", "search"].include?(controller.action_name)
+        = form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do
           %span.search Search
-          = text_field_tag :search, params[:search]
+          = text_field_tag :q, params[:q]
+          = observe_field 'q', :frequency => 0.5, :update => 'index', :url => { :controller => controller.controller_name, :action => :index }, :method => :get, :with => "'q=' + encodeURIComponent(value)"
     %nav
       .inner
-        %ul.nav
-          %li= link_to "Home", root_path, :class => current_page?(root_path) ? 'current' : ''          
+        %ul.nav       
           %li= link_to "Authors", authors_path, :class => current_page?(authors_path) ? 'current' : ''
           %li= link_to "Articles", articles_path, :class => current_page?(articles_path) ? 'current' : ''
-          - if logged_in?
-            %li= link_to "Docs", docs_path, :class => current_page?(docs_path(params[:action])) ? 'current' : ''
-            %li= link_to "Affiliations", affiliations_path, :class => current_page?(affiliations_path) ? 'current' : ''
+          %li= link_to "About", about_path, :class => current_page?(about_path) ? 'current' : '' 
+          - if current_author.try(:admin?)  
             %li= link_to "Sources", sources_path, :class => current_page?(sources_path) ? 'current' : ''
             %li= link_to "Groups", groups_path, :class => current_page?(groups_path) ? 'current' : ''
           %li.login
-            - if logged_in?
-              = link_to "Logout", logout_path
+            - if author_signed_in?
+              = link_to "Signed in as " + current_author.display_name, current_author.username
+              |
+              = link_to "Sign out", destroy_author_session_path, :method => :delete
             - else
-              = link_to_setup_or_login
+              = link_to "Sign in with Twitter", author_omniauth_authorize_path(:twitter)
   #content
     .inner
       - [ :error, :notice, :warning, :message ].each do |name|

@@ -5,9 +5,9 @@
 # below each fixture, per the syntax in the comments below
 #
 one: 
-  mas_id: 1
+  mas: 1
   name: University College London
 
 two: 
-  mas_id: 2
+  mas: 2
   name: Brown University

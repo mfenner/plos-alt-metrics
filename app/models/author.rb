@@ -11,12 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+  
 class Author < ActiveRecord::Base
-  extend SourceHelper
+  include SourceHelper
+  
+  devise :rememberable, :omniauthable
   
   has_and_belongs_to_many :articles, :order => "retrievals.citations_count desc, articles.published_on desc", :include => :retrievals
   has_many :positions
+  has_many :authentications
   
   # Check that no duplicate position is created
   has_many :affiliations, :through => :positions do
@@ -25,12 +28,37 @@ class Author < ActiveRecord::Base
     end
   end
   
-  validates_numericality_of :mas_id
-  validates_uniqueness_of :mas_id
+  attr_accessible :username, :name, :mas, :mendeley, :remember_me
   
-  default_scope :order => 'authors.mas_id'
+  validates_numericality_of :mas, :allow_nil => true
+  validates_uniqueness_of :mas, :allow_nil => true
+  validates_presence_of :username
+  validates_uniqueness_of :username
   
-  named_scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
+  default_scope :order => 'authors.sort_name'
+  
+  scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
+    
+  def self.find_for_twitter_oauth(omniauth)
+    authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
+    if authentication && authentication.author
+      authentication.author
+    else
+      author = Author.create!(:username => omniauth['user_info']['nickname'], 
+                              :name => omniauth['user_info']['name'],
+                              :description => omniauth['user_info']['description'],
+                              :location => omniauth['user_info']['location'],
+                              :image => omniauth['user_info']['image'])
+      author.authentications.create!(:provider => omniauth['provider'], 
+                                     :uid => omniauth['uid'],
+                                     :token => omniauth['credentials']['token'],
+                                     :secret => omniauth['credentials']['secret'])
+      author.save
+      # Fetch aditional properties from Twitter
+      self.update_via_twitter(author)
+      author
+    end
+  end
   
   def stale?
     new_record? or author.articles.empty?
@@ -44,7 +72,7 @@ class Author < ActiveRecord::Base
   def to_json(options={})
     result = { 
       :author => { 
-        :mas_id => mas_id, 
+        :mas => mas, 
         :name => name, 
         :articles_count => articles_count,
         :updated_at => updated_at
@@ -61,7 +89,7 @@ class Author < ActiveRecord::Base
     
     result[:author][:affiliations] = []
     self.affiliations.each do |affiliation|
-      result[:author][:affiliations] << {:mas_id => affiliation.mas_id, 
+      result[:author][:affiliations] << {:mas => affiliation.mas, 
         :name => affiliation.name, 
         :homepageURL => affiliation.homepageURL,
         :updated_at => updated_at}
@@ -88,13 +116,14 @@ class Author < ActiveRecord::Base
   end
   
   def display_name
-  	(self.native_name.blank? ? "" : self.native_name + " (") + (self.name.blank? ? self.mas_id : self.name) +  (self.native_name.blank? ? "" : ")")
+  	(self.native_name.blank? ? "" : self.native_name + " (") + (self.name.blank? ? self.mas : self.name) +  (self.native_name.blank? ? "" : ")")
 	end
   
   def self.fetch_properties(author, options={})
     # Fetch author information, return nil if no response 
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Author&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=1"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Author&AuthorID=#{author.mas}&StartIdx=1&EndIdx=1"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
+    
     result = get_json(url, options)["d"]["Author"]
     return nil if result.nil?
     
@@ -102,23 +131,32 @@ class Author < ActiveRecord::Base
   end
   
   def self.update_properties(author, properties, options={})
-   # Update author information
-    author_name = (properties["FirstName"].to_s.blank? ? "" : properties["FirstName"].to_s.capitalize + " ") + (properties["MiddleName"].to_s.blank? ? "" : properties["MiddleName"].to_s.capitalize + " ") + (properties["LastName"].to_s.blank? ? "" : properties["LastName"].to_s.capitalize)
-    sort_name = properties["LastName"].to_s.capitalize
-    author.update_attributes(:name => author_name, :sort_name => sort_name, :native_name => properties["NativeName"], :homepageURL => properties["HomepageURL"], :photoURL => properties["DisplayPhotoURL"])
+    # Update author information
+    author.update_attributes(:sort_name => properties["LastName"].to_s.capitalize, :native_name => properties["NativeName"])
     
     # Update affiliation information
     af_properties = properties["Affiliation"]
     unless af_properties.nil?
-      affiliation = Affiliation.find_or_create_by_mas_id(:mas_id  => af_properties["ID"], :name => af_properties["Name"], :homepageURL => af_properties["HomepageURL"])
+      affiliation = Affiliation.find_or_create_by_mas(:mas  => af_properties["ID"], :name => af_properties["Name"], :homepageURL => af_properties["HomepageURL"])
       author.affiliations << affiliation
     end
     author
   end
   
+  def self.update_via_twitter(author, options={})
+    # Fetch information from Twitter, update description, location and image
+    url = "http://api.twitter.com/1/users/show.json?screen_name=" + author.username
+    Rails.logger.info "Twitter query: #{url}"
+    result = get_json(url, options)
+    return nil if result.nil?
+    
+    author.update_attributes(:description => result["description"], location => result["location"], :image => result["profile_image_url"])
+    author
+  end
+  
   def self.fetch_articles(author, options={})
     # Fetch articles, return nil if no response 
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas_id}&StartIdx=1&EndIdx=50"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas}&StartIdx=1&EndIdx=50"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
     result = get_json(url, options)["d"]["Publication"]
