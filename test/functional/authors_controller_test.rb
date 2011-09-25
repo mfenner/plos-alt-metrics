@@ -49,18 +49,18 @@ class AuthorsControllerTest < ActionController::TestCase
 
   def test_should_create_author
     assert_difference('Author.count') do
-      post :create, :author => { :mas_id => "1" }
+      post :create, :author => { :mas => "1" }
     end
 
     assert_redirected_to author_path(assigns(:author))
   end
 
-  def test_should_require_mas_id
+  def test_should_require_mas
     post :create, :author => {}
     assert_tag :tag => "div", 
                :attributes => { :class => "fieldWithErrors" },
                :descendant => { :tag => "input", 
-                                :attributes => { :id => "author_mas_id" } }
+                                :attributes => { :id => "author_mas" } }
   end
 
   def test_should_show_author

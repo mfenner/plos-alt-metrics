@@ -44,9 +44,9 @@ class RetrieverTest < ActiveSupport::TestCase
   end
 
   test "source timeout should not cause rake timeout" do
-    crossref = sources(:crossref)
-    crossref.timeout = 1
-    crossref.save!
+    pubmed = sources(:pubmed)
+    pubmed.timeout = 1
+    pubmed.save!
 
     resp = Net::HTTPOK.new('1.1', '200', '')
     resp.expects(:body).at_least_once.returns('')
@@ -55,7 +55,7 @@ class RetrieverTest < ActiveSupport::TestCase
     article2 = articles(:uncited_with_no_retrievals)
     article2.expects(:citations_count).at_least_once
     Retriever.update_articles [article1, article2]
-    assert crossref.reload.disable_until.present?
+    assert pubmed.reload.disable_until.present?
   end
 end
 

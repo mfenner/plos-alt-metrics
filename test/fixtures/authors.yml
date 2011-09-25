@@ -5,9 +5,11 @@
 # below each fixture, per the syntax in the comments below
 #
 one: 
-  mas_id: 1
+  mas: 1
+  username: john
   name: John Smith
 
 two: 
-  mas_id: 2
+  mas: 2
+  username: josiah
   name: Josiah Carberry

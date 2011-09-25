@@ -103,7 +103,10 @@ header {
     header ul li {
       display: inline; }
       header ul li.login {
-        padding-left:3em; }
+        float: right; 
+        background-color: transparent;
+        -webkit-box-shadow: 0 transparent;
+        padding-right: 2em; }
 
 #content {
   padding-top: 1em;
@@ -145,6 +148,10 @@ body.index pre, body.docs pre {
   border: solid 1px rgba(0, 0, 0, 0.1);
   padding: 1em 0px 0px;
   overflow-x: auto; }
+  
+.page{
+  padding-right: 4em;
+}
  
 h1 {
   margin-top: 0.5em;
@@ -165,9 +172,26 @@ table {
   
 }
 
+.slogan {
+  font-size: large;
+  padding-bottom: 0.5em;
+}
+
 td.name {
   width: 750px;
   padding-bottom: 1em;
+}
+
+td.title {
+  width: 250px;
+}
+
+h3.service {
+  margin-bottom: 0em;
+}
+
+td.edit {
+  width: 50px;
 }
 
 span.name {
@@ -188,6 +212,11 @@ td.count, th.count {
   padding-bottom: 0.5em;
 }
 
+div.edit {
+	padding: 8px;
+  background-color: #ffffcc;
+}
+
 div.layout {
   width: 100%;
 }
@@ -197,6 +226,11 @@ div.affiliation {
 }
 
 .photo {
+  height: 120px;
+  margin-top: 0;
+}
+
+.photo_mini {
   float: left;
   padding-right: 1em;
 }
@@ -209,10 +243,11 @@ div.affiliation {
   clear: both;
 }
 
-.personal_info, .article {
-  margin-top: 0em;
+div.personal_info, .article {
+  margin-top: -0.5em;
   margin-bottom: 1em;
 }
+
 td.source_title {
   width: 200px;
   padding-left: 2em;
@@ -232,6 +267,20 @@ td.source {
   width: 200px;
   text-align: center;
   vertical-align: bottom;
+}
+
+td.service {
+  width: 250px;
+  text-align: center;
+}
+
+td.photo {
+  width: 250px;
+  height: 160px;
+}
+
+span.service {
+  font-size: larger;
 }
 
 .article {

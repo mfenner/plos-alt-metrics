@@ -22,15 +22,14 @@
     <% for author in @authors %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html %></span><br/>
-			<% unless author.affiliations.empty? %>
-          	  <% author.affiliations.each do |affiliation| %>
-          	    <%= h(affiliation.name) %><br/>
-              <% end %>
-            <% end %>
+					<%= image_tag "http://api.twitter.com/1/users/profile_image/#{author.username}", :class => "photo_mini" %>
+      	  <span class="name"><%= link_to author.display_name, author_path(author.username) %></span><br/>
+					<% unless author.description.blank? %>
+				    <%= author.description %>
+				  <% end %>
       	</td>
       	<td class="count">
-	      <%= author.articles_count == 0 ? "&nbsp;" : author.articles_count %>
+	      <%= author.articles_count == 0 ? "" : author.articles_count %>
 	    </td>
 	  </tr>
     <% end %>

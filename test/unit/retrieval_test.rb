@@ -41,7 +41,7 @@ class RetrievalTest < ActiveSupport::TestCase
   def test_citation_creation
     test_doi = "10.0/citable"
     article = Article.create(:doi => test_doi)
-    source = sources(:crossref)
+    source = sources(:pubmed)
     Source.expects(:active).returns([source])
     test_raw_citations = [
       %w[doi journal_title article_title uri].inject({}) do |h, k|

@@ -30,15 +30,13 @@ class ArticleTest < ActiveSupport::TestCase
 
   def test_should_require_doi
     @article.doi = nil
-    assert !@article.save
-    assert @article.errors.on(:doi)
+    assert !@article.save, "article should not be saved without a DOI"
   end
 
   def test_should_require_doi_uniqueness
     assert @article.save
     @article2 = Article.new :doi => "10.0/dummy"
-    assert !@article2.save
-    assert @article2.errors.on(:doi)
+    assert !@article2.save, "article requires unique DOI"
   end
 
   def test_should_find_stale_articles
@@ -77,7 +75,7 @@ class ArticleTest < ActiveSupport::TestCase
     assert a.valid?, a.errors.full_messages
     assert a.stale?
 
-    r = a.retrievals.first(:conditions => { :source_id => sources(:connotea).id })
+    r = a.retrievals.first(:conditions => { :source_id => sources(:citeulike).id })
     assert r.valid?
     assert_equal Time.at(0), r.retrieved_at
     assert Article.stale_and_published.include?(a)
@@ -93,7 +91,7 @@ class ArticleTest < ActiveSupport::TestCase
 
   def test_staleness_excludes_failed_retrievals_and_disabled_sources
     a = Article.create! :doi => '10.1/foo', :published_on => 1.day.ago
-    r = a.retrievals.first(:conditions => { :source_id => sources(:connotea).id })
+    r = a.retrievals.first(:conditions => { :source_id => sources(:citeulike).id })
     assert_equal Time.at(0), r.retrieved_at
     Source.update_all :disable_until => 3.days.from_now
 

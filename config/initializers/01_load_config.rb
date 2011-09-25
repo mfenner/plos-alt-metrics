@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-APP_CONFIG = YAML.load_file("#{RAILS_ROOT}/config/settings.yml")[RAILS_ENV]
+APP_CONFIG = YAML.load_file("#{Rails.root}/config/settings.yml")[Rails.env]
 
 REST_AUTH_SITE_KEY = APP_CONFIG['rest_auth_site_key']
 REST_AUTH_DIGEST_STRETCHES = APP_CONFIG['rest_auth_digest_stretches']

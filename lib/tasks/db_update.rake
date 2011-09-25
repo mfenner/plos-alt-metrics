@@ -20,7 +20,7 @@ require 'doi'
 require 'log4j_style_logger'
 
 namespace :db do
-  RAILS_DEFAULT_LOGGER = ActiveSupport::BufferedLogger.new "#{RAILS_ROOT}/log/#{RAILS_ENV}_db_update_rake.log"
+  RAILS_DEFAULT_LOGGER = ActiveSupport::BufferedLogger.new "#{Rails.root.to_s}/log/#{Rails.env}_db_update_rake.log"
   
   task :update => :"db:update:stale"
   namespace :update do
@@ -79,8 +79,8 @@ namespace :db do
     
     desc "Update one specified author"
     task :one_author => :environment do
-      mas_id = ENV["mas_id"] or abort("mas_id not specified (eg, 'mas_id=12779261')")
-      author = Author.find_by_mas_id(mas_id) or abort("Author not found: #{mas_id}")
+      username = ENV["username"] or abort("Username not specified (eg, 'username=mfenner')")
+      author = Author.find_by_username(username) or abort("Author not found: #{twitter}")
       ENV["LAZY"] ||= "0"
       Retriever.update_authors([author])
     end

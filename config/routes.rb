@@ -1,6 +1,3 @@
-# $HeadURL: http://ambraproject.org/svn/plos/alm/head/config/routes.rb $
-# $Id: routes.rb 5989 2011-01-14 01:08:57Z josowski $
-#
 # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
 # http://www.plos.org/
 #
@@ -16,81 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ActionController::Routing::Routes.draw do |map|
-  map.resources :articles, :requirements => { :id => /.+?/ }, :collection => { :search => :get }
-  map.resources :sources
-  map.resources :groups
-  map.resources :authors, :collection => { :search => :get }
-  map.resources :affiliations, :collection => { :search => :get }
-
-  #We originally wanted to make the "." part of the connect statement and not the regex. 
-  #But we encountered some weirdness, and this seems to work.
-  map.connect '/group/articles/:id:format',
-    :controller => 'groups',
-    :action     => 'groupArticleSummaries',
-    :requirements => { :id => /.+/, :format => /.(json|xml|csv)/ }
-
-  map.connect '/group/articles/:id',
-    :controller => 'groups',
-    :action     => 'groupArticleSummaries',
-    :requirements => { :id => /.+?/ }
-
-  #Maps .xml/.csv/.json requests to this function when doi is passed as a parameter
-  map.connect '/group/articles.:format',
-    :controller => 'groups',
-    :action     => 'groupArticleSummaries',
-    :requirements => { :format => /(json|xml|csv)/ }
-
-  map.root :controller => "index"
-
-  map.docs '/docs/:action', :controller => "docs"
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  map.register '/register', :controller => 'users', :action => 'create'
-  map.signup '/signup', :controller => 'users', :action => 'new'
-  map.resources :users
-  map.resource :session
-
-  # The priority is based upon order of creation: first created -> highest priority.
-
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
+PlosAltMetrics::Application.routes.draw do
+  devise_for :authors, :controllers => { :omniauth_callbacks => "authors/omniauth_callbacks" } do
+    get '/authors/auth/:provider' => 'authors/omniauth_callbacks#passthru'
+    get 'sign_in', :to => 'authors/sessions#new', :as => :new_author_session
+    delete 'sign_out', :to => 'authors/sessions#destroy', :as => :destroy_author_session
+  end
+  devise_for :authors do
+    get "/sign_out" => "devise/sessions#destroy"
+  end
   
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
+  # Wildcard match for DOI
+  #get '/articles/*doi' => 'articles#show'
+  resources :articles, :requirements => { :id => /.+?/ }
+  match "/group/articles(/:id)(.:format)" => "groups#groupArticleSummaries"
+  
+  # Admin resources
+  resources :sources
+  resources :groups
+  resources :authentications
+  get '/docs(/:action)', :controller => :docs, :format => false
+  get 'about', :to => 'index#index', :as => "about"
+  
+  # Authors are in default path, should therefore be defined after admin resources. 
+  # Root goes to authors#index, needs to be defined.
+  resources :authors, :path => "/"
+  root :to => "authors#index"
 
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  # map.root :controller => "welcome"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  # BJS: Removed; all the routes we need are at the top.
-  #map.connect ':controller/:action/:id'
-  #map.connect ':controller/:action/:id.:format'
 end

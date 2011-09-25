@@ -20,7 +20,7 @@
   %ul
     - DocsController.docs.each_with_index do |d, i|
       = '|' if i != 0
-      %li= link_to d.titleize, docs_path(d), :class => current_page?(docs_path(d)) ? 'current' : ''
+      %li= link_to d.titleize, "/docs/index/#{d}", :class => current_page?("/docs/index/#{d}") ? 'current' : ''
 
 .border
   .page

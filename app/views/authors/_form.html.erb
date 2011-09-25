@@ -14,12 +14,10 @@
   # limitations under the License.
 -%>
 <% author ||= form %>
-<% form_for(author) do |f| %>
-  <%= f.error_messages %>
-
+<%= form_for(author) do |f| %>
   <p>
-    <%= f.label :mas_id, "Author ID" %><br />
-    <%= f.text_field :mas_id %>
+    <%= f.label :mas, "Author ID" %><br />
+    <%= f.text_field :mas %>
   </p>
   <p>
     <%= f.submit(author.new_record? ? "Create" : "Update") %>

@@ -15,30 +15,26 @@
 -%>
 <div class="border">
 <div class="page">
-  <% unless @author.photoURL.blank? %>
-    <%= image_tag h(@author.photoURL), :class => "photo" %>
-  <% end %>
+	<h1><%= h(@author.display_name) %></h1>
+	
+	<%= render :partial => 'service' %>
 
-  <h1><%= h(@author.display_name) %></h1>
-  
-  <div class="personal_info">
-  	<% unless @author.affiliations.empty? %>
-	    <div class="affiliation">
-		  <% @author.affiliations.each do |affiliation| %>
-		    <%= h(affiliation.name) %><br/>
-	      <% end %>
-	    </div>
+  <% unless @author.description.blank? %>
+	    <%= @author.description %>
 	  <% end %>
+	<% unless @author.affiliations.empty? %>
+	  <div class="affiliation">
+	 <% @author.affiliations.each do |affiliation| %>
+	   <%= h(affiliation.name) %><br/>
+	    <% end %>
+	  </div>
+	<% end %>
 
-	  <% unless @author.homepageURL.blank? %>
-	    <div class="homepage">
-	      <%= link_to "Homepage", h(@author.homepageURL), :class => "photo" %>
-	    </div>
-	  <% end %>
-		<div class="summary">
-
-		</div>
-  </div>
+	<% unless @author.website.blank? %>
+	  <div class="homepage">
+	    <%= link_to @author.website, @author.website %>
+	  </div>
+	<% end %>
 
 <% unless @author.articles.empty? %>
   <% unless active_groups.empty? %>

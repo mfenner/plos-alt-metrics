@@ -64,9 +64,9 @@ task :doi_import => :environment do
   puts "Saved #{created.size} new articles, updated #{updated.size} articles, ignored #{duplicate.size} other existing articles"
 end
 
-desc "Bulk-import authors from standard input using mas_id"
+desc "Bulk-import authors from standard input using Twitter username"
 task :author_import => :environment do
-  puts "Reading mas_ids from standard input..."
+  puts "Reading Twitter usernames from standard input..."
   valid = []
   invalid = []
   duplicate = []
@@ -74,33 +74,33 @@ task :author_import => :environment do
   updated = []
   
   while (line = STDIN.gets)
-    mas_id, raw_name = line.strip.split(" ", 2)
+    username, raw_name = line.strip.split(" ", 2)
     name = raw_name.strip if raw_name
-    if mas_id.to_i.to_s == mas_id
-      valid << [mas_id, name]
+    unless username.nil?
+      valid << [username, name]
     else
-      puts "Ignoring mas_id: #{mas_id}"
-      invalid << [mas_id, name]
+      puts "Ignoring username: #{username}"
+      invalid << [username, name]
     end
   end
   puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
   if valid.size > 0
-    valid.each do |mas_id, name|
-      existing = Author.find_by_mas_id(mas_id)
+    valid.each do |username, name|
+      existing = Author.find_by_username(username)
       unless existing
-        author = Author.create(:mas_id => mas_id, :name => name)
-        created << mas_id
+        author = Author.create(:username => username, :name => name)
+        created << username
       else
-        duplicate << mas_id
+        duplicate << username
       end
     end
   end
   puts "Saved #{created.size} new authors, updated #{updated.size} authors, ignored #{duplicate.size} other existing authors"
 end
 
-desc "Bulk-import affiliations from standard input using mas_id"
+desc "Bulk-import affiliations from standard input using mas id"
 task :affiliation_import => :environment do
-  puts "Reading mas_ids from standard input..."
+  puts "Reading mas ids from standard input..."
   valid = []
   invalid = []
   duplicate = []
@@ -108,24 +108,24 @@ task :affiliation_import => :environment do
   updated = []
   
   while (line = STDIN.gets)
-    mas_id, raw_name = line.strip.split(" ", 2)
+    mas, raw_name = line.strip.split(" ", 2)
     name = raw_name.strip if raw_name
-    if mas_id.to_i.to_s == mas_id
-      valid << [mas_id, name]
+    if mas.to_i.to_s == mas
+      valid << [mas, name]
     else
-      puts "Ignoring mas_id: #{mas_id}"
-      invalid << [mas_id, name]
+      puts "Ignoring mas id: #{mas}"
+      invalid << [mas, name]
     end
   end
   puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
   if valid.size > 0
-    valid.each do |mas_id, name|
-      existing = Affiliation.find_by_mas_id(mas_id)
+    valid.each do |mas, name|
+      existing = Affiliation.find_by_mas(mas)
       unless existing
-        affiliation = Affiliation.create(:mas_id => mas_id, :name => name)
-        created << mas_id
+        affiliation = Affiliation.create(:mas => mas, :name => name)
+        created << mas_
       else
-        duplicate << mas_id
+        duplicate << mas
       end
     end
   end

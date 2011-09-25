@@ -32,7 +32,7 @@
 			      Coauthors: 
           	<% article.authors.each do |author| %>
               <% unless author == @author %>
-          	    <%= link_to(h(author.display_name), :controller => "authors", :action => "show", :id => author.mas_id, :format => :html) %>
+          	    <%= link_to(h(author.display_name), :controller => "authors", :action => "show", :id => author.mas, :format => :html) %>
               <% end %> 
             <% end %>
           <% end %>

@@ -20,9 +20,9 @@
 #   map.resources :articles, :requirements => { :id => /.+?/ }
 #
 # allows periods in the :id of routes, but limits us fully known MIME types.
-ActionController::Routing::OptionalFormatSegment.class_eval do
-  @@types = Mime::SET.map(&:to_sym).join('|')
-  def regexp_chunk
-    "/|(\\.(#{@@types}))?"
-  end
-end
+#ActionDispatch::Routing::OptionalFormatSegment.class_eval do
+#  @@types = Mime::SET.map(&:to_sym).join('|')
+#  def regexp_chunk
+#    "/|(\\.(#{@@types}))?"
+#  end
+#end

@@ -1,0 +1,21 @@
+<% if (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) %>
+  <div class="edit">
+	  <%= remote_form_for :author, :update => "mas", :url => author_url(:id => @author.username, :partial => "mas"), :method => :put do |f| %>
+		    <%= image_tag "microsoftacademicsearch.gif", :class => "service" %><br />
+		    <%= f.text_field :mas %>
+		  </p>
+		  <p>
+			  <%= link_to_remote "Cancel", :update => "mas", :url => author_path(@author.username, :partial => "mas"), :method => :get %>
+		    <%= f.submit("Submit") %>
+		<% end %>
+	</div>
+<% else %>
+	<%= image_tag "microsoftacademicsearch.gif", :class => "service" %><br/>
+	<span class="service"><%= @author.mas.blank? ? "not set" : link_to(@author.mas, "http://academic.research.microsoft.com/Author/" + @author.mas) %></span>
+	<% if current_author == @author or current_author.try(:admin?) %>
+    <%= link_to_remote image_tag("edit.gif"), { :update => "mas", 
+	                                       :url => edit_author_path(@author.username, :partial => "mas"),
+	                                       :method => :get },
+	                                       :title => "Edit Microsoft Academic Search" %>
+	<% end %>
+<% end %>
