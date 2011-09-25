@@ -111,7 +111,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (~> 0.14.4)
-    rake (0.8.7)
+    rake (0.9.2)
     rbx-require-relative (0.0.5)
     rdiscount (1.6.8)
     rdoc (3.9.4)
@@ -152,7 +152,7 @@ DEPENDENCIES
   oa-oauth
   prototype_legacy_helper (= 0.0.0)!
   rails (= 3.0.10)
-  rake (= 0.8.7)
+  rake (= 0.9.2)
   rdiscount (= 1.6.8)
   ruby-debug
   soap4r (>= 1.5.8)
