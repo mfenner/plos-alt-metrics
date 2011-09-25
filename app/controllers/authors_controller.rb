@@ -44,20 +44,15 @@ class AuthorsController < ApplicationController
   # GET /authors/1
   # GET /authors/1.xml
   def show
-    if params[:refresh] == "now"
-      load_author    
-      redirect_to(@author) and return  # why not just keep going with show?
-    end
-
     load_author
-    
     @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
-    
     
     respond_to do |format|
       format.html do 
         if request.xhr?
           render :partial => params[:partial] 
+        else
+          
         end
       end
       format.xml do
@@ -83,7 +78,12 @@ class AuthorsController < ApplicationController
   
   # GET /authors/1/edit
   def edit
-    render :partial => params[:partial] if request.xhr?
+    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    if request.xhr?
+      render :partial => params[:partial]
+    else
+      render :show 
+    end
   end
 
   # POST /authors

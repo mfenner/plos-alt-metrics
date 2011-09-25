@@ -37,7 +37,7 @@
 			<% unless article.authors.empty? %>
 			  <% if article.authors.count > 0 %>
 	        <% article.authors.each do |author| %>
-          	<%= link_to h(author.display_name), :controller => "authors", :action => "show", :id => author.mas, :format => :html %>
+          	<%= link_to h(author.display_name), author_path(author.username) %>
          <% end %>
        <% end %>
      <% end %>

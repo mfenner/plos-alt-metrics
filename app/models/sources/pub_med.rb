@@ -17,7 +17,6 @@
 # limitations under the License.
 
 class PubMed < Source
-  include SourceHelper
 
   ToolID = 'ArticleLevelMetrics'
 
@@ -40,7 +39,7 @@ class PubMed < Source
     citations = []
     query_url = url + article.pub_med
     
-    get_xml(query_url, options.merge(:remove_doctype => 1)) do |document|
+    SourceHelper.get_xml(query_url, options.merge(:remove_doctype => 1)) do |document|
       document.find("//PubMedToPMCcitingformSET/REFORM/PMCID").each do |cite|
         pmc = cite.first.content
         if pmc
@@ -65,7 +64,7 @@ class PubMed < Source
     }
     query_url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?" \
               + params.to_query
-    result = get_xml(query_url, options.merge(:remove_doctype => 1)) \
+    result = SourceHelper.get_xml(query_url, options.merge(:remove_doctype => 1)) \
         do |document|
       id_element = document.find_first("//eSearchResult/IdList/Id")
       id_element and id_element.content.strip
@@ -77,7 +76,7 @@ class PubMed < Source
 
   def get_pub_med_central_from_pub_med(pubmed, options={})
     query_url = "http://www.pubmedcentral.nih.gov/utils/entrezpmc.cgi?view=xml&id=" + pubmed
-    result = get_xml(query_url, options.merge(:remove_doctype => 1)) \
+    result = SourceHelper.get_xml(query_url, options.merge(:remove_doctype => 1)) \
         do |document|
       id_element = document.find_first("//PubMedToPMCreformSET/REFORM/PMCID")
       id_element and id_element.content.strip

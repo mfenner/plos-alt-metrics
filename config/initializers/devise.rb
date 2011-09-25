@@ -4,7 +4,7 @@
 # Patch Omniauth to include custom strategy for Mendeley
 module OmniAuth
   module Strategies
-    autoload :Mendeley, 'lib/mendeley'
+    autoload :Mendeley, 'lib/oauth_mendeley'
   end
 end
 

@@ -11,9 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-  
+
+require "source_helper"
+
 class Author < ActiveRecord::Base
-  include SourceHelper
   
   devise :rememberable, :omniauthable
   
@@ -124,7 +125,7 @@ class Author < ActiveRecord::Base
     url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Author&AuthorID=#{author.mas}&StartIdx=1&EndIdx=1"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
-    result = get_json(url, options)["d"]["Author"]
+    result = SourceHelper.get_json(url, options)["d"]["Author"]
     return nil if result.nil?
     
     properties = result["Result"][0]
@@ -147,7 +148,7 @@ class Author < ActiveRecord::Base
     # Fetch information from Twitter, update description, location and image
     url = "http://api.twitter.com/1/users/show.json?screen_name=" + author.username
     Rails.logger.info "Twitter query: #{url}"
-    result = get_json(url, options)
+    result = SourceHelper.get_json(url, options)
     return nil if result.nil?
     
     author.update_attributes(:description => result["description"], location => result["location"], :image => result["profile_image_url"])
@@ -159,7 +160,7 @@ class Author < ActiveRecord::Base
     url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas}&StartIdx=1&EndIdx=50"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
-    result = get_json(url, options)["d"]["Publication"]
+    result = SourceHelper.get_json(url, options)["d"]["Publication"]
     return nil if result.nil?
     
     articles = result["Result"]

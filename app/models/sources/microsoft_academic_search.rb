@@ -16,7 +16,6 @@
 # Specify range of citations returned with { :startidx => 1, :endidx => 50 }
 
 class MicrosoftAcademicSearch < Source
-  include SourceHelper
   
   def uses_partner_id; true; end
 
@@ -34,7 +33,7 @@ class MicrosoftAcademicSearch < Source
     if options[:with_citations].nil?
 
       result_string = "&PublicationContent=MetaOnly&StartIdx=1&EndIdx=1"
-      results = get_json(url + publication_id + result_string, options)["d"]["Publication"]
+      results = SourceHelper.get_json(url + publication_id + result_string, options)["d"]["Publication"]
       return nil if results.nil?
 
       results = results["Result"][0]
@@ -45,7 +44,7 @@ class MicrosoftAcademicSearch < Source
       citations = results["CitationCount"].to_i
     else
       result_string = "&ReferenceType=Citation&StartIdx=" + options[:startidx].to_s + "&EndIdx=" + options[:endidx].to_s + "&OrderBy=Year"
-      results = get_json(url + publication_id + result_string, options)["d"]["Publication"]
+      results = SourceHelper.get_json(url + publication_id + result_string, options)["d"]["Publication"]
       return nil if results.nil?
     
       results = results["Result"]

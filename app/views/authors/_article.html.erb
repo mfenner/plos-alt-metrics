@@ -27,12 +27,12 @@
     <% @articles.each do |article| %>
       <tr>
       	<td class="name">
-      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : h(article.title)), article_path(article.doi) %></span><br/>
+      	  <span class="name"><%= (article.title.blank? ? article.doi : h(article.title)) %></span><br/>
 			    <% if article.authors.count > 1 %>
 			      Coauthors: 
           	<% article.authors.each do |author| %>
               <% unless author == @author %>
-          	    <%= link_to(h(author.display_name), :controller => "authors", :action => "show", :id => author.mas, :format => :html) %>
+          	    <%= link_to(h(author.display_name), author_path(author.username)) %>
               <% end %> 
             <% end %>
           <% end %>
