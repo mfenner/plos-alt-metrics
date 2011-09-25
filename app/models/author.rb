@@ -151,7 +151,7 @@ class Author < ActiveRecord::Base
     result = SourceHelper.get_json(url, options)
     return nil if result.nil?
     
-    author.update_attributes(:description => result["description"], location => result["location"], :image => result["profile_image_url"])
+    author.update_attributes(:description => result["description"], :location => result["location"], :image => result["profile_image_url"])
     author
   end
   
