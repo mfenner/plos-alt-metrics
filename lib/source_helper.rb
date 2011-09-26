@@ -87,7 +87,7 @@ protected
         #http://www.mikeperham.com/2009/03/15/socket-timeouts-in-ruby/
         #http://groups.google.com/group/comp.lang.ruby/browse_thread/thread/c14cfd560cf253d2/bbb0f2e8309f3467?lnk=gst&q=dns+timeout#bbb0f2e8309f3467
         #http://ph7spot.com/musings/system-timer
-
+        options[:timeout] ||= 30
         SystemTimer.timeout_after(options[:timeout]) do
           http = Net::HTTP.new(url.host, url.port)
           http.use_ssl = true if (url.scheme == 'https')

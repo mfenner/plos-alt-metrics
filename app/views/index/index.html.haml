@@ -22,7 +22,7 @@
       What is ScienceCard?
       ===================
 
-      ScienceCard is a web service that collects all scientific articles of an author and displays aggregate article-level metrics. ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort, and to export and reuse this information elsewhere. To make this as effortless as possible, ScienceCard relies on unique identifiers for authors (currently identifiers from Microsoft Academic Search) and articles (currently digital object identifiers or DOIs). Future versions will add more author identifiers services, including ORCID when the service launches in 2012, and will add other identifiers for scholarly content (e.g. from ArXiV).
+      ScienceCard is a web service that collects all scientific articles published by an author and displays their aggregate article-level metrics. ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort, and to export and reuse this information elsewhere. To make this as effortless as possible, ScienceCard relies on unique identifiers for authors (currently identifiers from Microsoft Academic Search) and articles (currently digital object identifiers or DOIs). Future versions will add more author identifiers services, including ORCID when the service launches in 2012, as well as other identifiers for scholarly content (e.g. from ArXiV).
 
       ScienceCard uses freely available sources for the article-level metrics. Some sources are only available from some publishers (e.g. HTML page views or PDF downloads), or when you are a publisher yourself (e.g. CrossRef).
 
@@ -33,7 +33,7 @@
 
       To create your own ScienceCard, create an account by logging in via Twitter. Next add at least one author identifier - currently only Microsoft Academic Search is supported.
 			
-       ScienceCard will then go out and fetch all papers associated with this author identifier, and their article-level metrics (citations, bookmarks, etc.). This may take a while, so you best come revist. The publications and article-level metrics are then automatically updated.
+      ScienceCard will then fetch all papers associated with this author identifier, and their available article-level metrics (citations, bookmarks, etc.). This may take a while, so you should revisit some time after registering. Once set up, the publications and article-level metrics are then automatically updated.
 
       The ScienceCard API
       ===============
@@ -43,7 +43,7 @@
       Setting up your own Server
       ===============
 
-      ScienceCard is an open source application based on the PLoS Article-Level Metrics Developer API Server. This means that you can download and install the software and run your own ScienceCard server. Two good reasons to do this are a) you are a publisher and want to provide article-level metrics for your authors or b) you are an institution and want to provide these metrics for your researchers. ScienceCard uses the <a href="http://rubyonrails.org/">Ruby on Rails</a> web framework and can easily be extended, e.g. if you want to allow researchers to log in using their institutional accounts.
+      ScienceCard is an open source application based on the PLoS Article-Level Metrics Developer API Server. This means that you can download and install the software and run your own ScienceCard server. here are at least two good reasons to do this: a) you are a publisher and want to provide article-level metrics for your authors or b) you are an institution and want to provide these metrics for your researchers. ScienceCard uses the Ruby on Rails <http://rubyonrails.org/>  web framework and can easily be extended, e.g. if you want to allow researchers to log in using their institutional accounts.
 			
       More Information
       ===================

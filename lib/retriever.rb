@@ -221,13 +221,15 @@ class Retriever
     
     results.each do |result|
       # Only add journal articles
-      unless result["uuid"].nil? or result["Title"].nil? or result["type"] != "Journal Article"
+      unless result["uuid"].nil? or result["title"].nil? or result["type"] != "Journal Article"
         metadata = Article.fetch_from_mendeley(result["uuid"])
-        article = Article.find_or_create_by_mendeley(:doi => metadata["identifiers"]["doi"], :pub_med => metadata["identifiers"]["pmid"], :pub_med_central => metadata["identifiers"]["pmc_id"], :mendeley => metadata["uuid"], :title => metadata["Title"], :year => metadata["Year"], :volume => metadata["volume"], :issue => metadata["issue"])
-        # Check that DOI is valid
-        if article.valid?
-          group.articles << article unless group.articles.include?(article)
-          Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+        unless metadata["identifiers"]["doi"].nil?
+          article = Article.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
+          # Check that DOI is valid
+          if article.valid?
+            group.articles << article unless group.articles.include?(article)
+            Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+          end
         end
       end
     end  
