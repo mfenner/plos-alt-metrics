@@ -45,7 +45,7 @@ class AuthorsController < ApplicationController
   # GET /authors/1.xml
   def show
     load_author
-    @articles = @author.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
     
     respond_to do |format|
       format.html do 
@@ -78,7 +78,7 @@ class AuthorsController < ApplicationController
   
   # GET /authors/1/edit
   def edit
-    @articles = @author.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
     if request.xhr?
       render :partial => params[:partial]
     else
