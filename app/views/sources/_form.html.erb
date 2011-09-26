@@ -96,8 +96,8 @@
   
   <% if Group.find(:all).size > 0 %>
     <p>
-      <%= f.label :group  %><br/>
-      <%= select "source", "group_id", Group.find(:all).collect { |g| [ g.name, g.id ] },{:include_blank => true} %>
+      <%= f.label :category  %><br/>
+      <%= select "source", "category_id", Category.find(:all).collect { |g| [ g.name, g.id ] },{:include_blank => true} %>
     </p>
   <% end %>
   

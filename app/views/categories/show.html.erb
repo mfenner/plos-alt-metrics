@@ -19,10 +19,16 @@
 -%>
 <div class="border">
 <div class="page">
-<h1>Creating new group</h1>
+<h1>Details for <%=h @category.name %> </h1>
 
-<%= render :partial => "form", :object => @group %>
+<p>
+  <b>Name:</b>
+  <%=h @category.name %>
+</p>
 
-<%= link_to 'Back to list', groups_path %>
+<%= link_to 'Edit', edit_category_path(@category) %>
+<%= link_to 'Delete', category_path(@category), :confirm => 'Are you sure?', :method => :delete %>
+<br/>
+<%= link_to 'Back to list', categories_path %>
 </div>
 </div>

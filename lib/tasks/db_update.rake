@@ -85,6 +85,22 @@ namespace :db do
       Retriever.update_authors([author])
     end
     
+    desc "Update all groups"
+    task :groups => :environment do
+      ENV["LAZY"] = "0"
+      limit = (ENV["LIMIT"] || 0).to_i
+      groups = Group.limit(limit)
+      Retriever.update_groups(groups)
+    end
+    
+    desc "Update one specified group"
+    task :one_group => :environment do
+      mendeley = ENV["mendeley"] or abort("Mendeley id for Group not specified (eg, 'mendeley=586171')")
+      group = Group.find_by_mendeley(mendeley) or abort("Group not found: #{mendeley}")
+      ENV["LAZY"] ||= "0"
+      Retriever.update_groups([group])
+    end
+    
     desc "Update all affiliations"
     task :affiliations => :environment do
       ENV["LAZY"] = "0"

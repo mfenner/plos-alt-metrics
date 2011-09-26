@@ -21,8 +21,9 @@ class Article < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals
   has_many :citations, :through => :retrievals
-  
-  has_and_belongs_to_many :authors
+  has_many :contributions
+  has_many :authors, :through => :contributions
+  has_and_belongs_to_many :groups
 
   validates_format_of :doi, :with => DOI::FORMAT
   validates_uniqueness_of :doi
@@ -89,27 +90,27 @@ class Article < ActiveRecord::Base
     self
   end
   
-  #Get citation count by group and sources from the activerecord data
-  def citations_by_group
+  #Get citation count by category and sources from the activerecord data
+  def citations_by_category
     results = {}
     
     for ret in retrievals
       # Only get citations for active sources
       if ret.source.active
-        if results[ret.source.group_id] == nil then
-          results[ret.source.group_id] = {
-            :name => ret.source.group && ret.source.group.name.downcase,
+        if results[ret.source.category_id] == nil then
+          results[ret.source.category_id] = {
+            :name => ret.source.category && ret.source.category.name.downcase,
             :total => ret.citations_count + ret.other_citations_count,
             :sources => []
           }
-          results[ret.source.group_id][:sources] << {
+          results[ret.source.category_id][:sources] << {
             :name => ret.source.name,
             :total => ret.citations_count + ret.other_citations_count,
             :public_url => ret.source.public_url(ret)
           }
         else
-          results[ret.source.group_id][:total] = results[ret.source.group_id][:total] + ret.citations_count + ret.other_citations_count
-          results[ret.source.group_id][:sources] << {
+          results[ret.source.category_id][:total] = results[ret.source.category_id][:total] + ret.citations_count + ret.other_citations_count
+          results[ret.source.category_id][:sources] << {
             :name => ret.source.name,
             :total => ret.citations_count + ret.other_citations_count,
             :public_url => ret.source.public_url(ret)
@@ -118,13 +119,13 @@ class Article < ActiveRecord::Base
       end
     end
     
-    groupsCount = []
+    categoriesCount = []
     
     results.each do | key, value |
-      groupsCount << value
+      categoriesCount << value
     end
     
-    groupsCount
+    categoriesCount
   end
   
   #Get citation count by source from the activerecord data
@@ -142,10 +143,10 @@ class Article < ActiveRecord::Base
   end
   
   #Get cites for the given source from the activeRecord data
-  def get_cites_by_group(groupname)
-    groupname = groupname.downcase
+  def get_cites_by_category(categoryname)
+    categoryname = categoryname.downcase
     retrievals.map do |ret|
-      if ret.source.group.name.downcase == groupname && (ret.citations_count + ret.other_citations_count) > 0
+      if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
         #Cast this to an array to get around a ruby 'singularize' bug
         { :name => ret.source.name.downcase, :citations => ret.citations.to_a }
       end
@@ -212,6 +213,14 @@ class Article < ActiveRecord::Base
       end.compact
     end
     result.to_json(options)
+  end
+  
+  def self.fetch_from_mendeley(uuid, options={})
+    # Fetch article information, return nil if no response 
+    url = "http://api.mendeley.com/oapi/documents/details/#{uuid}?consumer_key=#{APP_CONFIG['mendeley_key']}"
+    Rails.logger.info "Mendeley query: #{url}"
+    
+    result = SourceHelper.get_json(url, options)
   end
 
   private

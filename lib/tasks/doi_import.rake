@@ -98,6 +98,40 @@ task :author_import => :environment do
   puts "Saved #{created.size} new authors, updated #{updated.size} authors, ignored #{duplicate.size} other existing authors"
 end
 
+desc "Bulk-import groups from standard input using Mendeley group id"
+task :group_import => :environment do
+  puts "Reading Mendeley groups from standard input..."
+  valid = []
+  invalid = []
+  duplicate = []
+  created = []
+  updated = []
+  
+  while (line = STDIN.gets)
+    mendeley, raw_name = line.strip.split(" ", 2)
+    name = raw_name.strip if raw_name
+    unless mendeley.nil?
+      valid << [mendeley, name]
+    else
+      puts "Ignoring Mendeley group id: #{mendeley}"
+      invalid << [mendeley, name]
+    end
+  end
+  puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
+  if valid.size > 0
+    valid.each do |mendeley, name|
+      existing = Group.find_by_mendeley(mendeley)
+      unless existing
+        group = Group.create(:mendeley => mendeley, :name => name)
+        created << mendeley
+      else
+        duplicate << mendeley
+      end
+    end
+  end
+  puts "Saved #{created.size} new groups, updated #{updated.size} groups, ignored #{duplicate.size} other existing groups"
+end
+
 desc "Bulk-import affiliations from standard input using mas id"
 task :affiliation_import => :environment do
   puts "Reading mas ids from standard input..."

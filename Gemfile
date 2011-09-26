@@ -14,7 +14,7 @@ gem 'libxml-ruby', '2.2.2', :require => 'xml'
 gem 'rdiscount', "1.6.8"
 gem 'soap4r', '>=1.5.8', :require => 'soap/rpc/driver'
 gem 'starling', "0.10.1"
-gem 'system_timer', '1.2.4'
+gem 'SystemTimer', '1.2.3'
 gem 'formatize'
 gem 'devise'
 gem "oa-oauth", :require => "omniauth/oauth"

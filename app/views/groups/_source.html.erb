@@ -3,7 +3,7 @@
 		<% active_categories.each do |category| %>
 	    <td class="source_title" colspan="<%= category.sources.active.count %>">
 		    <h2><%= h(category.name) %></h2>
-		    <%= h(category.article_description) %>
+		    <%= h(category.group_description) %>
 	    </td>
     <% end %>
 	</tr>
@@ -20,11 +20,7 @@
 		 <% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
 	      <td class="source_count">
-			    <% if @article.citations_by_source(source)[:public_url] and @article.citations_by_source(source)[:total] > 0 %>
-            <%= link_to h(@article.citations_by_source(source)[:total]), @article.citations_by_source(source)[:public_url]  %>
-           <% else %>
-             <%= h(@article.citations_by_source(source)[:total]) %>
-           <% end %>
+			    <%= @group.citations_count(source) %>
 		    </td>
 	    <% end %>
     <% end %>

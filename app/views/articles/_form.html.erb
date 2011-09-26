@@ -18,7 +18,7 @@
   # limitations under the License.
 -%>
 <% article ||= form %>
-<%= form_for(article) do |f| %>
+<%= form_for(article.id) do |f| %>
   <p>
     <%= f.label :doi, "DOI" %><br />
     <%= f.text_field :doi %>

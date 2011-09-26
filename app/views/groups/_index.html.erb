@@ -14,19 +14,18 @@
   # limitations under the License.
 -%>
 <div class="layout">  
-  <% unless @authors.empty? %>
-	  <table class="index">
-		  <th>
-			  <h2><%= pluralize(@authors.total_entries, 'Author') %></h2>
-			</th>
-		<% @authors.in_groups_of(2, false) do |authors| %> 
+  <% unless @groups.empty? %>
+	<table class="index">
+		<th>
+			<h2><%= pluralize(@groups.total_entries, 'Group') %></h2>
+		</th>
+		<% @groups.in_groups_of(2, false) do |groups| %> 
 		  <tr>  
-		    <% authors.each do |author| %>  
+		    <% groups.each do |group| %>  
 		    	<td class="index">
-			      <% unless author.nil? %>
-							<%= image_tag "http://api.twitter.com/1/users/profile_image/#{author.username}", :class => "photo_mini" %>
-		      	  <span class="name"><%= link_to author.display_name, author_path(author.username) %></span><br/>
-		          <%= link_to "@#{author.username}", "http://twitter.com/#{author.username}" %>
+			      <% unless group.nil? %>
+							<span class="name"><%= link_to group.name, group_path(group.mendeley) %></span><br/>
+		          <%= link_to group.mendeley, "http://www.mendeley.com/groups/#{group.mendeley}" %>
 		        <% end %>
 	      	</td>
 		    <% end %>  
@@ -35,10 +34,10 @@
 	</table>
     </div>
   <% else %>
-    <h2>No authors found</h2>
+    <h2>No groups found</h2>
   <% end %>
 
   <div class="pagination">
-    <%= will_paginate @authors %>
+    <%= will_paginate @groups %>
   </div>
 </div>

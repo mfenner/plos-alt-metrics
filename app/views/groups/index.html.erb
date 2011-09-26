@@ -1,9 +1,5 @@
 <%#
-  # $HeadURL$
-  # $Id$
-  #
-  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
-  # http://www.plos.org/
+  # Copyright (c) 2011 Martin Fenner
   #
   # Licensed under the Apache License, Version 2.0 (the "License");
   # you may not use this file except in compliance with the License.
@@ -17,27 +13,6 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-
-<div class="border">
-<div class="page">
-<h1>Groups</h1>
-
-<ul>
-<% for group in @groups %>
-  <li>
-    <h3><%= link_to h(group.name), group %></h3>
-    <ul>
-      <% group.sources.each do |source| %>
-        <li><%= link_to h(source.name), source_path(source) %></li>
-      <% end %>
-    </ul>
-  </li>
-<% end %>
-</ul>
-
-Groups are a way to organize sources.  You can define a group for 
-your sources by editing a source.<br/>
-<br/>
-<%= link_to 'Add a new group', new_group_path %>
-</div>
+<div id="index">
+  <%= render :partial => 'index' %> 
 </div>

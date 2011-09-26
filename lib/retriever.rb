@@ -210,6 +210,32 @@ class Retriever
     Rails.logger.info "Refreshed author #{author.mas}"
   end
   
+  def update_articles_by_group(group)
+    Rails.logger.info "Updating group #{group.inspect}..."
+    
+    # Fetch articles from group, return nil if no response
+    results = Group.fetch_articles(group)
+    return nil if results.nil?
+    
+    results = results["documents"]
+    
+    results.each do |result|
+      # Only add journal articles
+      unless result["uuid"].nil? or result["Title"].nil? or result["type"] != "Journal Article"
+        metadata = Article.fetch_from_mendeley(result["uuid"])
+        article = Article.find_or_create_by_mendeley(:doi => metadata["identifiers"]["doi"], :pub_med => metadata["identifiers"]["pmid"], :pub_med_central => metadata["identifiers"]["pmc_id"], :mendeley => metadata["uuid"], :title => metadata["Title"], :year => metadata["Year"], :volume => metadata["volume"], :issue => metadata["issue"])
+        # Check that DOI is valid
+        if article.valid?
+          group.articles << article unless group.articles.include?(article)
+          Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+        end
+      end
+    end  
+    
+    group.refreshed!.save!
+    Rails.logger.info "Refreshed group #{group.mendeley}"
+  end
+  
   def update_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
@@ -220,7 +246,20 @@ class Retriever
     author = Author.update_properties(author, properties) 
     
     author.refreshed!.save!
-    Rails.logger.info "Refreshed author #{author.mas}"
+    Rails.logger.info "Refreshed author #{author.username}"
+  end
+  
+  def update_group(group)
+    Rails.logger.info "Updating group #{group.inspect}..."
+    
+    # Fetch properties from group, return nil if no response
+    properties = Group.fetch_properties(group)
+    return nil if properties.nil?
+    
+    group = Group.update_properties(group, properties) 
+    
+    group.refreshed!.save!
+    Rails.logger.info "Refreshed group #{group.mendeley}"
   end
 
   def self.update_articles(articles, adjective=nil, timeout_period=50.minutes)
@@ -289,6 +328,42 @@ class Retriever
       end
     rescue RetrieverTimeout => e
       Rails.logger.error "Timeout exceeded on author update" + e.backtrace.join("\n")
+      raise e
+    end
+  end
+  
+  def self.update_groups(groups, adjective=nil, timeout_period=50.minutes, include_articles=true)
+    require 'timeout'
+    begin
+
+      # user can pass in the timeout value. expecting an integer value in minutes
+      timeout_passed_in = ENV.fetch("TIMEOUT", 0).to_i
+      if (timeout_passed_in > 0)
+        timeout_period = timeout_passed_in.minutes
+      end
+
+      Rails.logger.info "Timeout value is #{timeout_period.to_i} seconds"
+      
+      Timeout::timeout timeout_period.to_i, RetrieverTimeout do
+        lazy = ENV.fetch("LAZY", "1") == "1"
+        Rails.logger.debug ["Updating", groups.size.to_s,
+              lazy ? "stale" : nil, adjective,
+              groups.size == 1 ? "group" : "groups"].compact.join(" ")
+        retriever = self.new(:lazy => lazy,
+          :raise_on_error => ENV["RAISE_ON_ERROR"])
+
+        groups.each do |group|
+          retriever.update_group(group)
+          if include_articles
+            old_count = group.articles_count || 0
+            retriever.update_articles_by_group(group)
+            new_count = group.articles_count || 0
+            Rails.logger.debug "Mendeley: #{group.mendeley} count now #{new_count} (#{new_count - old_count})"
+          end
+        end
+      end
+    rescue RetrieverTimeout => e
+      Rails.logger.error "Timeout exceeded on group update" + e.backtrace.join("\n")
       raise e
     end
   end

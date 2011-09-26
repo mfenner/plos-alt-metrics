@@ -169,7 +169,11 @@ h3 {
 }
 
 table {
-  
+
+}
+
+table.index {
+  width: 100%;
 }
 
 .slogan {
@@ -178,7 +182,12 @@ table {
 }
 
 td.name {
-  width: 750px;
+  width: 75%;
+  padding-bottom: 1em;
+}
+
+td.index {
+  width: 50%;
   padding-bottom: 1em;
 }
 
