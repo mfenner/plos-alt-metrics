@@ -36,11 +36,11 @@
     <%= render :partial => 'source'%>
   </div>
 
-  <% if logged_in? %>
-    Refresh: <%= link_to 'now', article_path(@article, :refresh => "now") %> |
-    <%= link_to 'soon', article_path(@article, :refresh => "soon") %><br/>
-    <%= link_to 'Edit', edit_article_path(@article) %> |
-    <%= link_to 'Delete', @article, :confirm => 'Are you sure?', :method => :delete %>
+  <% if author_signed_in? %>
+    Refresh: <%= link_to 'now', article_path(@article.id, :refresh => "now") %> |
+    <%= link_to 'soon', article_path(@article.id, :refresh => "soon") %><br/>
+    <%= link_to 'Edit', edit_article_path(@article.id) %> |
+    <%= link_to 'Delete', article_path(@article.id), :confirm => 'Are you sure?', :method => :delete %>
     <br/>
   <% end %>
 </div>

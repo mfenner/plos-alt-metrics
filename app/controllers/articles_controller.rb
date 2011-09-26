@@ -121,6 +121,10 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def edit
+    
+  end
+  
   # PUT /articles/1
   # PUT /articles/1.xml
   def update
@@ -153,8 +157,9 @@ class ArticlesController < ApplicationController
 protected
   def load_article(options={})
     # Load one article given query params, for the non-#index actions
-    doi = DOI::from_uri(params[:id])
-    @article = Article.find_by_doi!(doi, options)
+    #doi = DOI::from_uri(params[:id])
+    #@article = Article.find_by_doi!(doi, options)
+    @article = Article.find(params[:id])
   end
 
   def eager_includes

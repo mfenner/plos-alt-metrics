@@ -1,8 +1,4 @@
-# $HeadURL$
-# $Id$
-#
-# Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
-# http://www.plos.org/
+# Copyright (c) 2011 Martin Fenner
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,147 +13,139 @@
 # limitations under the License.
 
 class GroupsController < ApplicationController
-  before_filter :authenticate_author!
-
-  #This is a way of excepting a list of DOIS and getting back summaries for them all.
-  #Articles with no cites are not returned
-  #This method does not check for article staleness and does not query articles for refresh
-  def groupArticleSummaries
-    logger.debug "groupArticleSummaries"
-
-    #Specifying multilple DOIS without a parameter proved nightmareish
-    #So we do it here using a comma delimated list with format 
-    #Specified as a parameter (ID)
-
-    #Here sometimes the :format value may have a period attached to it
-    #This will filter it out
-    reqFormat = params[:format]
-
-    if reqFormat != nil
-      matchedFormat = reqFormat.match(/xml|csv|json/)
-      
-      #If we get a bad format, just default to nil (or HTML)
-      if matchedFormat == nil
-        request.format = nil
-      else
-        request.format = matchedFormat[0]
-        logger.info "format:" + request.format
-      end
-    end
-
-    logger.info "ID:" + params[:id]
-
-    if !params[:id]
-      raise "ID parameter not specified"
-    end
-
-    #Ids can be a collection
-    ids = params[:id].split(',')
-    ids = ids.map { |id| DOI::from_uri(id) }
-      
-    @result  = []
-
-    # Specifiy the eager loading so we get all the data we need up front
-    articles = Article.find(:all, 
-      :include => [ :retrievals => [ :citations, { :source => :group } ]], 
-      :conditions => [ "articles.doi in (?) and (retrievals.citations_count > 0 or retrievals.other_citations_count > 0)", ids ])
-    
-    @result = articles.map do |article|
-      returning Hash.new do |hash|
-        hash[:article] = article
-        hash[:groupcounts] = article.citations_by_group
-        
-        # If any groups are specified via URL params, get those details
-        hash[:groups] = params[:group].split(",").map do |group|
-          sources = article.get_cites_by_group(group)
-          { :name => group,
-            :sources => sources } unless sources.empty?
-        end.compact if params[:group]
-      end
-    end
-  
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @result }
-      format.json { render :json => @result, :callback => params[:callback] }
-    end
-  end
+  before_filter :authenticate_group!, :except => [ :index, :show ]
+  before_filter :load_group, 
+                :only => [ :edit, :update, :destroy ]
 
   # GET /groups
+  # GET /groups.xml
   def index
-    @groups = Group.find(:all)
-
+    unless params[:q].blank?
+      @groups = Group.paginate :page => params[:page], 
+        :per_page => 20,
+        :conditions => ["groups.name REGEXP ? or groups.mendeley REGEXP ?", params[:q],params[:q]],
+        :order => 'groups.name' 
+    else
+      @groups = Group.paginate :page => params[:page], :per_page => 20, :order => 'groups.name'
+    end
+    
     respond_to do |format|
-      format.html # index.html.erb
+      format.html do 
+        if request.xhr?
+          render :partial => "index" 
+        end
+      end
+      format.xml  { render :xml => @groups }
+      format.json { render :json => @groups, :callback => params[:callback] }
+      format.csv  { render :csv => @groups }
     end
   end
 
   # GET /groups/1
+  # GET /groups/1.xml
   def show
-    @group = Group.find(params[:id])
-
+    load_group
+    @articles = @group.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do 
+        if request.xhr?
+          render :partial => params[:partial] 
+        else
+          
+        end
+      end
+      format.xml do
+        response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
+        render :xml => @group.articles.to_xml
+      end
+      format.csv  { render :csv => @group }
+      format.json { render :json => @group.to_json, :callback => params[:callback] }
     end
   end
 
   # GET /groups/new
+  # GET /groups/new.xml
   def new
     @group = Group.new
-    
+
     respond_to do |format|
       format.html # new.html.erb
+      format.xml  { render :xml => @group }
+      format.json { render :json => @group }
     end
   end
-
+  
   # GET /groups/1/edit
   def edit
-    @group = Group.find(params[:id])
+    @articles = @group.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    if request.xhr?
+      render :partial => params[:partial]
+    else
+      render :show 
+    end
   end
 
   # POST /groups
+  # POST /groups.xml
   def create
-    @group = Group.new(params[:group])
+    # Get group if it exists, otherwise create new one
+    #@group = Group.find_or_initialize_by_mas(:mas  => params[:group][:mas])
 
-    respond_to do |format|
-      if @group.save
-        flash[:notice] = 'Group was successfully created.'
-        format.html { redirect_to(groups_url) }
-      else
-        format.html { render :action => "new" }
-      end
-    end
+    #respond_to do |format|
+    #  if @group.save
+    #    # Fetch group information and update group
+    #    properties = Group.fetch_properties(@group)
+    #    @group = Group.update_properties(@group, properties)
+    #    flash[:notice] = 'Group was successfully created.' if @group.new_record?
+    
+    #    format.html { redirect_to group_path(@group.mas, :format => :html) }
+    #    format.xml  { render :xml => @group, :status => :created, :location => @group }
+    #    format.json { render :json => @group, :status => :created, :location => @group }
+    #  else
+    #    format.html { render :action => "new" }
+    #    format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+    #    format.json { render :json => @group.errors, :status => :unprocessable_entity }
+    #  end
+    #end
   end
 
-  # POST /groups/1
+  # PUT /groups/1
+  # PUT /groups/1.xml
   def update
-    @group = Group.find(params[:id])
-
     respond_to do |format|
       if @group.update_attributes(params[:group])
         flash[:notice] = 'Group was successfully updated.'
-        format.html { redirect_to(groups_url) }
+        format.html { render :partial => params[:partial] if request.xhr? }
+        format.xml  { head :ok }
+        format.json { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { render :partial => params[:partial] if request.xhr? }
+        format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+        format.json { render :json => @group.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   # DELETE /groups/1
+  # DELETE /groups/1.xml
   def destroy
-    @group = Group.find(params[:id])
-    
-    Source.find(:all, :conditions => {  :group_id => @group.id }).each do |s| 
-      s.group = nil;
-      s.save
-    end
-    
     @group.destroy
 
     respond_to do |format|
       format.html { redirect_to(groups_url) }
+      format.xml  { head :ok }
+      format.json { head :ok }
     end
   end
 
+protected
+  def load_group(options={})
+    # Load one group given query params, for the non-#index actions
+    # Use :username as :id
+    @group = Group.find_by_mendeley!(params[:id], options)
+    if @group.nil?
+      redirect_to :action => 'index' and return
+    end
+  end
 end
-

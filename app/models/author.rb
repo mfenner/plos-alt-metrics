@@ -18,9 +18,12 @@ class Author < ActiveRecord::Base
   
   devise :rememberable, :omniauthable
   
-  has_and_belongs_to_many :articles, :order => "retrievals.citations_count desc, articles.published_on desc", :include => :retrievals
   has_many :positions
   has_many :authentications
+  has_many :contributions
+  has_many :articles, :through => :contributions
+  has_many :members
+  has_many :groups, :through => :members
   
   # Check that no duplicate position is created
   has_many :affiliations, :through => :positions do
@@ -80,10 +83,10 @@ class Author < ActiveRecord::Base
       }
     }
     
-    @groups = Group.find :all, :conditions => ["sources.active=1"], :include => :sources, :order => :group_id
+    @categories = Category.find :all, :conditions => ["sources.active=1"], :include => :sources, :order => :category_id
     result[:author][:citations] = []
-    @groups.each do |group|
-		  group.sources.active.each do |source|
+    @categories.each do |category|
+		  category.sources.active.each do |source|
 	      result[:author][:citations] << [:source_id => source.id, :source_name => source.name, :count => self.citations_count(source)]
 	    end
     end

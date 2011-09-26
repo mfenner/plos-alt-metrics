@@ -17,10 +17,8 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<% group ||= form %>
-<%= form_for(group) do |f| %>
-  <%= f.error_messages %>
-
+<% category ||= form %>
+<%= form_for(category) do |f| %>
   <p>
     <%= f.label :name %><br />
     <%= f.text_field :name %>
@@ -37,6 +35,6 @@
   </p>
 
   <p>
-    <%= f.submit(group.new_record? ? "Create" : "Update") %>
+    <%= f.submit(category.new_record? ? "Create" : "Update") %>
   </p>
 <% end %>

@@ -17,26 +17,27 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
+
 <div class="border">
 <div class="page">
-<h1>Sources</h1>
+<h1>Categories</h1>
 
 <ul>
-<% for source in @sources %>
+<% for category in @categories %>
   <li>
-    <% unless source.is_a? String %>
-      <%# Link to an existing source -%>
-      <h3><%= link_to h(source.name), source_path(source) %></h3>
-      <div><%= source.active ? "<strong>Active</strong>".html_safe : "<strong>Inactive</strong>".html_safe %>; <% if source.category %> Category: <%=source.category.name %>, <% end %>
-           update every <%= SecondsToDuration::convert(source.staleness).inspect %></div>
-    <% else %>
-      <%# Link to create a new source for an unconfigured one -%>
-      <h3><%= link_to h(source), new_source_path(:class => source) %></h3>
-      <div>Unconfigured - click to configure.</div>
-    <% end %>
+    <h3><%= link_to h(category.name), category %></h3>
+    <ul>
+      <% category.sources.each do |source| %>
+        <li><%= link_to h(source.name), source_path(source) %></li>
+      <% end %>
+    </ul>
   </li>
 <% end %>
 </ul>
-</div>
-</div>
 
+Categories are a way to organize sources.  You can define a category for 
+your sources by editing a source.<br/>
+<br/>
+<%= link_to 'Add a new category', new_category_path %>
+</div>
+</div>
