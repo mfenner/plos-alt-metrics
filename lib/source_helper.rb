@@ -103,13 +103,13 @@ protected
       # Handle client errors. This includes HTTPUnauthorized 401, HTTPForbidden 403 and HTTPNotFound 404
       # http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/classes/Net/HTTP.html
       when Net::HTTPClientError 
-        Rails.logger.debug "Requested #{uri}#{optsMsg}, got: #{response.body}"
+        Rails.logger.debug "HTTPClientError. Requested #{uri}#{optsMsg}, got: #{response.body}"
 
         Rails.logger.debug "Response headers:"
         response.each_header do |key, value|
           Rails.logger.debug "[#{key}] = '#{value}']"
         end
-        response.body
+        ""
       when Net::HTTPSuccess, Net::HTTPRedirection
         Rails.logger.info "Requested #{uri}#{optsMsg}, got: #{response.body}"
 
