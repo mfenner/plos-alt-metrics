@@ -26,7 +26,8 @@ class Mendeley < Source
     consumer_key= "&consumer_key=" + partner_id.to_s
     Rails.logger.info "Mendeley query: #{url + consumer_key}"
     results = SourceHelper.get_json(url + consumer_key, options)
-
+    return [] if results.blank? 
+    
     stats = results["stats"]
     return [] if stats.nil?
 
