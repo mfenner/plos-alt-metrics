@@ -17,11 +17,6 @@
 <div class="page">
 	<h1><%= h(@author.display_name) %></h1>
 	
-	<%= render :partial => 'service' %>
-
-  <% unless @author.description.blank? %>
-	    <%= @author.description %>
-	  <% end %>
 	<% unless @author.affiliations.empty? %>
 	  <div class="affiliation">
 	 <% @author.affiliations.each do |affiliation| %>
@@ -29,6 +24,12 @@
 	    <% end %>
 	  </div>
 	<% end %>
+	
+  <% unless @author.description.blank? %>
+	    <%= @author.description %>
+	  <% end %>
+		
+	<%= render :partial => 'service' %>
 
 	<% unless @author.website.blank? %>
 	  <div class="homepage">
