@@ -162,6 +162,8 @@ class Author < ActiveRecord::Base
   
   def self.fetch_articles(author, options={})
     # Fetch articles, return nil if no response 
+    return nil if author.mas.blank?
+    
     url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas}&StartIdx=1&EndIdx=50"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
