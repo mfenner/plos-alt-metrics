@@ -38,7 +38,6 @@
   %header
     .inner
       %h1= APP_CONFIG['application']
-      %div.slogan= APP_CONFIG['slogan']
       - if ["articles", "authors", "groups"].include?(controller.controller_name) and ["index"].include?(controller.action_name)
         = form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do
           %span.search Search

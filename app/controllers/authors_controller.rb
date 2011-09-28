@@ -22,11 +22,11 @@ class AuthorsController < ApplicationController
   def index
     unless params[:q].blank?
       @authors = Author.paginate :page => params[:page], 
-        :per_page => 16,
+        :per_page => 12,
         :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or authors.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]],
         :order => 'authors.sort_name, authors.username' 
     else
-      @authors = Author.paginate :page => params[:page], :per_page => 16, :order => 'sort_name, username'
+      @authors = Author.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
     end
     
     respond_to do |format|
