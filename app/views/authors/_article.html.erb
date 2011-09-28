@@ -31,9 +31,11 @@
           <%= link_to "doi:" + h(article.doi), "http://dx.doi.org/" + h(article.doi) %>
 			<% unless article.authors.empty? %>
 			  <% if article.authors.count > 1 %>
-			    with 
+			    <br/>with 
 	        <% article.authors.each do |author| %>
-          	<br/><%= link_to author.display_name, author_path(author.username) %>
+	          <% if author != @author %>
+          	<%= link_to author.display_name, author_path(author.username) %><br/>
+            <% end %>
          <% end %>
        <% end %>
      <% end %>
