@@ -44,8 +44,25 @@ class Plos < Source
   end
   
   def public_url(retrieval)
-    retrieval.article.doi.to_s && ("http://dx.doi.org/" \
-      + retrieval.article.doi.to_s)
+    case retrieval.article.doi.to_s
+      when /journal.pone/
+        host = "http://www.plosone.org"
+      when /journal.pbio/
+        host = "http://www.plosbiology.org"
+      when /journal.pmed/
+        host = "http://www.plosmedicine.org"
+      when /journal.pcbi/
+        host = "http://www.ploscompbiol.org"
+      when /journal.pgen/
+        host = "http://www.plosgenetics.org"
+      when /journal.ppat/
+        host = "http://www.plospathogens.org"
+      when /journal.pntd/
+        host = "http://www.plosntds.org"
+      else
+        host = nil
+    end
+    retrieval.article.doi.to_s && (host.nil? ? "http://dx.doi.org/" + retrieval.article.doi.to_s : host + "/article/metrics/info%3Adoi%2F" + retrieval.article.doi.to_s)
   end
   
 end

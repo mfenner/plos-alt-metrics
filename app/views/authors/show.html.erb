@@ -17,17 +17,12 @@
 <div class="page">
 	<h1><%= h(@author.display_name) %></h1>
 	
-	<% unless @author.affiliations.empty? %>
-	  <div class="affiliation">
-	 <% @author.affiliations.each do |affiliation| %>
-	   <%= h(affiliation.name) %><br/>
-	    <% end %>
-	  </div>
-	<% end %>
-	
   <% unless @author.description.blank? %>
-	    <%= @author.description %>
-	  <% end %>
+	  <%= @author.description %><br/>
+	<% end %>
+	<% unless @author.description.blank? %>
+		<%= @author.description %>
+	<% end %>
 		
 	<%= render :partial => 'service' %>
 

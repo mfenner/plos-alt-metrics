@@ -31,16 +31,14 @@ class ArticlesController < ApplicationController
     unless params[:q].blank?
       @articles = Article.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["CONCAT(articles.title, ' ', articles.doi) REGEXP ?", params[:q]],
-        :include => [:retrievals],
-        :order => "retrievals.citations_count desc, articles.year desc"
+        :conditions => ["CONCAT(articles.title, ' ', articles.doi) REGEXP ?", params[:q]]
     else
       collection = Article
       collection = collection.cited(params[:cited])  if params[:cited]
       collection = collection.query(params[:query])  if params[:query]
       collection = collection.order(params[:order])  if params[:order]
 
-      @articles = collection.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+      @articles = collection.paginate :page => params[:page], :per_page => 10
     end
     
     @source = Source.find_by_type(params[:source]) if params[:source]
