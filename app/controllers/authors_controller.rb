@@ -113,10 +113,38 @@ class AuthorsController < ApplicationController
   # PUT /authors/1
   # PUT /authors/1.xml
   def update
+    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+  
     respond_to do |format|
       if @author.update_attributes(params[:author])
+        if params[:partial] == "mas"
+          # Fetch articles from author, return nil if no response
+          results = Author.fetch_articles(@author)
+          break if results.nil?
+
+          results.each do |result|
+            # Only add articles with DOI and title
+            unless result["DOI"].nil? or result["Title"].nil?
+              article = Article.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
+              # Check that DOI is valid
+              if article.valid?
+                @author.articles << article unless @author.articles.include?(article)
+              end
+            end
+          end
+        end
         flash[:notice] = 'Author was successfully updated.'
-        format.html { render :partial => params[:partial] if request.xhr? }
+        format.html do
+          if request.xhr? 
+            service_partial = render_to_string(:partial => params[:partial])
+            article_partial = render_to_string(:partial => 'article')
+
+            render :update do |page|
+              page.replace params[:partial], service_partial
+              page.replace 'article', article_partial
+            end
+          end
+        end
         format.xml  { head :ok }
         format.json { head :ok }
       else

@@ -69,7 +69,7 @@ class Article < ActiveRecord::Base
 		sources.disable_until IS NULL 
 		OR sources.disable_until < UTC_TIMESTAMP()))
 	AND articles.published_on < ?", Date.today],
-    :order => :retrieved_at
+    :order => "retrievals.retrieved_at"
 
   default_scope :order => "retrievals.citations_count desc, articles.year desc", :include => :retrievals
 

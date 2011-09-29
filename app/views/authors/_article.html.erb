@@ -12,53 +12,63 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div class="article">
-	<table>
-		<th class="name">
-			<h2><%= pluralize(@author.articles.count, 'Article') %></h2>
-		</th>
-		<% active_categories.each do |category| %>
-	    <% category.sources.active.each do |source| %>
-	      <th class="count">
-			    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.article_description + ": " + source.name %>
-		    </th>
-		  <% end %>
-    <% end %>
-    <% @articles.each do |article| %>
-      <tr>
-      	<td class="name">
-      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : article.title), article_path(article.id) %></span><br/>
-          <%= link_to "doi:" + h(article.doi), "http://dx.doi.org/" + h(article.doi) %>
-			<% unless article.authors.empty? %>
-			  <% if article.authors.count > 1 %>
-			    <br/>with 
-	        <% article.authors.each do |author| %>
-	          <% if author != @author %>
-          	  <%= link_to author.display_name, author_path(author.username) %> 
-            <% end %>
-         <% end %>
-       <% end %>
-     <% end %>
-      	</td>
-          <% active_categories.each do |category| %>
-				    <% category.sources.active.each do |source| %>
-			        <td class="count">
-				        <% citation = article.citations_by_source(source) %>
-							  <% if citation[:total] > 0 %>
-                 <% if citation[:public_url] %>
-                   <%= link_to h(citation[:total]), citation[:public_url]  %>
-                 <% else %>
-                   <%= h(citation[:total]) %>
-                 <% end %>
-               <% end %>
-				    </td>
-			    <% end %>
-   	  <% end %>
-	  </tr>
-    <% end %>
-	</table>
+
+<% unless @author.articles.empty? %>
+  <% unless active_categories.empty? %>
+    <div id="source">
+	    <%= render :partial => 'source'%>
+    </div>
+  <% end %>
+	<div class="article">
+		<table>
+			<th class="name">
+				<h2><%= pluralize(@author.articles.count, 'Article') %></h2>
+			</th>
+			<% active_categories.each do |category| %>
+		    <% category.sources.active.each do |source| %>
+		      <th class="count">
+				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.article_description + ": " + source.name %>
+			    </th>
+			  <% end %>
+	    <% end %>
+	    <% @articles.each do |article| %>
+	      <tr>
+	      	<td class="name">
+	      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : article.title), article_path(article.id) %></span><br/>
+	          <%= link_to "doi:" + h(article.doi), "http://dx.doi.org/" + h(article.doi) %>
+				<% unless article.authors.empty? %>
+				  <% if article.authors.count > 1 %>
+				    <br/>with 
+		        <% article.authors.each do |author| %>
+		          <% if author != @author %>
+	          	  <%= link_to author.display_name, author_path(author.username) %> 
+	            <% end %>
+	         <% end %>
+	       <% end %>
+	     <% end %>
+	      	</td>
+	          <% active_categories.each do |category| %>
+					    <% category.sources.active.each do |source| %>
+				        <td class="count">
+					        <% citation = article.citations_by_source(source) %>
+								  <% if citation[:total] > 0 %>
+	                 <% if citation[:public_url] %>
+	                   <%= link_to h(citation[:total]), citation[:public_url]  %>
+	                 <% else %>
+	                   <%= h(citation[:total]) %>
+	                 <% end %>
+	               <% end %>
+					    </td>
+				    <% end %>
+	   	  <% end %>
+		  </tr>
+	    <% end %>
+		</table>
 	
-	<div class="pagination">
-    <%= will_paginate @articles %>
-  </div>
-</div>
+		<div class="pagination">
+	    <%= will_paginate @articles %>
+	  </div>
+	</div>
+<% else %>
+  <h3>No articles found</h3>
+<% end %>
