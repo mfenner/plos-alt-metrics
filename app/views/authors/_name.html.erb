@@ -1,0 +1,19 @@
+<% if params[:partial] == "name" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
+  <div class="edit_name">
+		<%= remote_form_for :author, :update => "name", :url => author_url(:id => @author.username, :partial => "name"), :method => :put do |f| %>
+		  <%= f.text_field :name, :class => :name %>
+			<%= link_to_remote "Cancel", :update => "name", :url => author_path(@author.username, :partial => "name"), :method => :get %>
+		  <%= f.submit("Submit") %>
+		<% end %>
+	</div>
+<% else %>
+	<h1>
+	  <%= h(@author.display_name) %>
+	  <% if current_author == @author or current_author.try(:admin?) %>
+      <%= link_to_remote image_tag("edit.gif"), { :update => "name", 
+	                                       :url => edit_author_path(@author.username, :partial => "name"),
+	                                       :method => :get },
+	                                       :title => "Edit Name" %>
+	  <% end %>
+	</h1>
+<% end %>
