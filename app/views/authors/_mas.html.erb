@@ -2,7 +2,7 @@
   <div class="edit">
 	  <%= remote_form_for :author, :update => "mas", :url => author_url(:id => @author.username, :partial => "mas"), :before => "Element.show('spinner');", :method => :put do |f| %>
 		    <%= image_tag "microsoftacademicsearch.gif", :class => "service" %><br />
-		    <% if mas_choices(@author).empty? %>
+		    <% if mas_choices(@author).nil? or mas_choices(@author).empty? %>
 		      <%= f.text_field :mas %>
 		    <% else %>
 		      <%= f.select(:mas, mas_choices(@author)) %>
