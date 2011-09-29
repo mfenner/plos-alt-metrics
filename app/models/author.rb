@@ -152,7 +152,7 @@ class Author < ActiveRecord::Base
   def self.search_for_authors(author, options={})
     # Fetch author information, return nil if no response 
     return nil if author.name.blank?
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&FullTextQuery=#{CGI.escape(author.name)}&ResultObjects=Author&StartIdx=1&EndIdx=10"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&FullTextQuery=#{CGI.escape(author.name)}&ResultObjects=Author&StartIdx=1&EndIdx=5"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
     result = SourceHelper.get_json(url, options)["d"]["Author"]
@@ -162,7 +162,7 @@ class Author < ActiveRecord::Base
     choices = []
     properties.each do |property|
       affiliation = property["Affiliation"].nil? ? "" : " (" + property["Affiliation"]["Name"] + ")"
-      name_and_affiliation = (property["FirstName"].to_s.blank? ? "" : property["FirstName"].to_s.capitalize + " ") + (property["MiddleName"].to_s.blank? ? "" : property["MiddleName"].to_s.capitalize + " ") + (property["LastName"].to_s.blank? ? "" : property["LastName"].to_s.capitalize + affiliation)
+      name_and_affiliation = (property["FirstName"].to_s.blank? ? "" : property["FirstName"].to_s.capitalize + " ") + (property["MiddleName"].to_s.blank? ? "" : property["MiddleName"].to_s.capitalize + " ") + (property["LastName"].to_s.blank? ? "" : property["LastName"].to_s.capitalize + affiliation + " - " + property["ID"].to_s)
       choices << [name_and_affiliation, property["ID"]]
     end
     choices
