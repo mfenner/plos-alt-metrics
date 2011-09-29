@@ -13,6 +13,7 @@
 # limitations under the License.
 
 require "source_helper"
+require 'oauth'
 
 class Author < ActiveRecord::Base
   
@@ -24,6 +25,8 @@ class Author < ActiveRecord::Base
   has_many :articles, :through => :contributions
   has_many :members
   has_many :groups, :through => :members
+  has_many :friendships
+  has_many :friends, :through => :friendships
   
   # Check that no duplicate position is created
   has_many :affiliations, :through => :positions do
@@ -49,17 +52,14 @@ class Author < ActiveRecord::Base
       authentication.author
     else
       author = Author.create!(:username => omniauth['user_info']['nickname'], 
-                              :name => omniauth['user_info']['name'],
-                              :description => omniauth['user_info']['description'],
-                              :location => omniauth['user_info']['location'],
-                              :image => omniauth['user_info']['image'])
+                              :name => omniauth['user_info']['name'])
       author.authentications.create!(:provider => omniauth['provider'], 
                                      :uid => omniauth['uid'],
                                      :token => omniauth['credentials']['token'],
                                      :secret => omniauth['credentials']['secret'])
       author.save
       # Fetch aditional properties from Twitter
-      self.update_via_twitter(author)
+      #self.update_via_twitter(author)
       author
     end
   end
@@ -149,14 +149,42 @@ class Author < ActiveRecord::Base
     author
   end
   
-  def self.update_via_twitter(author, options={})
-    # Fetch information from Twitter, update description, location and image
-    url = "http://api.twitter.com/1/users/show.json?screen_name=" + author.username
-    Rails.logger.info "Twitter query: #{url}"
-    result = SourceHelper.get_json(url, options)
+  def self.search_for_authors(author, options={})
+    # Fetch author information, return nil if no response 
+    return nil if author.name.blank?
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&FullTextQuery=#{CGI.escape(author.name)}&ResultObjects=Author&StartIdx=1&EndIdx=10"
+    Rails.logger.info "Microsoft Academic Search query: #{url}"
+    
+    result = SourceHelper.get_json(url, options)["d"]["Author"]
     return nil if result.nil?
     
-    author.update_attributes(:description => result["description"], :location => result["location"], :image => result["profile_image_url"])
+    properties = result["Result"]
+    choices = []
+    properties.each do |property|
+      affiliation = property["Affiliation"].nil? ? "" : " (" + property["Affiliation"]["Name"] + ")"
+      name_and_affiliation = (property["FirstName"].to_s.blank? ? "" : property["FirstName"].to_s.capitalize + " ") + (property["MiddleName"].to_s.blank? ? "" : property["MiddleName"].to_s.capitalize + " ") + (property["LastName"].to_s.blank? ? "" : property["LastName"].to_s.capitalize + affiliation)
+      choices << [name_and_affiliation, property["ID"]]
+    end
+    choices
+  end
+  
+  def self.update_via_twitter(author, options={})
+    authentication = author.authentications.find(:first, :conditions => { :provider => 'twitter' })
+    access_token = author.prepare_access_token(authentication)
+    
+     # Fetch information from Twitter, update description, location and image
+    response = access_token.request(:get, "http://api.twitter.com/1/users/show.json?screen_name=#{author.username}")
+    Rails.logger.info "Twitter query: #{url}"
+    results = (response.body.length > 0) ? ActiveSupport::JSON.decode(response.body) : []
+    
+    # Find Twitter friends
+    #response = access_token.request(:get, "https://api.twitter.com/1/friends/ids.json?cursor=-1&screen_name=#{@author.username}")
+    #results = (response.body.length > 0) ? ActiveSupport::JSON.decode(response.body) : []
+    #results["ids"].each do ||
+      #@author.friends << friend unless author.friends.include?(friend)
+    #end
+    
+    author.update_attributes(:description => results["description"], :location => results["location"], :image => results["profile_image_url"])
     author
   end
   
@@ -180,5 +208,12 @@ class Author < ActiveRecord::Base
       citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
     end
     citations = citations.sum
+  end
+  
+  # Exchange your oauth_token and oauth_token_secret for an AccessToken instance.
+  def self.prepare_access_token(authentication)
+    consumer = OAuth::Consumer.new('API key', 'API secret', { :site => "http://api.twitter.com" })
+    token_hash = { :oauth_token => authentication.token, :oauth_token_secret => authentication.secret }
+    access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
   end
 end

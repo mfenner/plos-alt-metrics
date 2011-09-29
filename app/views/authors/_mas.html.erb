@@ -2,7 +2,7 @@
   <div class="edit">
 	  <%= remote_form_for :author, :update => "mas", :url => author_url(:id => @author.username, :partial => "mas"), :method => :put do |f| %>
 		    <%= image_tag "microsoftacademicsearch.gif", :class => "service" %><br />
-		    <%= f.text_field :mas %>
+		    <%= f.select(:mas, mas_choices(@author)) %>
 		  </p>
 		  <p>
 			  <%= link_to_remote "Cancel", :update => "mas", :url => author_path(@author.username, :partial => "mas"), :method => :get %>

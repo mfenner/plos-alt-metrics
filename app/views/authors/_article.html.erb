@@ -34,7 +34,7 @@
 			    <br/>with 
 	        <% article.authors.each do |author| %>
 	          <% if author != @author %>
-          	<%= link_to author.display_name, author_path(author.username) %><br/>
+          	  <%= link_to author.display_name, author_path(author.username) %> 
             <% end %>
          <% end %>
        <% end %>
