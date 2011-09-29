@@ -1,6 +1,6 @@
 <% if params[:partial] == "mas" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
   <div class="edit">
-	  <%= remote_form_for :author, :update => "mas", :url => author_url(:id => @author.username, :partial => "mas"), :method => :put do |f| %>
+	  <%= remote_form_for :author, :update => "mas", :url => author_url(:id => @author.username, :partial => "mas"), :before => "Element.show('spinner');", :method => :put do |f| %>
 		    <%= image_tag "microsoftacademicsearch.gif", :class => "service" %><br />
 		    <% if mas_choices(@author).empty? %>
 		      <%= f.text_field :mas %>
@@ -11,6 +11,7 @@
 		  <p>
 			  <%= link_to_remote "Cancel", :update => "mas", :url => author_path(@author.username, :partial => "mas"), :method => :get %>
 		    <%= f.submit("Submit") %>
+				<%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
 		<% end %>
 	</div>
 <% else %>
