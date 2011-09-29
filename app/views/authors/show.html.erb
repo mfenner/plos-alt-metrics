@@ -15,7 +15,10 @@
 -%>
 <div class="border">
 <div class="page">
-	<h1><%= h(@author.display_name) %></h1>
+	
+	<div id="name">
+		<%= render :partial => 'name'%>
+	</div>
 	
   <% unless @author.description.blank? %>
 	  <%= @author.description %><br/>

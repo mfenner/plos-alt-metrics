@@ -39,6 +39,10 @@ input[type=submit], input[type=button], button {
 
 input[type=submit]:active, input[type=button]:active, button:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.2)), to(transparent)); }
+  
+input.name {
+  font-size: x-large;
+}
 
 header .inner form {
   position: absolute;
@@ -223,6 +227,12 @@ td.count, th.count {
 
 div.edit {
 	padding: 8px;
+  background-color: #ffffcc;
+}
+
+div.edit_name {
+	padding: 8px;
+	width: 500px;
   background-color: #ffffcc;
 }
 
