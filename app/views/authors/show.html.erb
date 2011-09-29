@@ -31,17 +31,7 @@
 	    <%= link_to @author.website, @author.website %>
 	  </div>
 	<% end %>
-
-<% unless @author.articles.empty? %>
-  <% unless active_categories.empty? %>
-    <div id="source">
-	    <%= render :partial => 'source'%>
-    </div>
-  <% end %>
-
-  <div id="article">
-	  <%= render :partial => 'article'%>
-  </div>
-<% else %>
-  <h3>No articles found</h3>
-<% end %>
+	
+<div id="article">
+	<%= render :partial => 'article'%>
+</div>
