@@ -14,11 +14,13 @@
 -%>
 
 <% unless @author.articles.empty? %>
-  <% unless active_categories.empty? %>
-    <div id="source">
+	<% unless active_categories.empty? %>
+	  <div id="source">
 	    <%= render :partial => 'source'%>
-    </div>
-  <% end %>
+	  </div>
+	<% end %>
+	<p>
+
 	<div class="article">
 		<table>
 			<th class="name">
@@ -63,11 +65,15 @@
 	   	  <% end %>
 		  </tr>
 	    <% end %>
+			<tr>
+		    <td class="pagination">
+			    <div class="pagination">
+				    <%= will_paginate @articles %>
+				  </div>
+			  </td>
+			  <td class="count"></td>
+			</tr>
 		</table>
-	
-		<div class="pagination">
-	    <%= will_paginate @articles %>
-	  </div>
 	</div>
 <% else %>
   <h3>No articles found</h3>

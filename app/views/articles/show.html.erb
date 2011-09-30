@@ -1,9 +1,5 @@
 <%#
-  # $HeadURL$
-  # $Id$
-  #
-  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
-  # http://www.plos.org/
+  # Copyright (c) 2011 Martin Fenner
   #
   # Licensed under the Apache License, Version 2.0 (the "License");
   # you may not use this file except in compliance with the License.
@@ -17,31 +13,6 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div class="border">
-<div class="page">
-  <h2><%=h @article.title unless @article.title.blank? %></h2>
-  <div class="article">
-	  <%= link_to "doi:" + h(@article.doi), "http://dx.doi.org/" + h(@article.doi) %><p>
-
-	<% unless @article.authors.empty? %>
-	  <% if @article.authors.count > 0 %>
-      <% @article.authors.each do |author| %>
-      	<%= link_to h(author.display_name), author_path(author.username) %>
-     <% end %>
-   <% end %>
-  <% end %>
-	</div>
-
-	<div id="source">
-    <%= render :partial => 'source'%>
-  </div>
-
-  <% if author_signed_in? %>
-    Refresh: <%= link_to 'now', article_path(@article.id, :refresh => "now") %> |
-    <%= link_to 'soon', article_path(@article.id, :refresh => "soon") %><br/>
-    <%= link_to 'Edit', edit_article_path(@article.id) %> |
-    <%= link_to 'Delete', article_path(@article.id), :confirm => 'Are you sure?', :method => :delete %>
-    <br/>
-  <% end %>
-</div>
+<div id="show">
+  <%= render :partial => 'show' %> 
 </div>

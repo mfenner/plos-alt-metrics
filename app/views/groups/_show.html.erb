@@ -13,6 +13,24 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div id="index">
-  <%= render :partial => 'index' %> 
-</div>
+	<h2><%= h(@group.name) %></h2>
+	
+	<%= render :partial => 'service' %>
+	
+  <% unless @group.description.blank? %>
+	    <%= @group.description %>
+	  <% end %>
+
+<% unless @group.articles.empty? %>
+  <% unless active_categories.empty? %>
+    <div id="source">
+	    <%= render :partial => 'source'%>
+    </div>
+  <% end %>
+
+  <div id="article">
+	  <%= render :partial => 'article'%>
+  </div>
+<% else %>
+  <h3>No articles found</h3>
+<% end %>
