@@ -7,7 +7,7 @@
 		<% end %>
 	</div>
 <% else %>
-	<h1>
+	<h2>
 	  <%= h(@author.display_name) %>
 	  <% if current_author == @author or current_author.try(:admin?) %>
       <%= link_to_remote image_tag("edit.gif"), { :update => "name", 
@@ -15,5 +15,5 @@
 	                                       :method => :get },
 	                                       :title => "Edit Name" %>
 	  <% end %>
-	</h1>
+	</h2>
 <% end %>

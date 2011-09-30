@@ -1,0 +1,44 @@
+<%#
+  # $HeadURL$
+  # $Id$
+  #
+  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
+  # http://www.plos.org/
+  #
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #     http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
+-%>
+  <h2><%=h @article.title unless @article.title.blank? %></h2>
+  <div class="article">
+	  <%= link_to "doi:" + h(@article.doi), "http://dx.doi.org/" + h(@article.doi) %><p>
+
+	<% unless @article.authors.empty? %>
+	  <% if @article.authors.count > 0 %>
+      <% @article.authors.each do |author| %>
+      	<%= link_to h(author.display_name), author_path(author.username) %>
+     <% end %>
+   <% end %>
+  <% end %>
+	</div>
+
+	<div id="source">
+    <%= render :partial => 'source'%>
+  </div>
+
+  <% if current_author.try(:admin?) %>
+    <p>
+    Refresh: <%= link_to 'now', article_path(@article.id, :refresh => "now") %> |
+    <%= link_to 'soon', article_path(@article.id, :refresh => "soon") %><br/>
+    <%= link_to 'Edit', edit_article_path(@article.id) %> |
+    <%= link_to 'Delete', article_path(@article.id), :confirm => 'Are you sure?', :method => :delete %>
+    <br/>
+  <% end %>

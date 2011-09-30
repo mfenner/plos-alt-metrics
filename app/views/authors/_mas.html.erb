@@ -5,7 +5,7 @@
 		    <% if mas_choices(@author).nil? or mas_choices(@author).empty? %>
 		      <%= f.text_field :mas %>
 		    <% else %>
-		      <%= f.select(:mas, mas_choices(@author)) %>
+		      <%= f.select(:mas, mas_choices(@author), :include_blank => true) %>
 		    <% end %>
 		  </p>
 		  <p>

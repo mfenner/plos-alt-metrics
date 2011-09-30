@@ -17,12 +17,9 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div class="layout">
-  <% unless @articles.empty? %>
+<% unless @articles.empty? %>
 	<table class="index">
-		<th>
-			<h2><%= pluralize(@articles.total_entries, 'Article') %></h2>
-		</th>
+		<th class="name"><%= pluralize(@articles.total_entries, 'Article') %></th>
 		<% active_categories.each do |category| %>
 	    <% category.sources.active.each do |source| %>
 	      <th class="count">
@@ -52,13 +49,16 @@
    	  <% end %>
 	  </tr>
     <% end %>
+    <tr>
+	    <td class="pagination">
+		    <div class="pagination">
+			    <%= will_paginate @articles %>
+			  </div>
+		  </td>
+		  <td class="count"></td>
+		</tr>
 	</table>
     </div>
   <% else %>
     <h2>No articles found</h2>
   <% end %>
-
-  <div class="pagination">
-    <%= will_paginate @articles %>
-  </div>
-</div>
