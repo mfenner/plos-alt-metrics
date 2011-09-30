@@ -48,4 +48,7 @@ PlosAltMetrics::Application.configure do
   config.active_support.deprecation = :notify
   
   config.action_mailer.default_url_options = { :host => 'localhost' }
+  
+  # Configure Google Analytics
+  config.middleware.use("Rack::GoogleAnalytics", :web_property_id => 'UA-362856-11')
 end
