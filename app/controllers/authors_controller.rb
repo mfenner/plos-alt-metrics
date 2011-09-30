@@ -133,7 +133,7 @@ class AuthorsController < ApplicationController
             end
           end
         end
-        flash[:notice] = 'Author was successfully updated.'
+        #flash[:notice] = 'Author was successfully updated.'
         format.html do
           if request.xhr? 
             service_partial = render_to_string(:partial => params[:partial])
