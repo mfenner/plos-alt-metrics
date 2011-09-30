@@ -38,10 +38,5 @@ module PlosAltMetrics
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-    
-    # Configure Google Analytics
-    if Rails.env == "production"
-      config.middleware.use("Rack::GoogleAnalytics", :web_property_id => APP_CONFIG['google_analytics'])
-    end
   end
 end
