@@ -19,6 +19,7 @@ gem 'formatize'
 gem 'devise'
 gem "oa-oauth", :require => "omniauth/oauth"
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+gem "simple-navigation"
 
 group :development do
   gem 'ruby-debug'
@@ -26,4 +27,8 @@ end
 
 group :test do
   gem 'mocha'
+end
+
+group :production do
+  gem 'rack-google_analytics', :require => "rack/google_analytics"
 end
