@@ -39,6 +39,9 @@ class Scopus < Source
     
     # Workaround as Scopus ID required to link to Scopus page. Trim "SCOPUS_ID:"
     article.update_attributes(:scopus => results["dc:identifier"][10..-1])
+    
+    # Use prism:coverDate as a proxy for the publication date if no publication date yet
+    article.update_attributes(:published_on => results["prism:coverDate"]) if article.published_on.blank?
 
     citations = results["citedby-count"].to_i
   end

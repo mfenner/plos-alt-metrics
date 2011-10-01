@@ -31,7 +31,8 @@ class ArticlesController < ApplicationController
     unless params[:q].blank?
       @articles = Article.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["CONCAT(articles.title, ' ', articles.doi) REGEXP ?", params[:q]]
+        :include => :authors,
+        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or articles.title REGEXP ? or articles.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
     else
       collection = Article
       collection = collection.cited(params[:cited])  if params[:cited]

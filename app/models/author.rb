@@ -37,8 +37,8 @@ class Author < ActiveRecord::Base
   
   attr_accessible :username, :name, :mas, :mendeley, :remember_me
   
-  validates_numericality_of :mas, :allow_nil => true, :allow_blank => true
-  validates_uniqueness_of :mas, :allow_nil => true, :allow_blank => true
+  validates_numericality_of :mas, :allow_blank => true
+  validates_uniqueness_of :mas, :allow_blank => true
   validates_presence_of :username
   validates_uniqueness_of :username
   
