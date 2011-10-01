@@ -31,6 +31,9 @@ class Scopus < Source
 
     results = results["search-results"]["entry"]
     return [] if results.nil? 
+    
+    # Workaround if Scopus returns more than one result for a given DOI (which it shouldn't)
+    results = results[0] if results.is_a? Array
 
     Rails.logger.debug "Scopus got #{results.inspect} for #{article.inspect}"
     
