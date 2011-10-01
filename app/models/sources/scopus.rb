@@ -38,7 +38,7 @@ class Scopus < Source
     Rails.logger.debug "Scopus got #{results.inspect} for #{article.inspect}"
     
     # Workaround as Scopus ID required to link to Scopus page. Trim "SCOPUS_ID:"
-    article.update_attributes(:scopus => results["dc:identifier"][11..-1])
+    article.update_attributes(:scopus => results["dc:identifier"][10..-1])
 
     citations = results["citedby-count"].to_i
   end
