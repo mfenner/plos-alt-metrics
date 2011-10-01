@@ -17,6 +17,6 @@
 # limitations under the License.
 
 class Category < ActiveRecord::Base
-  has_many :sources
+  has_many :sources, :order => "sources.id"
 
 end
