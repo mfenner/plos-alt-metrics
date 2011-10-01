@@ -26,11 +26,11 @@ class Scopus < Source
     options[:extraheaders] = { "Accept"  => "application/json", "X-ELS-APIKey" => partner_id, "X-ELS-ResourceVersion" => "XOCS" }
     Rails.logger.info "Scopus query: #{url}"
 
-    results = SourceHelper.get_json(url + publication_id, options)["search-results"]
-    return nil if results.nil?
+    results = SourceHelper.get_json(url + publication_id, options)
+    return [] if results.blank? 
 
-    results = results["entry"]
-    return nil if results.nil?
+    results = results["search-results"]["entry"]
+    return [] if results.nil? 
 
     Rails.logger.debug "Scopus got #{results.inspect} for #{article.inspect}"
     
