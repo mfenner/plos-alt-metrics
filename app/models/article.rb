@@ -71,7 +71,7 @@ class Article < ActiveRecord::Base
 	AND articles.published_on < ?", Date.today],
     :order => "retrievals.retrieved_at"
 
-  default_scope :order => "articles.published_on desc, articles.created_at desc"
+  default_scope :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
 
   def to_param
     DOI.to_uri(doi)
