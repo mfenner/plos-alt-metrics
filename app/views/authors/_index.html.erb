@@ -39,5 +39,16 @@
 	</table>
 </div>
 <% else %>
-	<h2>No authors found</h2>
+	<h2>Welcome to ScienceCard</h2>
+	<p class="about">
+		ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other article-level metrics for these publications.
+	</p>
+	<ol class="about">
+		<li>Create your own ScienceCard  in two easy steps. First <%= link_to "sign in with Twitter", author_omniauth_authorize_path(:twitter) %> to create a ScienceCard account. Then link your ScienceCard to your Microsoft Academic Search profile on the ScienceCard account page.</li>
+		<li>Search for the ScienceCards of people you know, using the search box on this page.</li>
+		<li><%= link_to "Search", articles_path %> for articles written by ScienceCard authors and study their article-level metrics.</li>
+	</ol>
+	<p class="about">
+		ScienceCard was started in September 2011 by Martin Fenner. Please contact him <%= link_to "@ScienceCard", "http://twitter.com/sciencecard" %> if you have questions or comments.
+	</p>
 <% end %>

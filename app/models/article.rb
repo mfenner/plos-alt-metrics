@@ -71,7 +71,7 @@ class Article < ActiveRecord::Base
 	AND articles.published_on < ?", Date.today],
     :order => "retrievals.retrieved_at"
 
-  default_scope :order => "retrievals.citations_count desc, retrievals.other_citations_count desc", :include => :retrievals
+  default_scope :order => "articles.published_on desc, articles.created_at desc"
 
   def to_param
     DOI.to_uri(doi)
