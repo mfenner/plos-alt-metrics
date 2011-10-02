@@ -172,14 +172,14 @@ class Author < ActiveRecord::Base
   end
   
   def self.update_via_twitter(author, options={})
-    # Update author info. Leave image empty if Twitter provides only default profile image
-    user = Twitter.user(author.username)
-    image = Twitter.profile_image(author.username, :size => 'original')
-    image = nil if image.match(/default_profile_images/)
-    author.update_attributes(:twitter => user.id, :location => user.location, :description => user.description, :website => user.url, :image => image)
-
-    # Find Twitter friends
     begin
+      # Update author info. Leave image empty if Twitter provides only default profile image
+      user = Twitter.user(author.username)
+      image = Twitter.profile_image(author.username, :size => 'original')
+      image = nil if image.match(/default_profile_images/)
+      author.update_attributes(:twitter => user.id, :location => user.location, :description => user.description, :website => user.url, :image => image)
+
+      # Find Twitter friends
       friends_ids = Twitter.friend_ids(author.username).ids
       unless friends_ids.blank?
         author.friendships.clear
