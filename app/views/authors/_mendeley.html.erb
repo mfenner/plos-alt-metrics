@@ -1,4 +1,4 @@
-<% if params[:partial] == "service" and params[:service] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
+<% if params[:service] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
   <div class="edit">
 	  <%= remote_form_for :author, :update => "service", :url => author_url(:id => @author.username, :partial => "service", :service => "mendeley"), :method => :put do |f| %>
     <h3>Mendeley</h3>

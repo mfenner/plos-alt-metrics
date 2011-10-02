@@ -1,4 +1,4 @@
-<% if params[:partial] == "service" and params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) %>
+<% if params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) %>
   <div class="edit">
 	  <%= remote_form_for :author, :update => "service", :url => author_url(:id => @author.username, :partial => "service", :service => "mas"), :before => "Element.show('spinner');", :method => :put do |f| %>
 	  <h3>Microsoft Academic Search</h3>

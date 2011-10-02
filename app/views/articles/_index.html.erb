@@ -19,7 +19,7 @@
 -%>
 <% unless @articles.empty? %>
 	<table class="index">
-		<th class="name"><%= pluralize(@articles.total_entries, 'Article') %></th>
+		<th class="name"><%= pluralize(@articles.total_entries, 'Article') + (author_signed_in? and params[:q].blank? ? ' by Authors you are Following' : "") %></th>
 		<% active_categories.each do |category| %>
 	    <% category.sources.active.each do |source| %>
 	      <th class="count">
