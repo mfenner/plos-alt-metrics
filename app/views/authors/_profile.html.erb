@@ -1,10 +1,12 @@
 <table class="profile">
 	<tr>
-		<% unless @author.image.blank? %>
-			<td class="photo">
-		    <%= image_tag @author.image, :class => "photo" %>
-		  </td>
-		<% end %>
+		<td class="photo">
+			<div id="photo">
+				<% unless @author.image.blank? %>
+	        <%= image_tag @author.image, :class => "photo" %>
+	      <% end %>
+	    </div>
+	  </td>
 		<td class="twitter">
 	    <div id="twitter">
 	      <%= render :partial => 'twitter' %>

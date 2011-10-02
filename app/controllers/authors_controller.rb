@@ -148,6 +148,7 @@ class AuthorsController < ApplicationController
             article_partial = render_to_string(:partial => 'article')
 
             render :update do |page|
+              page.replace 'photo', '<div id="photo"><img alt="' + @author.username + '" class="photo" src="' + @author.image + '" /></div'
               page.replace params[:partial], service_partial
               page.replace 'article', article_partial
             end
