@@ -241,11 +241,14 @@ class Retriever
   def update_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
-    # Fetch properties from author, return nil if no response
+    # Fetch Microsoft Academic Search properties from author, return nil if no response
     properties = Author.fetch_properties(author)
     return nil if properties.nil?
     
-    author = Author.update_properties(author, properties) 
+    author = Author.update_properties(author, properties)
+    
+    # Update Twitter properties
+    Author.update_via_twitter(author)
     
     author.refreshed!.save!
     Rails.logger.info "Refreshed author #{author.username}"

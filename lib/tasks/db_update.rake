@@ -100,14 +100,6 @@ namespace :db do
       ENV["LAZY"] ||= "0"
       Retriever.update_groups([group])
     end
-    
-    desc "Update all affiliations"
-    task :affiliations => :environment do
-      ENV["LAZY"] = "0"
-      limit = (ENV["LIMIT"] || 0).to_i
-      authors = Author.limit(limit)
-      Retriever.update_authors(authors, include_articles=false)
-    end
 
     desc "Count stale articles"
     task :count => :environment do
