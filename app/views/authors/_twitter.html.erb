@@ -1,6 +1,7 @@
 <% if params[:partial] == "twitter" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
   <div class="edit">
 		<%= remote_form_for :author, :update => "twitter", :url => author_url(:id => @author.username, :partial => "twitter", :service => "twitter"), :before => "Element.show('spinner');", :method => :put do |f| %>
+		  <h3>Name</h3>
 		  <%= f.text_field :name, :class => :name %><p>
 			<%= link_to_remote "Cancel", :update => "twitter", :url => author_path(@author.username, :partial => "twitter"), :method => :get %>
 		  <%= f.submit("Submit") %>
