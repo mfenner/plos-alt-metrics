@@ -13,25 +13,9 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-	
-<div id="name">
-	<%= render :partial => 'name'%>
+<div id="profile">
+	<%= render :partial => 'profile'%>
 </div>
-
- <% unless @author.description.blank? %>
-  <%= @author.description %><br/>
-<% end %>
-<% unless @author.description.blank? %>
-	<%= @author.description %>
-<% end %>
-	
-<%= render :partial => 'service' %>
-
-<% unless @author.website.blank? %>
-  <div class="homepage">
-    <%= link_to @author.website, @author.website %>
-  </div>
-<% end %>
 
 <div id="article">
   <%= render :partial => 'article'%>

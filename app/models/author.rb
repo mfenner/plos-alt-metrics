@@ -14,6 +14,7 @@
 
 require "source_helper"
 require 'oauth'
+require "twitter"
 
 class Author < ActiveRecord::Base
   
@@ -35,7 +36,7 @@ class Author < ActiveRecord::Base
     end
   end
   
-  attr_accessible :username, :name, :mas, :mendeley, :remember_me
+  attr_accessible :username, :name, :mas, :mendeley, :twitter, :location, :description, :image, :website, :remember_me
   
   validates_numericality_of :mas, :allow_blank => true
   validates_uniqueness_of :mas, :allow_blank => true
@@ -52,14 +53,16 @@ class Author < ActiveRecord::Base
       authentication.author
     else
       author = Author.create!(:username => omniauth['user_info']['nickname'], 
+                              :twitter => omniauth['uid'],
                               :name => omniauth['user_info']['name'])
-      author.authentications.create!(:provider => omniauth['provider'], 
+      author.authentications << authentication.create!(:provider => omniauth['provider'], 
                                      :uid => omniauth['uid'],
                                      :token => omniauth['credentials']['token'],
                                      :secret => omniauth['credentials']['secret'])
       author.save
-      # Fetch aditional properties from Twitter
-      #self.update_via_twitter(author)
+      
+      # Fetch additional properties from Twitter
+      self.update_via_twitter(author)
       author
     end
   end
@@ -169,22 +172,23 @@ class Author < ActiveRecord::Base
   end
   
   def self.update_via_twitter(author, options={})
-    authentication = author.authentications.find(:first, :conditions => { :provider => 'twitter' })
-    access_token = author.prepare_access_token(authentication)
-    
-     # Fetch information from Twitter, update description, location and image
-    response = access_token.request(:get, "http://api.twitter.com/1/users/show.json?screen_name=#{author.username}")
-    Rails.logger.info "Twitter query: #{url}"
-    results = (response.body.length > 0) ? ActiveSupport::JSON.decode(response.body) : []
-    
+    # Update author info
+    user = Twitter.user(author.username)
+    image = Twitter.profile_image(author.username, :size => 'original')
+    author.update_attributes(:twitter => user.id, :location => user.location, :description => user.description, :website => user.url, :image => image)
+
     # Find Twitter friends
-    #response = access_token.request(:get, "https://api.twitter.com/1/friends/ids.json?cursor=-1&screen_name=#{@author.username}")
-    #results = (response.body.length > 0) ? ActiveSupport::JSON.decode(response.body) : []
-    #results["ids"].each do ||
-      #@author.friends << friend unless author.friends.include?(friend)
-    #end
+    friends_ids = Twitter.friend_ids(author.username).ids
+    unless friends_ids.blank?
+      author.friendships.clear
+      friends_ids.each do |friend_id|
+        friend = Author.find_by_twitter(friend_id)
+        if friend and !author.friends.include?(friend)
+          author.friends << friend 
+        end
+      end
+    end
     
-    author.update_attributes(:description => results["description"], :location => results["location"], :image => results["profile_image_url"])
     author
   end
   
@@ -210,10 +214,4 @@ class Author < ActiveRecord::Base
     citations = citations.sum
   end
   
-  # Exchange your oauth_token and oauth_token_secret for an AccessToken instance.
-  def self.prepare_access_token(authentication)
-    consumer = OAuth::Consumer.new('API key', 'API secret', { :site => "http://api.twitter.com" })
-    token_hash = { :oauth_token => authentication.token, :oauth_token_secret => authentication.secret }
-    access_token = OAuth::AccessToken.from_hash(consumer, token_hash)
-  end
 end

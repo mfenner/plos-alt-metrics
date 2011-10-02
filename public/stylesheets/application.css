@@ -50,7 +50,7 @@ input[type=submit]:active, input[type=button]:active, button:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.2)), to(transparent)); }
   
 input.name {
-  font-size: x-large;
+  font-size: larger;
 }
 
 a {
@@ -144,8 +144,8 @@ div.flash {
   padding: 1em;
 }
 
-.about {
-
+#profile {
+  padding-bottom: 0.5em;
 }
   
 .page{
@@ -165,6 +165,8 @@ h2 {
 
 h3 {
   font-size: large;
+  margin-top: 0;
+  margin-bottom: 0.5em;
 }
 
 th.name {
@@ -173,7 +175,7 @@ th.name {
   padding-bottom: 0.5em;
 }
 
-table.index {
+table.index, table.profile {
   width: 100%;
   background-color: #fff;
 }
@@ -194,7 +196,6 @@ td.pagination {
 
 td.index {
   width: 50%;
-  padding-bottom: 1em;
 }
 
 td.title {
@@ -236,24 +237,16 @@ div.edit {
   background-color: #ffffcc;
 }
 
-div.edit_name {
-	padding: 8px;
-	width: 500px;
-  background-color: #ffffcc;
-}
-
-div.affiliation {
-
-}
-
 .photo {
   height: 120px;
+  padding-right: 0.5em;
   margin-top: 0;
 }
 
 .photo_mini {
   float: left;
   padding-right: 1em;
+  padding-bottom: 1em;
 }
 
 .homepage {
@@ -262,10 +255,6 @@ div.affiliation {
 
 .summary {
   clear: both;
-}
-
-div.personal_info, .article {
-
 }
 
 td.source_title {
@@ -288,18 +277,29 @@ td.source {
   vertical-align: bottom;
 }
 
+td.twitter {
+  width: 750px;
+  vertical-align: top;
+  padding-right: 1em;
+}
+
 td.service {
   width: 250px;
-  text-align: center;
+  vertical-align: top;
 }
 
 td.photo {
-  width: 250px;
+  vertical-align: top;
   height: 160px;
+}
+
+div#mas, div#mendeley {
+  clear: both;
 }
 
 span.service {
   font-size: larger;
+  font-weight: bold;
 }
 
 .article {
