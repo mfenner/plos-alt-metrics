@@ -76,5 +76,7 @@
 		</table>
 	</div>
 <% else %>
-  <h3>No articles found</h3>
+  <% unless @author.mas.blank? %>
+    <h3>No articles found</h3>
+  <% end %>
 <% end %>

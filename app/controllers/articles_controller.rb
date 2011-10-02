@@ -38,8 +38,13 @@ class ArticlesController < ApplicationController
       collection = collection.cited(params[:cited])  if params[:cited]
       collection = collection.query(params[:query])  if params[:query]
       collection = collection.order(params[:order])  if params[:order]
-
-      @articles = collection.paginate :page => params[:page], :per_page => 10
+      
+      if author_signed_in?
+        # Fetch all articles by the authors you are following
+        @articles = collection.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 10
+      else
+        @articles = collection.paginate :page => params[:page], :per_page => 10
+      end
     end
     
     @source = Source.find_by_type(params[:source]) if params[:source]

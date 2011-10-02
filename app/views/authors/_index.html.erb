@@ -15,7 +15,7 @@
 -%> 
 <% unless @authors.empty? %>
   <table class="index">
-	  <th class="name"><%= pluralize(@authors.total_entries, 'Author') %></th>
+	  <th class="name"><%= (author_signed_in? and params[:q].blank?) ? 'Following ' : "") + pluralize(@authors.total_entries, 'Author' %></th>
 	<% @authors.in_groups_of(2, false) do |authors| %> 
 	  <tr>  
 	    <% authors.each do |author| %>  
