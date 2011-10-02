@@ -44,9 +44,10 @@
 		ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other article-level metrics for these publications.
 	</p>
 	<ol class="about">
-		<li>Create your own ScienceCard  in two easy steps. First <%= link_to "sign in with Twitter", author_omniauth_authorize_path(:twitter) %> to create a ScienceCard account. Then link your ScienceCard to your Microsoft Academic Search profile on the ScienceCard account page.</li>
-		<li>Search for the ScienceCards of people you know, using the search box on this page.</li>
-		<li><%= link_to "Search", articles_path %> for articles written by ScienceCard authors and study their article-level metrics.</li>
+		<li>To create your own ScienceCard, simply <%= link_to "sign in with Twitter", author_omniauth_authorize_path(:twitter) %>. Then optionally link your ScienceCard to your Microsoft Academic Search profile on the ScienceCard profile page.</li>
+		<li>ScienceCard automatically lists the available ScienceCards of the people you follow on Twitter. Or search for the ScienceCards of people you know, using the search box on this page.</li>
+		<li>ScienceCard automatically lists the articles written by the people you follow. Or <%= link_to "search", articles_path %> for articles written by ScienceCard authors.</li>
+		<li>Once you found the ScienceCard of the person you are interested in, you can look at his publications, and how often they have been downloaded, bookmarked or cited. </li>
 	</ol>
 	<p class="about">
 		ScienceCard was started in September 2011 by Martin Fenner. Please contact him <%= link_to "@ScienceCard", "http://twitter.com/sciencecard" %> if you have questions or comments.
