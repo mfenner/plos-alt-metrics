@@ -121,7 +121,7 @@ class AuthorsController < ApplicationController
   
     respond_to do |format|
       if @author.update_attributes(params[:author])
-        if params[:partial] == "mas"
+        if params[:service] == "mas"
           # Fetch articles from author, return nil if no response
           results = Author.fetch_articles(@author)
           # First remove all claimed articles, e.g. because mas id was changed or set to empty 
@@ -138,6 +138,8 @@ class AuthorsController < ApplicationController
               end
             end
           end
+        elsif params[:service] == "twitter"
+          Author.update_via_twitter(@author)
         end
         #flash[:notice] = 'Author was successfully updated.'
         format.html do

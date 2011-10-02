@@ -1,0 +1,19 @@
+<table class="profile">
+	<tr>
+		<% unless @author.image.blank? %>
+			<td class="photo">
+		    <%= image_tag @author.image, :class => "photo" %>
+		  </td>
+		<% end %>
+		<td class="twitter">
+	    <div id="twitter">
+	      <%= render :partial => 'twitter' %>
+	    </div>
+	  </td>
+	  <td class="service">
+		  <div id="service">
+	      <%= render :partial => 'service' %>
+	    </div>
+	  </td>
+	</tr>
+</table>

@@ -1,21 +1,20 @@
-<% if params[:partial] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
+<% if params[:partial] == "service" and params[:service] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
   <div class="edit">
-	  <%= remote_form_for :author, :update => "mendeley", :url => author_url(:id => @author.username, :partial => "mendeley"), :method => :put do |f| %>
-		    <%= image_tag "mendeley.gif", :class => "service" %><br />
+	  <%= remote_form_for :author, :update => "service", :url => author_url(:id => @author.username, :partial => "service", :service => "mendeley"), :method => :put do |f| %>
+    <h3>Mendeley</h3>
 		    <%= f.text_field :mendeley %>
-		  </p>
 		  <p>
-			  <%= link_to_remote "Cancel", :update => "mendeley", :url => author_path(@author.username, :partial => "mendeley"), :method => :get %>
+			  <%= link_to_remote "Cancel", :update => "service", :url => author_path(@author.username, :partial => "service"), :method => :get %>
 		    <%= f.submit("Submit") %>
 		<% end %>
 	</div>
 <% else %>
-	<%= image_tag "mendeley.gif", :class => "service" %><br/>
-	<span class="service"><%= @author.mendeley.blank? ? "not set" : link_to(@author.mendeley, "http://www.mendeley.com/profiles/" + @author.mendeley) %></span>
-  <% if current_author == @author or current_author.try(:admin?) %>
-	  <%= link_to_remote image_tag("edit.gif"), { :update => "mendeley", 
-	                                       :url => edit_author_path(@author.username, :partial => "mendeley"),
-	                                       :method => :get },
-	                                       :title => "Edit Mendeley" %>
-	<% end %>
+	  <%= image_tag "mendeley.png", :class => "photo_mini" %>
+		<span class="name"><%= @author.mendeley.blank? ? "not set" : link_to(@author.mendeley, "http://www.mendeley.com/profiles/" + @author.mendeley) %></span>
+		<% if current_author == @author or current_author.try(:admin?) %>
+		  &nbsp;<%= link_to_remote image_tag("edit.gif"), { :update => "service", 
+		                                       :url => edit_author_path(@author.username, :partial => "service", :service => "mendeley"),
+		                                       :method => :get },
+		                                       :title => "Edit Mendeley" %>
+		<% end %>
 <% end %>
