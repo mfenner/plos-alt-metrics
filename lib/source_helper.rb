@@ -110,6 +110,14 @@ protected
           Rails.logger.debug "[#{key}] = '#{value}']"
         end
         ""
+      when Net::HTTPServerError
+        Rails.logger.debug "HTTPServerError. Requested #{uri}#{optsMsg}, got: #{response.body}"
+
+        Rails.logger.debug "Response headers:"
+        response.each_header do |key, value|
+          Rails.logger.debug "[#{key}] = '#{value}']"
+        end
+        ""
       when Net::HTTPSuccess, Net::HTTPRedirection
         Rails.logger.info "Requested #{uri}#{optsMsg}, got: #{response.body}"
 
@@ -119,6 +127,7 @@ protected
         end
         
         response.body # OK
+
       else
         response.error!
       end
