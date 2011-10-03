@@ -18,7 +18,7 @@ require "twitter"
 
 class Author < ActiveRecord::Base
   
-  devise :rememberable, :omniauthable
+  devise :rememberable, :omniauthable, :trackable
   
   has_many :positions
   has_many :authentications
@@ -46,26 +46,27 @@ class Author < ActiveRecord::Base
   default_scope :order => 'authors.sort_name'
   
   scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
-    
+  
   def self.find_for_twitter_oauth(omniauth)
-    authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
-    if authentication && authentication.author
-      authentication.author
-    else
-      author = Author.create!(:username => omniauth['user_info']['nickname'], 
-                              :twitter => omniauth['uid'],
-                              :name => omniauth['user_info']['name'])
-      author.authentications << authentication.create!(:provider => omniauth['provider'], 
-                                     :uid => omniauth['uid'],
-                                     :token => omniauth['credentials']['token'],
-                                     :secret => omniauth['credentials']['secret'])
-      author.save
-      
-      # Fetch additional properties from Twitter
-      self.update_via_twitter(author)
-      author
-    end
-  end
+     authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
+     if authentication && authentication.author
+       authentication.author
+     else
+       author = Author.find_or_create_by_username(:username => omniauth['user_info']['nickname'], 
+                               :twitter => omniauth['uid'],
+                               :name => omniauth['user_info']['name'])
+       authentication = Authentication.create!(:provider => omniauth['provider'], 
+                                      :uid => omniauth['uid'],
+                                      :token => omniauth['credentials']['token'],
+                                      :secret => omniauth['credentials']['secret'])                            
+       author.authentications << authentication
+       author.save
+
+       # Fetch additional properties from Twitter
+       self.update_via_twitter(author)
+       author
+     end
+   end
   
   def stale?
     new_record? or author.articles.empty?
