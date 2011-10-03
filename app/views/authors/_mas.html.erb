@@ -19,6 +19,6 @@
 		<% if current_author == @author or current_author.try(:admin?) %>&nbsp;<%= link_to_remote image_tag("edit.gif"), { :update => "service", 
 		                                       :url => edit_author_path(@author.username, :partial => "service", :service => "mas"),
 		                                       :method => :get },
-		                                       :title => "Edit Mendeley" %>
+		                                       :title => "Edit Microsoft Academic Search" %>
 		<% end %>
 <% end %>
