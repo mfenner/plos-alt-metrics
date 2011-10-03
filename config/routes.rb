@@ -16,8 +16,8 @@
 PlosAltMetrics::Application.routes.draw do
   devise_for :authors, :controllers => { :omniauth_callbacks => "authors/omniauth_callbacks" } do
     get '/authors/auth/:provider' => 'authors/omniauth_callbacks#passthru'
-    get '/sign_in', :to => 'devise/sessions#new', :as => :new_session
-    match '/sign_out', :to => 'authors/sessions#destroy', :as => :destroy_author_session, :via => [:get, :delete]
+    get 'sign_in', :to => 'authors/sessions#new', :as => :new_author_session
+    match 'sign_out', :to => 'authors/sessions#destroy', :as => :destroy_author_session, :via => [:get, :delete]
   end
   
   # Wildcard match for DOI

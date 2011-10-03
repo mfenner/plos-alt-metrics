@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111001053917) do
+ActiveRecord::Schema.define(:version => 20111002213748) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -78,6 +78,11 @@ ActiveRecord::Schema.define(:version => 20111001053917) do
     t.string   "mendeley"
     t.integer  "contributions_count"
     t.string   "twitter"
+    t.integer  "sign_in_count",       :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
   end
 
   create_table "categories", :force => true do |t|
