@@ -26,7 +26,7 @@ pubmed:
   password: pass
   staleness: <%= 1.year.to_i %>
   active: true
-  group: cool_kids
+  category: bookmarks
 
 citeulike:
   type: Citeulike

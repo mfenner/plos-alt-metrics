@@ -207,7 +207,8 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   config.omniauth :twitter, APP_CONFIG['twitter_key'], APP_CONFIG['twitter_secret']
-  config.omniauth :oauth_mendeley, APP_CONFIG['mendeley_key'], APP_CONFIG['mendeley_secret']
+  #config.omniauth :google, APP_CONFIG['google_key'], APP_CONFIG['google_secret'], :scope => "https://www.googleapis.com/auth/plus.me"
+  #config.omniauth :oauth_mendeley, APP_CONFIG['mendeley_key'], APP_CONFIG['mendeley_secret']
   
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
