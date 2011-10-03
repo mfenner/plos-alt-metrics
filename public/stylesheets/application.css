@@ -196,6 +196,7 @@ td.pagination {
 
 td.index {
   width: 50%;
+  padding-bottom: 0.5em;
 }
 
 td.title {
@@ -246,7 +247,7 @@ div.edit {
 .photo_mini {
   float: left;
   padding-right: 1em;
-  padding-bottom: 1em;
+  padding-bottom: 0.5em;
 }
 
 .homepage {
@@ -288,12 +289,18 @@ td.service {
   vertical-align: top;
 }
 
+td.group {
+  width: 150px;
+  vertical-align: top;
+}
+
 td.photo {
   vertical-align: top;
   height: 160px;
 }
 
 div#mas, div#mendeley {
+  padding-top: 0.5em;
   clear: both;
 }
 

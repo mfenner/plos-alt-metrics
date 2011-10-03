@@ -13,21 +13,10 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-	<h2><%= h(@group.name) %></h2>
-	
-	<%= render :partial => 'service' %>
-	
-  <% unless @group.description.blank? %>
-	    <%= @group.description %>
-	  <% end %>
+
+<%= render :partial => 'service' %>
 
 <% unless @group.articles.empty? %>
-  <% unless active_categories.empty? %>
-    <div id="source">
-	    <%= render :partial => 'source'%>
-    </div>
-  <% end %>
-
   <div id="article">
 	  <%= render :partial => 'article'%>
   </div>

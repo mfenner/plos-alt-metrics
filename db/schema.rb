@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111002213748) do
+ActiveRecord::Schema.define(:version => 20111003091924) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(:version => 20111002213748) do
     t.datetime "updated_at"
     t.text     "article_description"
     t.text     "author_description"
+    t.text     "group_description"
   end
 
   create_table "citations", :force => true do |t|
