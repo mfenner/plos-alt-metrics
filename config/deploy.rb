@@ -9,9 +9,9 @@ set :group, "fennerm"
 set :repository, "git@github.com:mfenner/plos-alt-metrics.git"
 
 # Change these to point to the servers you wish to deploy to.
-role :web, "alm.xartrials.org"
-role :app, "alm.xartrials.org"
-role :db,  "alm.xartrials.org", :primary => true
+role :web, "sciencecard.org"
+role :app, "sciencecard.org"
+role :db,  "sciencecard.org", :primary => true
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:

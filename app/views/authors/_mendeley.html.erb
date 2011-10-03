@@ -9,7 +9,7 @@
 		<% end %>
 	</div>
 <% else %>
-	  <%= image_tag "mendeley.png", :class => "photo_mini" %>
+	  <%= image_tag "mendeley.png", :class => "photo_mini" %><br/>
 		<span class="name"><%= @author.mendeley.blank? ? "not set" : link_to(@author.mendeley, "http://www.mendeley.com/profiles/" + @author.mendeley) %></span>
 		<% if current_author == @author or current_author.try(:admin?) %>
 		  &nbsp;<%= link_to_remote image_tag("edit.gif"), { :update => "service", 

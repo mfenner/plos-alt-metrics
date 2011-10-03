@@ -26,7 +26,13 @@ class GroupsController < ApplicationController
         :conditions => ["groups.name REGEXP ? or groups.mendeley REGEXP ?", params[:q],params[:q]],
         :order => 'groups.name' 
     else
-      @groups = Group.paginate :page => params[:page], :per_page => 20, :order => 'groups.name'
+      if author_signed_in?
+        # Fetch all groups with the authors you are following
+        #@groups = Group.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 12
+        @groups = Group.paginate :page => params[:page], :per_page => 12, :order => 'groups.name'
+      else
+        @groups = Group.paginate :page => params[:page], :per_page => 12, :order => 'groups.name'
+      end
     end
     
     respond_to do |format|

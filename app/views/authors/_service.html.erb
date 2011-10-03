@@ -1,6 +1,6 @@
 <% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas"].include?(params[:service]) %>
 	<div class="service">
-	  <%= image_tag "twitter.png", :class => "photo_mini" %>
+	  <%= image_tag "twitter.png", :class => "photo_mini" %><br/>
 	  <span class="name"><%= link_to "@#{@author.username}", "http://twitter.com/" + @author.username %></span>
 	</div>
 <% end %>

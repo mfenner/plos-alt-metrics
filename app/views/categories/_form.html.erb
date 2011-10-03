@@ -35,6 +35,11 @@
   </p>
 
   <p>
+    <%= f.label :group_description %><br />
+    <%= f.text_area :group_description, :size => "50x3" %>
+  </p>
+
+  <p>
     <%= f.submit(category.new_record? ? "Create" : "Update") %>
   </p>
 <% end %>

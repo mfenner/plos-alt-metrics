@@ -1,10 +1,15 @@
-<table>
+<table class="profile">
 	<tr>
-    <td class="service">
-	    <div id="mendeley">
-        <%= image_tag "mendeley.gif", :class => "service" %><br/>
-		    <span class="service"><%= link_to @group.mendeley, "http://www.mendeley.com/groups/" + @group.mendeley %></span>
+		<td class="twitter">
+	    <div id="twitter">
+	      <h2><%= h(@group.name) %></h2>
+	    </div>
+	  </td>
+	  <td class="group">
+			<div id="mendeley">
+        <%= image_tag "mendeley.png", :class => "photo_mini" %><br/>
+		    <span class="name"><%= link_to @group.mendeley, "http://www.mendeley.com/groups/" + @group.mendeley %></span>
       </div>
-    </td>
-  </tr>
+	  </td>
+	</tr>
 </table>

@@ -9,14 +9,15 @@ module OmniAuth
     class OauthMendeley < OmniAuth::Strategies::OAuth
       def initialize(app, consumer_key = nil, consumer_secret = nil, &block)
         client_options = {
-          :site => 'https://www.mendeley.com',
+          :site => 'http://www.mendeley.com',
           :request_token_path => "/oauth/request_token/",
           :access_token_path => "/oauth/access_token/",
           :authorize_path => "/oauth/authorize/",
-          :http_method => :post
+          :http_method => :post,
+          :scheme => :query_string
         }
 
-        super(app, :mendeley, consumer_key, consumer_secret, client_options, &block)
+        super(app, :oauth_mendeley, consumer_key, consumer_secret, client_options, &block)
       end
       
       def auth_hash
@@ -33,6 +34,11 @@ module OmniAuth
         { 'name' => user_data['display_name'],
           'uid' => user_data['uid'],
           'email' => user_data['email'] }
+      end
+      
+      def callback_phase
+        session['oauth'][name.to_s]['callback_confirmed'] = true
+        super
       end
 
     end

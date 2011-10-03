@@ -13,7 +13,7 @@ class Authors::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def mendeley
+  def oauth_mendeley
     raise request.env["omniauth.auth"].to_yaml
   end
   

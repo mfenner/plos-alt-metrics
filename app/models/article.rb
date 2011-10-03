@@ -222,6 +222,32 @@ class Article < ActiveRecord::Base
     
     result = SourceHelper.get_json(url, options)
   end
+  
+  def self.update_groups(article, options={})
+    options[:groups] ||= []
+    
+    # Fetch group information from Mendeley if not provided, requires Mendeley uuid
+    if options[:groups].empty?
+      return nil if article.mendeley.blank?
+      options[:groups] = self.fetch_from_mendeley(article.mendeley)["groups"] 
+    end
+    return nil if options[:groups].blank?
+    
+    options[:groups].each do |group_id|
+      group = Group.find_by_mendeley(group_id["group_id"])
+      
+      # Create group if it doesn't exist and fetch name from Mendeley
+      group = Group.update_via_mendeley(group_id["group_id"]) if group.nil?
+      
+      # If there was an error, e.g. group is private
+      next if group.nil?
+      
+      article.groups << group unless article.groups.include?(group)
+      Rails.logger.debug "Groups updated for article #{article.doi})"
+    end
+    
+    article
+  end
 
   private
     def create_retrievals

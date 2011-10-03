@@ -71,6 +71,30 @@ class Group < ActiveRecord::Base
     self.articles.count
   end
   
+  def citations_count(source, options={})
+    citations = []
+    self.articles.each do |article|
+      citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+      citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+    end
+    citations = citations.sum
+  end
+  
+  def self.update_via_mendeley(mendeley, options={})
+    # Fetch group basic information, return nil if no response 
+    url = "http://api.mendeley.com/oapi/documents/groups/#{mendeley}?consumer_key=#{APP_CONFIG['mendeley_key']}"
+    Rails.logger.info "Mendeley query: #{url}"
+    
+    result = SourceHelper.get_json(url, options)
+    return nil if result.blank? or result["error"]
+    
+    # Update group information
+    group = Group.find_or_create_by_mendeley(:mendeley => mendeley)
+    group.update_attributes(:name => CGI.unescapeHTML(result["name"]))
+    Rails.logger.debug "Group is#{" (new)" if group.new_record?} #{group.inspect}"
+    group
+  end
+  
   def self.fetch_properties(group, options={})
     # Fetch group information, return nil if no response 
     url = "http://api.mendeley.com/oapi/documents/groups/#{group.mendeley}?consumer_key=#{APP_CONFIG['mendeley_key']}"

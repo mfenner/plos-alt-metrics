@@ -4,7 +4,7 @@
 # Patch Omniauth to include custom strategy for Mendeley
 module OmniAuth
   module Strategies
-    autoload :Mendeley, 'lib/oauth_mendeley'
+    autoload :OauthMendeley, 'lib/oauth_mendeley'
   end
 end
 
@@ -207,7 +207,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   config.omniauth :twitter, APP_CONFIG['twitter_key'], APP_CONFIG['twitter_secret']
-  #config.omniauth :mendeley, APP_CONFIG['mendeley_key'], APP_CONFIG['mendeley_secret']
+  config.omniauth :oauth_mendeley, APP_CONFIG['mendeley_key'], APP_CONFIG['mendeley_secret']
   
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
