@@ -37,7 +37,7 @@
 	      <tr>
 	      	<td class="name">
 	      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : article.title), article_path(article.id) %></span><br/>
-	          <%= link_to "doi:" + h(article.doi), "http://dx.doi.org/" + h(article.doi) %>
+	          <%= link_to "http://dx.doi.org/" + h(article.doi), "http://dx.doi.org/" + h(article.doi) %>
 				<% unless article.authors.empty? %>
 				  <% if article.authors.count > 0 %>
 		        <% article.authors.each do |author| %>

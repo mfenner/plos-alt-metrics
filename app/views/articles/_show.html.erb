@@ -19,7 +19,7 @@
 -%>
   <h2><%=h @article.title unless @article.title.blank? %></h2>
   <div class="article">
-	  <%= link_to "doi:" + h(@article.doi), "http://dx.doi.org/" + h(@article.doi) %><p>
+	  <%= link_to "http://dx.doi.org/" + h(@article.doi), "http://dx.doi.org/" + h(@article.doi) %><p>
 
 	<% unless @article.authors.empty? %>
 	  <% if @article.authors.count > 0 %>
