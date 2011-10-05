@@ -55,7 +55,7 @@ module DOI
       doi.sub!(/\.s?[gt]00[1-9]$/, '')
     # Remove versions from Nature Preceedings
     elsif doi.match(/^10.1038\/npre/)
-      doi.sub!(/\.\d*$/, '')
+      doi.sub!(/\.\d$/, '')
     end
   end 
 end
