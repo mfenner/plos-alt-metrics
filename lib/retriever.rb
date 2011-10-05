@@ -197,6 +197,7 @@ class Retriever
     results.each do |result|
       # Only add articles with DOI and title
       unless result["DOI"].nil? or result["Title"].nil?
+        result["DOI"] = DOI::clean(result["DOI"])
         article = Article.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
         if article.valid?
