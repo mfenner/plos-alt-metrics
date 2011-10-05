@@ -48,4 +48,14 @@ module DOI
     end
     doi
   end
+  
+  def self.clean(doi)
+    # Remove component DOIs from PLoS articles
+    if doi.match(/^10.1371/)
+      doi.sub!(/\.s?[gt]00[1-9]$/, '')
+    # Remove versions from Nature Preceedings
+    elsif doi.match(/^10.1038\/npre/)
+      doi.sub!(/\.\d*$/, '')
+    end
+  end 
 end
