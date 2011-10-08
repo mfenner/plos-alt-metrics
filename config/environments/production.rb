@@ -49,6 +49,12 @@ PlosAltMetrics::Application.configure do
   
   config.action_mailer.default_url_options = { :host => 'localhost' }
   
-  # Configure Google Analytics
+  # Configure Google Analytics, please add your settings
   config.middleware.use("Rack::GoogleAnalytics", :web_property_id => 'UA-362856-11')
+  
+  # Configure ExceptionNotifier
+  config.middleware.use("ExceptionNotifier",
+    :email_prefix => "[ScienceCard Error] ",
+    :sender_address => %{"ScienceCard" <fenner.martin@mh-hannover.de>},
+    :exception_recipients => %w{fenner.martin@mh-hannover.de})
 end
