@@ -16,8 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 body, input, textarea, select {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Georgia', sans-serif;
   font-size: medium; 
 }
   
