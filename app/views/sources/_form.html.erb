@@ -38,6 +38,11 @@
     <%= f.label :active %>
   </p>
 
+  <p>
+    <%= f.check_box :allow_reuse %>
+    <%= f.label :allow_reuse %>
+  </p>
+
   <% if source.uses_url %>
     <p>
       <%= f.label :url, "URL" %><br />

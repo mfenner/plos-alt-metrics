@@ -90,7 +90,7 @@ class Author < ActiveRecord::Base
     @categories = Category.find :all, :conditions => ["sources.active=1"], :include => :sources, :order => :category_id
     result[:author][:citations] = []
     @categories.each do |category|
-		  category.sources.active.each do |source|
+		  category.sources.reusable.each do |source|
 	      result[:author][:citations] << [:source_id => source.id, :source_name => source.name, :count => self.citations_count(source)]
 	    end
     end
