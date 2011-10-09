@@ -18,7 +18,10 @@
   # limitations under the License.
 -%>
 
-<h2>Categories</h2>
+<h2>Categories <%= link_to image_tag("add.gif"), new_category_path %></h2>
+
+Categories are a way to organize sources.  You can define a category for 
+your sources by editing a source.
 
 <ul>
 <% for category in @categories %>
@@ -32,8 +35,3 @@
   </li>
 <% end %>
 </ul>
-
-Categories are a way to organize sources.  You can define a category for 
-your sources by editing a source.<br/>
-<br/>
-<%= link_to 'Add a new category', new_category_path %>

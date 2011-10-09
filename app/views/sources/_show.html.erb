@@ -17,7 +17,7 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<h2>Details for <%=h @source.name %> (<%= @source.active ? "active" : "inactive" %>)</h2>
+<h2><%=h @source.name %> (<%= @source.active ? "active" : "inactive" %>) <%= link_to image_tag("edit.gif"), edit_source_path(@source) %></h2>
 
 <p>
   <b>Name:</b>
@@ -127,7 +127,3 @@
   <% end %>
 </ul>
 <% end %>
-
-<%= link_to 'Edit', edit_source_path(@source) %>
-<br/>
-<%= link_to 'Back to list', sources_path %>

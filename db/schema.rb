@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111003091924) do
+ActiveRecord::Schema.define(:version => 20111009114413) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(:version => 20111003091924) do
     t.string   "partner_id"
     t.text     "misc"
     t.text     "prefix"
+    t.boolean  "allow_reuse",   :default => true
   end
 
   add_index "sources", ["type"], :name => "index_sources_on_type", :unique => true

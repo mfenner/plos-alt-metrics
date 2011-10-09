@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 body, input, textarea, select {
-  font-family: "georgia", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: medium; 
 }
   
@@ -26,7 +26,7 @@ body {
   padding: 0;
   top: 0;
   left: 0;
-  background-color: #e0dad3;
+  background-color: #efecca;
 }
 
 input, textarea, select {
@@ -38,7 +38,7 @@ input, textarea, select {
   -moz-border-radius: 2px; }
 
 input[type=submit], input[type=button], button {
-  background-color: #438bd1;
+  background-color: #046380;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), to(transparent));
   border-color: rgba(0, 0, 0, 0.2);
   color: white;
@@ -54,13 +54,13 @@ input.name {
 }
 
 a {
-  color: #438bd1;
+  color: #046380;
   text-decoration: none; }
 
 aside, nav, footer, header, section { display: block }
 
 header {
-  background-color: #b1a9a3;
+  background-color: #d3ceaa;
   padding-top: 0.25em;
   padding-left: 2.5em;
   padding-bottom: 0em;
@@ -77,12 +77,12 @@ nav {
 }
   nav .content {
     padding: 0;
-    background-color: #b1a9a3;
+    background-color: #d3ceaa;
     min-height: 100px; }
   nav #navigation {
     float: left;
     width: 100%;
-    background-color: #b1a9a3; }
+    background-color: #d3ceaa; }
     nav #navigation ul {
       height: 25px;
       margin: 0 30px 0 0;
@@ -94,28 +94,27 @@ nav {
         padding: 0; }
         nav #navigation ul li a {
           float: left;
-          font-family: "georgia", sans-serif;
           font-size: medium;
           font-weight: normal;
           margin: 0;
           margin-right: 6px;
           padding: 4px 8px 6px;
-          background-color: #8c7a6e;
-          border-color: #8c7a6e;
+          background-color: #e6e2af;
+          border-color: #e6e2af;
           border-style: solid;
           border-width: 1px;
-          color: #ffffff;
+          color: #002f2f;
           text-decoration: none; }
           nav #navigation ul li a:hover {
-            background-color: #e0dad3; 
-            color: black;
+            background-color: #efecca;; 
+            color: #002f2f;
             border: 1px solid;
-            border-color: #e0dad3; }
+            border-color: #efecca;; }
         nav #navigation ul li a.selected {
-          background-color: #e0dad3;
+          background-color: #efecca;;
           border: 1px solid;
-          border-color: #e0dad3;
-          color: black;
+          border-color: #efecca;;
+          color: #002f2f;
           margin-right: 6px;
           font-weight: bold; }
 
@@ -124,7 +123,7 @@ li.login {
 }
 
 #content {
-  background-color: #e0dad3;
+  background-color: #efecca;;
   padding: 1em 2em 1em 2em;
 }
 
@@ -134,7 +133,7 @@ div.flash {
     padding: 2px 5px;
     margin: 0px auto 1em;
     display: inline-block;
-    color: black;
+    color: #002f2f;
     background-color: #a5e583;
     text-shadow: 0px -1px 0px rgba(255, 255, 255, 0.2);
     -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1); }
@@ -153,17 +152,20 @@ div.flash {
 }
  
 h1 {
+  color: #002f2f;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
    
 h2 {
+  color: #002f2f;
   font-size: x-large;
   margin-top: 0;
   margin-bottom: 0;
 }
 
 h3 {
+  color: #002f2f;
   font-size: large;
   margin-top: 0;
   margin-bottom: 0.5em;
@@ -217,12 +219,14 @@ span.name {
 }
 
 span.search {
+  color: #002f2f;
   font-size: large;
 }
 
 td.count,th.count {
   width: 30px;
   font-size: x-large;
+  font-style: italic;
   text-align: right;
   vertical-align: top;
   padding-left: 0.5em;
@@ -268,6 +272,7 @@ td.source_title {
 
 td.source_count {
   padding-top: 0.5em;
+  font-style: italic;
   font-size: xx-large;
   text-align: center;
 }
@@ -279,7 +284,7 @@ td.source {
 }
 
 td.twitter {
-  width: 700px;
+  width: 800px;
   vertical-align: top;
   padding-right: 1em;
 }
@@ -331,18 +336,18 @@ span.service {
   .pagination .current {
     font-style: normal;
     font-weight: bold;
-    background: #438bd1;
+    background: #046380;
     color: white;
-    border: 1px solid #438bd1; }
+    border: 1px solid #046380; }
   .pagination a {
     text-decoration: none;
-    color: #438bd1;
-    border: 1px solid #438bd1; }
+    color: #046380;
+    border: 1px solid #046380; }
     .pagination a:hover, .pagination a:focus {
       color: #000033;
       border-color: #000033; }
   .pagination .page_info {
-    background: #438bd1;
+    background: #046380;
     color: white;
     padding: 0.4em 0.6em;
     width: 22em;

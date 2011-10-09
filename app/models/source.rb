@@ -37,6 +37,7 @@ class Source < ActiveRecord::Base
   attr_accessor :staleness_days_before_type_cast
 
   scope :active, :conditions => {:active => true}
+  scope :reusable, :conditions => {:active => true, :allow_reuse => true}
 
   def self.unconfigured_source_names
     # Collect source classnames based on the source file names we have
