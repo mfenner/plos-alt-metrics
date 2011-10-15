@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111014164534) do
+ActiveRecord::Schema.define(:version => 20111015192527) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -22,10 +22,10 @@ ActiveRecord::Schema.define(:version => 20111014164534) do
   end
 
   create_table "articles", :force => true do |t|
-    t.string   "doi",                                                :null => false
+    t.string   "doi",                                                 :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "retrieved_at",    :default => '1970-01-01 00:00:00', :null => false
+    t.datetime "retrieved_at",     :default => '1970-01-01 00:00:00', :null => false
     t.string   "pub_med"
     t.string   "pub_med_central"
     t.date     "published_on"
@@ -41,6 +41,10 @@ ActiveRecord::Schema.define(:version => 20111014164534) do
     t.string   "mendeley_url"
     t.string   "scopus"
     t.string   "short_doi"
+    t.integer  "book_id"
+    t.string   "content_type"
+    t.string   "publication_type"
+    t.text     "contributors"
   end
 
   add_index "articles", ["doi"], :name => "index_articles_on_doi", :unique => true
@@ -85,6 +89,14 @@ ActiveRecord::Schema.define(:version => 20111014164534) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "authorclaim"
+  end
+
+  create_table "books", :force => true do |t|
+    t.string   "title"
+    t.string   "isbn_print"
+    t.string   "isbn_electronic"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "categories", :force => true do |t|
@@ -145,6 +157,14 @@ ActiveRecord::Schema.define(:version => 20111014164534) do
   end
 
   add_index "histories", ["retrieval_id", "year", "month"], :name => "index_histories_on_retrieval_id_and_year_and_month", :unique => true
+
+  create_table "journals", :force => true do |t|
+    t.string   "title"
+    t.string   "issn_print"
+    t.string   "issn_electronic"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "members", :force => true do |t|
     t.integer  "author_id"

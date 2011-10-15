@@ -24,6 +24,8 @@ class Article < ActiveRecord::Base
   has_many :contributions
   has_many :authors, :through => :contributions
   has_and_belongs_to_many :groups
+  belongs_to :journal
+  belongs_to :book
 
   validates_format_of :doi, :with => DOI::FORMAT
   validates_uniqueness_of :doi

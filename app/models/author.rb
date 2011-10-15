@@ -80,8 +80,12 @@ class Author < ActiveRecord::Base
   def to_json(options={})
     result = { 
       :author => { 
-        :mas => mas, 
-        :name => name, 
+        :name => name,
+        :mas => mas,  
+        :authorclaim => authorclaim,
+        :location => location,
+        :description => description,
+        :website => website,
         :articles_count => articles_count,
         :updated_at => updated_at
       }
@@ -95,14 +99,6 @@ class Author < ActiveRecord::Base
 	    end
     end
     
-    result[:author][:affiliations] = []
-    self.affiliations.each do |affiliation|
-      result[:author][:affiliations] << {:mas => affiliation.mas, 
-        :name => affiliation.name, 
-        :homepageURL => affiliation.homepageURL,
-        :updated_at => updated_at}
-    end
-    
     result[:author][:articles] = []
     self.articles.each do |article|
       result[:author][:articles] << {:doi => article.doi, 
@@ -111,6 +107,7 @@ class Author < ActiveRecord::Base
         :pub_med => article.pub_med,
         :pub_med_central => article.pub_med_central,
         :mas => article.mas,
+        :mendeley => article.mendeley,
         :citations_count => article.citations_count,
         :published => (article.published_on.blank? ? nil : article.published_on.to_time),
         :updated_at => article.retrieved_at}
@@ -220,15 +217,16 @@ class Author < ActiveRecord::Base
     url = "ftp://ftp.authorclaim.org/#{author.authorclaim[1,1].to_s}/#{author.authorclaim[2,1].to_s}/#{author.authorclaim}.amf.xml"
     Rails.logger.info "AuthorClaim query: #{url}"
     
-    results = []
     SourceHelper.get_xml(url, options) do |document|
-      document.find("//amf:isauthorof/amf:text", "amf:http://amf.openlib.org").each do |article|
+      results = []
+      document.root.namespaces.default_prefix = 'amf'
+      document.find("//amf:isauthorof/amf:text").each do |article|
         ref = article.attributes.get_attribute("ref").value
         # Only use article if reference has DOI
         next unless ref.match(/^info:lib\/crossref:/)
         result = {}
         result["DOI"] = CGI::unescape(ref[18..-1])
-        result["Title"] = article.find_first("amf:title", "amf:http://amf.openlib.org").content
+        result["Title"] = article.find_first("amf:title").content
         results << result
       end
       results

@@ -33,6 +33,12 @@ class Retriever
       Rails.logger.info "Skipping: article not published yet"
       return
     end
+    
+    # Cleaning of DOIs and updating of metadata via CrossRef
+    #doi = DOI::clean(article.doi)
+    #short_doi = DOI::shorten(article.doi)
+    #article.update_attributes(:short_doi => short_doi)
+    DOI::update_via_crossref(article.doi)
 
     # undoing revision 5150.  This way, we will always get the most current list of active sources.
     sources = Source.active
