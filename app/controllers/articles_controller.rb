@@ -162,7 +162,7 @@ protected
   def load_article(options={})
     # Load one article given query params, for the non-#index actions
     #doi = DOI::from_uri(params[:id])
-    #@article = Article.find_by_doi!(doi, options)
+    #@article = Article.find_by_doi(doi)
     @article = Article.find(params[:id])
   end
 

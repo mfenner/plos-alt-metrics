@@ -191,7 +191,7 @@ class Retriever
     Rails.logger.info "Updating author #{author.inspect}..."
     
     # Fetch articles from author, return nil if no response
-    results = Author.fetch_articles(author)
+    results = Author.fetch_articles_from_mas(author)
     return nil if results.nil?
     
     results.each do |result|
@@ -202,6 +202,8 @@ class Retriever
         # Check that DOI is valid
         if article.valid?
           author.articles << article unless author.articles.include?(article)
+          # Create shortDOI if it doesn't exist yet
+          article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
           Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
         end
       end
@@ -215,7 +217,7 @@ class Retriever
     Rails.logger.info "Updating group #{group.inspect}..."
     
     # Fetch articles from group, return nil if no response
-    results = Group.fetch_articles(group)
+    results = Group.fetch_articles_from_mas(group)
     return nil if results.nil?
     
     results = results["documents"]

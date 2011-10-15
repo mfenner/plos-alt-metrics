@@ -109,7 +109,7 @@ class Group < ActiveRecord::Base
     group
   end
   
-  def self.fetch_articles(group, options={})
+  def self.fetch_articles_from_mas(group, options={})
     # Fetch articles, return nil if no response 
     
     options[:page] ||= 1

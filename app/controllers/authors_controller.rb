@@ -123,21 +123,56 @@ class AuthorsController < ApplicationController
       if @author.update_attributes(params[:author])
         if params[:service] == "mas"
           # Fetch articles from author, return nil if no response
-          results = Author.fetch_articles(@author)
-          # First remove all claimed articles, e.g. because mas id was changed or set to empty 
-          @author.contributions.clear
+          results = Author.fetch_articles_from_mas(@author)
+          # First remove all mas article claims, e.g. because Microsoft Academic Search ID was changed or set to empty 
+          @author.contributions.where(:mas => true).each do |contribution|
+            contribution.update_attributes(:mas => false)
+          end
+          
           unless results.empty?
             results.each do |result|
               # Only add articles with DOI and title
               unless result["DOI"].nil? or result["Title"].nil?
-                article = Article.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
+                #result["DOI"] = DOI::clean(result["DOI"])
+                article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
                 # Check that DOI is valid
                 if article.valid?
-                  @author.articles << article unless @author.articles.include?(article)
+                  article.update_attributes(:mas => result["ID"])
+                  contribution = Contribution.find_or_create_by_author_id_and_article_id(:author_id => @author.id, :article_id => article.id)
+                  contribution.update_attributes(:mas => true)
+                  # Create shortDOI if it doesn't exist yet
+                  #article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
                 end
               end
             end
           end
+          # Remove contributions if no claims are found
+          @author.contributions.where(:mas => false, :authorclaim => false).delete_all
+        elsif params[:service] == "authorclaim"
+          # Fetch articles from author, return nil if no response
+          results = Author.fetch_articles_from_authorclaim(@author)
+          # First remove all authorclaim article claims, e.g. because AuthorClaim ID was changed or set to empty
+          @author.contributions.where(:authorclaim => true).each do |contribution|
+            contribution.update_attributes(:authorclaim => false)
+          end
+          unless results.empty?
+            results.each do |result|
+              # Only add articles with DOI and title
+              unless result["DOI"].nil? or result["Title"].nil?
+                #result["DOI"] = DOI::clean(result["DOI"])
+                article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                # Check that DOI is valid
+                if article.valid?
+                  contribution = Contribution.find_or_create_by_author_id_and_article_id(:author_id => @author.id, :article_id => article.id)
+                  contribution.update_attributes(:authorclaim => true)
+                  # Create shortDOI if it doesn't exist yet
+                  #article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
+                end
+              end
+            end
+          end
+          # Remove contributions if no claims are found
+          @author.contributions.where(:mas => false, :authorclaim => false).delete_all
         elsif params[:service] == "twitter"
           Author.update_via_twitter(@author)
         end

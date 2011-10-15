@@ -36,7 +36,7 @@ class Author < ActiveRecord::Base
     end
   end
   
-  attr_accessible :username, :name, :mas, :mendeley, :twitter, :location, :description, :image, :website, :remember_me
+  attr_accessible :username, :name, :mas, :mendeley, :authorclaim, :twitter, :location, :description, :image, :website, :remember_me
   
   validates_numericality_of :mas, :allow_blank => true
   validates_uniqueness_of :mas, :allow_blank => true
@@ -200,7 +200,7 @@ class Author < ActiveRecord::Base
     author
   end
   
-  def self.fetch_articles(author, options={})
+  def self.fetch_articles_from_mas(author, options={})
     # Fetch articles, return empty array if no mas identifier, no response, or no articles found
     return [] if author.mas.blank?
     
@@ -211,6 +211,28 @@ class Author < ActiveRecord::Base
     return [] if result.nil?
     
     articles = result["Result"]
+  end
+  
+  def self.fetch_articles_from_authorclaim(author, options={})
+    # Fetch articles, return empty array if no authorclaim identifier, no response, or no articles found
+    return [] if author.authorclaim.blank?
+    
+    url = "ftp://ftp.authorclaim.org/#{author.authorclaim[1,1].to_s}/#{author.authorclaim[2,1].to_s}/#{author.authorclaim}.amf.xml"
+    Rails.logger.info "AuthorClaim query: #{url}"
+    
+    results = []
+    SourceHelper.get_xml(url, options) do |document|
+      document.find("//amf:isauthorof/amf:text", "amf:http://amf.openlib.org").each do |article|
+        ref = article.attributes.get_attribute("ref").value
+        # Only use article if reference has DOI
+        next unless ref.match(/^info:lib\/crossref:/)
+        result = {}
+        result["DOI"] = CGI::unescape(ref[18..-1])
+        result["Title"] = article.find_first("amf:title", "amf:http://amf.openlib.org").content
+        results << result
+      end
+      results
+    end
   end
   
   def citations_count(source, options={})

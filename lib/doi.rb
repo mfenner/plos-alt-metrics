@@ -58,4 +58,12 @@ module DOI
       doi.sub!(/\.\d$/, '')
     end
   end 
+  
+  def self.shorten(doi, options={})
+    return nil if doi.blank?
+    url = "http://shortdoi.org/" + CGI.escape(doi) + "?format=json"
+    result = SourceHelper.get_json(url, options)
+    return nil if result.blank?
+    result["ShortDOI"]
+  end
 end

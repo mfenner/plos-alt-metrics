@@ -1,0 +1,20 @@
+<% if params[:service] == "authorclaim" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
+  <div class="edit">
+	  <%= remote_form_for :author, :update => "service", :url => author_url(:id => @author.username, :partial => "service", :service => "authorclaim"), :before => "Element.show('spinner');", :method => :put do |f| %>
+    <h3>AuthorClaim</h3>
+		    <%= f.text_field :authorclaim %>
+		  <p>
+			  <%= link_to_remote "Cancel", :update => "service", :url => author_path(@author.username, :partial => "service"), :method => :get %>
+		    <%= f.submit("Submit") %>
+		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
+		<% end %>
+	</div>
+<% else %>
+	  <%= image_tag "authorclaim.png", :class => "photo_mini", :title => "AuthorClaim" %><br/>
+		<span class="name"><%= @author.authorclaim.blank? ? "not set" : link_to(@author.authorclaim, "http://authorclaim.org/profile/" + @author.authorclaim) %></span>
+		<% if current_author == @author or current_author.try(:admin?) %>&nbsp;<%= link_to_remote image_tag("edit.gif"), { :update => "service", 
+		                                       :url => edit_author_path(@author.username, :partial => "service", :service => "authorclaim"),
+		                                       :method => :get },
+		                                       :title => "Edit AuthorClaim" %>
+		<% end %>
+<% end %>

@@ -18,6 +18,7 @@
 
 require 'rubygems'
 require 'system_timer'
+require "open-uri"
 
 class SourceHelper
   
@@ -28,7 +29,13 @@ class SourceHelper
 
   def self.get_xml(url, options={}, &block)
     remove_doctype = options.delete(:remove_doctype)
-    body = self.get_http_body(url, options)
+    if url.match(/^http:/)
+      body = self.get_http_body(url, options)
+    elsif url.match(/^ftp:/)
+      body = self.get_ftp_body(url, options)
+    else
+      body = ""
+    end
     return [] if body.length == 0
 
     #We got something. Conditionally remove the DOCTYPE to prevent
@@ -131,6 +138,16 @@ protected
       else
         response.error!
       end
+    rescue Exception => e
+      Rails.logger.error "Error (#{e.class.name}: #{e.message}) while requesting #{uri}#{optsMsg}"
+      raise e
+    end
+  end
+  
+  def self.get_ftp_body(uri, options={})
+    optsMsg = " with #{options.inspect}" unless options.empty?
+    begin
+      response = open(uri).read
     rescue Exception => e
       Rails.logger.error "Error (#{e.class.name}: #{e.message}) while requesting #{uri}#{optsMsg}"
       raise e

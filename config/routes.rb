@@ -21,7 +21,7 @@ PlosAltMetrics::Application.routes.draw do
   end
   
   # Wildcard match for DOI
-  #get '/articles/*doi' => 'articles#show'
+  #match '/articles/*id' => 'articles#show'
   resources :articles
   #match "/group/articles(/:id)(.:format)" => "groups#groupArticleSummaries"
   
