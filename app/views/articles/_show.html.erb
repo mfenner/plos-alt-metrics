@@ -19,7 +19,14 @@
 -%>
 	<div itemscope itemtype="http://schema.org/ScholarlyArticle">
     <h2><span itemprop="name"><%= @article.title %></span></h2>
-		 <span class="journal"><%= link_to @article.journal.title, journal_path(@article.journal) %>.</span> <%= @article.year %><%= @article.volume ? ":#{@article.volume}" : "" %> <%= @article.issue ? "(#{@article.issue})" : "" %><%= @article.first_page ? ";#{@article.first_page}" : "" %><%= @article.last_page and @article.last_page > @article.first_page ? "-#{@article.last_page}": "" %><br/><% unless @article.short_doi.blank? %><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %><% end %><p>
+		 	<span class="journal">
+       <% unless @article.journal.blank? %>
+         <%= link_to @article.journal.title, journal_path(@article.journal) %>.
+       <% end %>
+				<% unless @article.book.blank? %>
+         <%= @article.book.title %>.
+       <% end %>
+     </span> <%= @article.year %><%= @article.volume ? ":#{@article.volume}" : "" %> <%= @article.issue ? "(#{@article.issue})" : "" %><%= @article.first_page ? ";#{@article.first_page}" : "" %><%= @article.last_page and @article.last_page > @article.first_page ? "-#{@article.last_page}": "" %><br/><% unless @article.short_doi.blank? %><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %><% end %><p>
 			<% unless @article.authors.empty? %>
 			  <% if @article.authors.count > 0 %>
 		      <% @article.authors.each do |author| %>

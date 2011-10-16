@@ -31,7 +31,14 @@
       <tr>
       	<td class="name">	
       	  <span itemprop="name" class="name"><%= link_to article.title, article_path(article.id) %></span><br/>
-          <span class="journal"><%= article.journal.title %>.</span> <%= article.year %><%= article.volume ? ":#{article.volume}" : "" %> <%= article.issue ? "(#{article.issue})" : "" %><%= article.first_page ? ";#{article.first_page}" : "" %><%= article.last_page and article.last_page > article.first_page ? "-#{article.last_page}": "" %><br/><% unless article.short_doi.blank? %><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %><% end %>
+          <span class="journal">
+            <% unless article.journal.blank? %>
+	            <%= link_to article.journal.title, journal_path(article.journal) %>.
+	          <% end %>
+						<% unless article.book.blank? %>
+	            <%= article.book.title %>.
+	          <% end %>
+	        </span> <%= article.year %><%= article.volume ? ":#{article.volume}" : "" %> <%= article.issue ? "(#{article.issue})" : "" %><%= article.first_page ? ";#{article.first_page}" : "" %><%= article.last_page and article.last_page > article.first_page ? "-#{article.last_page}": "" %><br/><% unless article.short_doi.blank? %><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %><% end %>
 			<% unless article.authors.empty? %>
 			  <% if article.authors.count > 0 %>
 	        <% article.authors.each do |author| %>
