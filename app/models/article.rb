@@ -299,46 +299,26 @@ class Article < ActiveRecord::Base
           contributors_element = query_result.find_first("crossref_result:contributors")
           result[:contributors] = contributors_element ? extract_contributors(contributors_element) : nil
         
-          unless issn_print.blank? and issn_electronic.blank?
+          unless issn_electronic.blank?
             # Remove dashes for consistency
+            issn_electronic.gsub!(/[^0-9X]/, "")
             unless issn_print.blank?
               issn_print.gsub!(/[^0-9X]/, "")
             end
-            unless issn_electronic.blank?
-              issn_electronic.gsub!(/[^0-9X]/, "")
-            end 
             
-            journal = Journal.find(:first, :conditions => ["issn_print = ? OR issn_electronic = ?", issn_print, issn_electronic]) 
-            if journal
-              if (journal.title.blank? or journal.issn_print.blank? or journal.issn_electronic.blank?)
-                journal.update_attributes(:title => result[:journal_title],
-                                          :issn_print => issn_print,
-                                          :issn_electronic => issn_electronic)
-              end
-            else
-              journal = Journal.create(:title => result[:journal_title],
-                                    :issn_print => issn_print,
-                                    :issn_electronic => issn_electronic)
-            end
+            journal = Journal.find_or_create_by_issn_electronic(:issn_electronic => issn_electronic,
+                                                                :title => result[:journal_title],
+                                                                :issn_print => issn_print)
             journal_id = journal.id
           else
             journal_id = nil
           end
           
-          unless isbn_print.blank? and isbn_electronic.blank?
+          unless isbn_electronic.blank?
             
-            book = Book.find(:first, :conditions => ["isbn_print = ? OR isbn_electronic = ?", isbn_print, isbn_electronic]) 
-            if book
-              if (book.title.blank? or book.isbn_print.blank? or book.isbn_electronic.blank?)
-                book.update_attributes(:title => result[:volume_title],
-                                          :isbn_print => isbn_print,
-                                          :isbn_electronic => isbn_electronic)
-              end
-            else
-              book = Book.create(:title => result[:volume_title],
-                                    :isbn_print => isbn_print,
-                                    :isbn_electronic => isbn_electronic)
-            end
+            book = Book.find_or_create_by_isbn_electronic(:isbn_electronic => isbn_electronic,
+                                                          :title => result[:volume_title],
+                                                          :isbn_print => isbn_print)
             book_id = book.id
           else
             book_id = nil
