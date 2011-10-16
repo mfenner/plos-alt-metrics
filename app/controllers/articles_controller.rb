@@ -162,8 +162,7 @@ class ArticlesController < ApplicationController
 protected
   def load_article(options={})
     # Load one article given query params, for the non-#index actions
-    #@article = Article.find_by_short_doi!(params[:id], options)
-    @article = Article.find(params[:id])
+    @article = Article.find_by_short_doi!(params[:id], options)
   end
 
   def eager_includes
