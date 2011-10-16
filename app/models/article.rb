@@ -194,11 +194,13 @@ class Article < ActiveRecord::Base
     result = { 
       :article => { 
         :doi => doi, 
+        :shortdoi => "10/" + short_doi,
         :title => title, 
         :year => year,
         :pub_med => pub_med,
         :pub_med_central => pub_med_central,
         :mas => mas,
+        :mendeley => mendeley,
         :citations_count => citations_count,
         :published => (published_on.blank? ? nil : published_on.to_time),
         :updated_at => retrieved_at

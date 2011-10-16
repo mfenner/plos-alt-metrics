@@ -18,5 +18,18 @@
 
 class Journal < ActiveRecord::Base
   has_many :articles
+  
+  def articles_count
+    self.articles.count
+  end
+  
+  def citations_count(source, options={})
+    citations = []
+    self.articles.each do |article|
+      citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+      citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+    end
+    citations = citations.sum
+  end
 
 end

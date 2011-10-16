@@ -13,23 +13,23 @@
 # limitations under the License.
 
 class JournalsController < ApplicationController
-  before_filter :authenticate_group!, :except => [ :index, :show ]
+  before_filter :authenticate_author!, :except => [ :index, :show ]
 
-  # GET /groups
-  # GET /groups.xml
+  # GET /journals
+  # GET /journals.xml
   def index
     unless params[:q].blank?
-      @groups = Group.paginate :page => params[:page], 
+      @journals = Journal.paginate :page => params[:page], 
         :per_page => 20,
-        :conditions => ["groups.name REGEXP ? or groups.mendeley REGEXP ?", params[:q],params[:q]],
-        :order => 'groups.name' 
+        :conditions => ["journals.title REGEXP ? or journals.issn_print REGEXP ? or journals.issn_print REGEXP ?", params[:q],params[:q],params[:q]],
+        :order => 'journals.title' 
     else
       if author_signed_in?
-        # Fetch all groups with the authors you are following
-        #@groups = Group.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 12
-        @groups = Group.paginate :page => params[:page], :per_page => 12, :order => 'groups.name'
+        # Fetch all journals with the authors you are following
+        #@journals = Journal.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 12
+        @journals = Journal.paginate :page => params[:page], :per_page => 12, :order => 'journals.title'
       else
-        @groups = Group.paginate :page => params[:page], :per_page => 12, :order => 'groups.name'
+        @journals = Journal.paginate :page => params[:page], :per_page => 12, :order => 'journals.title'
       end
     end
     
@@ -39,17 +39,17 @@ class JournalsController < ApplicationController
           render :partial => "index" 
         end
       end
-      format.xml  { render :xml => @groups }
-      format.json { render :json => @groups, :callback => params[:callback] }
-      format.csv  { render :csv => @groups }
+      format.xml  { render :xml => @journals }
+      format.json { render :json => @journals, :callback => params[:callback] }
+      format.csv  { render :csv => @journals }
     end
   end
 
-  # GET /groups/1
-  # GET /groups/1.xml
+  # GET /journals/1
+  # GET /journals/1.xml
   def show
-    load_group
-    @articles = @group.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    load_journal
+    @articles = @journal.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
     
     respond_to do |format|
       format.html do 
@@ -61,28 +61,28 @@ class JournalsController < ApplicationController
       end
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @group.articles.to_xml
+        render :xml => @journal.articles.to_xml
       end
-      format.csv  { render :csv => @group }
-      format.json { render :json => @group.to_json, :callback => params[:callback] }
+      format.csv  { render :csv => @journal }
+      format.json { render :json => @journal.to_json, :callback => params[:callback] }
     end
   end
 
-  # GET /groups/new
-  # GET /groups/new.xml
+  # GET /journals/new
+  # GET /journals/new.xml
   def new
-    @group = Group.new
+    @journal = Journal.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @group }
-      format.json { render :json => @group }
+      format.xml  { render :xml => @journal }
+      format.json { render :json => @journal }
     end
   end
   
-  # GET /groups/1/edit
+  # GET /journals/1/edit
   def edit
-    @articles = @group.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @articles = @journal.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
     if request.xhr?
       render :partial => params[:partial]
     else
@@ -90,65 +90,65 @@ class JournalsController < ApplicationController
     end
   end
 
-  # POST /groups
-  # POST /groups.xml
+  # POST /journals
+  # POST /journals.xml
   def create
-    # Get group if it exists, otherwise create new one
-    #@group = Group.find_or_initialize_by_mas(:mas  => params[:group][:mas])
+    # Get journal if it exists, otherwise create new one
+    #@journal = Journal.find_or_initialize_by_mas(:mas  => params[:journal][:mas])
 
     #respond_to do |format|
-    #  if @group.save
-    #    # Fetch group information and update group
-    #    properties = Group.fetch_properties(@group)
-    #    @group = Group.update_properties(@group, properties)
-    #    flash[:notice] = 'Group was successfully created.' if @group.new_record?
+    #  if @journal.save
+    #    # Fetch journal information and update journal
+    #    properties = Journal.fetch_properties(@journal)
+    #    @journal = Journal.update_properties(@journal, properties)
+    #    flash[:notice] = 'Journal was successfully created.' if @journal.new_record?
     
-    #    format.html { redirect_to group_path(@group.mas, :format => :html) }
-    #    format.xml  { render :xml => @group, :status => :created, :location => @group }
-    #    format.json { render :json => @group, :status => :created, :location => @group }
+    #    format.html { redirect_to journal_path(@journal.mas, :format => :html) }
+    #    format.xml  { render :xml => @journal, :status => :created, :location => @journal }
+    #    format.json { render :json => @journal, :status => :created, :location => @journal }
     #  else
     #    format.html { render :action => "new" }
-    #    format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
-    #    format.json { render :json => @group.errors, :status => :unprocessable_entity }
+    #    format.xml  { render :xml => @journal.errors, :status => :unprocessable_entity }
+    #    format.json { render :json => @journal.errors, :status => :unprocessable_entity }
     #  end
     #end
   end
 
-  # PUT /groups/1
-  # PUT /groups/1.xml
+  # PUT /journals/1
+  # PUT /journals/1.xml
   def update
     respond_to do |format|
-      if @group.update_attributes(params[:group])
-        flash[:notice] = 'Group was successfully updated.'
+      if @journal.update_attributes(params[:journal])
+        flash[:notice] = 'Journal was successfully updated.'
         format.html { render :partial => params[:partial] if request.xhr? }
         format.xml  { head :ok }
         format.json { head :ok }
       else
         format.html { render :partial => params[:partial] if request.xhr? }
-        format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
-        format.json { render :json => @group.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @journal.errors, :status => :unprocessable_entity }
+        format.json { render :json => @journal.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /groups/1
-  # DELETE /groups/1.xml
+  # DELETE /journals/1
+  # DELETE /journals/1.xml
   def destroy
-    @group.destroy
+    @journal.destroy
 
     respond_to do |format|
-      format.html { redirect_to(groups_url) }
+      format.html { redirect_to(journals_url) }
       format.xml  { head :ok }
       format.json { head :ok }
     end
   end
 
 protected
-  def load_group(options={})
-    # Load one group given query params, for the non-#index actions
+  def load_journal(options={})
+    # Load one journal given query params, for the non-#index actions
     # Use :username as :id
-    @group = Group.find_by_mendeley!(params[:id], options)
-    if @group.nil?
+    @journal = Journal.find(params[:id])
+    if @journal.nil?
       redirect_to :action => 'index' and return
     end
   end

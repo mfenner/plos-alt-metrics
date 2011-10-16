@@ -35,16 +35,13 @@
 	    <% end %>
 	    <% @articles.each do |article| %>
 	      <tr>
-	      	<td class="name">
-	      	  <span class="name"><%= link_to (article.title.blank? ? article.doi : article.title), article_path(article.id) %></span><br/>
-	          <%= link_to "http://dx.doi.org/" + h(article.doi), "http://dx.doi.org/" + h(article.doi) %>
+	      	<td class="name">	
+	      	  <span itemprop="name" class="name"><%= link_to article.title, article_path(article.id) %></span><br/>
+	          <span class="journal"><%= article.journal.title %>.</span> <%= article.year %><%= article.volume ? ":#{article.volume}" : "" %> <%= article.issue ? "(#{article.issue})" : "" %><%= article.first_page ? ";#{article.first_page}" : "" %><%= article.last_page and article.last_page > article.first_page ? "-#{article.last_page}": "" %><br/><% unless article.short_doi.blank? %><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %><% end %>
 				<% unless article.authors.empty? %>
-				  <% if article.authors.count > 1 %>
-				    <br/>with 
+				  <% if article.authors.count > 0 %>
 		        <% article.authors.each do |author| %>
-		          <% if author != @author %>
-	          	  <%= link_to author.display_name, author_path(author.username) %> 
-	            <% end %>
+	          	<br/><%= link_to author.display_name, author_path(author.username) %>
 	         <% end %>
 	       <% end %>
 	     <% end %>
@@ -53,7 +50,7 @@
 					    <% category.sources.active.each do |source| %>
 				        <td class="count">
 					        <% citation = article.citations_by_source(source) %>
-								  <% if citation[:total] > 0 %>
+								  <% if citation and citation[:total] > 0 %>
 	                 <% if citation[:public_url] %>
 	                   <%= link_to h(citation[:total]), citation[:public_url]  %>
 	                 <% else %>

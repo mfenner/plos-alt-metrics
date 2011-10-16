@@ -20,12 +20,11 @@ PlosAltMetrics::Application.routes.draw do
     match 'sign_out', :to => 'authors/sessions#destroy', :as => :destroy_author_session, :via => [:get, :delete]
   end
   
-  # Wildcard match for DOI
-  #match '/articles/*id' => 'articles#show'
   resources :articles
   #match "/group/articles(/:id)(.:format)" => "groups#groupArticleSummaries"
   
   resources :groups
+  resources :journals
   
   # Admin resources
   resources :sources

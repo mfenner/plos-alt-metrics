@@ -13,7 +13,7 @@
   # limitations under the License.
 -%>
 
-<% unless @group.articles.empty? %>
+<% unless @journal.articles.empty? %>
 	<% unless active_categories.empty? %>
 	  <div id="source">
 	    <%= render :partial => 'source'%>
@@ -24,7 +24,7 @@
 	<div class="article">
 		<table>
 			<th class="name">
-				<h2><%= pluralize(@group.articles.count, 'Article') %></h2>
+				<h2><%= pluralize(@journal.articles.count, 'Article') %></h2>
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
@@ -73,7 +73,7 @@
 		</table>
 	</div>
 <% else %>
-  <% unless @group.mas.blank? %>
+  <% unless @journal.mas.blank? %>
     <h3>No articles found</h3>
   <% end %>
 <% end %>

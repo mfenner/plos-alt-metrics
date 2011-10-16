@@ -140,6 +140,7 @@ class AuthorsController < ApplicationController
                   article.update_attributes(:mas => result["ID"])
                   contribution = Contribution.find_or_create_by_author_id_and_article_id(:author_id => @author.id, :article_id => article.id)
                   contribution.update_attributes(:mas => true)
+                  Article.update_via_crossref(article)
                   # Create shortDOI if it doesn't exist yet
                   #article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
                 end
@@ -165,6 +166,7 @@ class AuthorsController < ApplicationController
                 if article.valid?
                   contribution = Contribution.find_or_create_by_author_id_and_article_id(:author_id => @author.id, :article_id => article.id)
                   contribution.update_attributes(:authorclaim => true)
+                  Article.update_via_crossref(contribution.article)
                   # Create shortDOI if it doesn't exist yet
                   #article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
                 end

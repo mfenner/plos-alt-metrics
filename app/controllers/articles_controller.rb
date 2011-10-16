@@ -86,6 +86,7 @@ class ArticlesController < ApplicationController
       end
       format.csv  { render :csv => @article }
       format.json { render :json => @article.to_json(format_options), :callback => params[:callback] }
+      format.bib { render :bib => @article }
     end
   end
 
@@ -161,8 +162,7 @@ class ArticlesController < ApplicationController
 protected
   def load_article(options={})
     # Load one article given query params, for the non-#index actions
-    #doi = DOI::from_uri(params[:id])
-    #@article = Article.find_by_doi(doi)
+    #@article = Article.find_by_short_doi!(params[:id], options)
     @article = Article.find(params[:id])
   end
 

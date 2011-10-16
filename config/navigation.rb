@@ -53,6 +53,7 @@ SimpleNavigation::Configuration.run do |navigation|
     primary.item :authors, 'Authors', authors_path
     primary.item :groups, 'Groups', groups_path, :highlights_on => :subpath 
     primary.item :articles, 'Articles', articles_path, :highlights_on => :subpath 
+    primary.item :journals, 'Journals', journals_path, :highlights_on => :subpath
     primary.item :about, 'About', about_path
 
     # Add an item which has a sub navigation (same params, but with block)

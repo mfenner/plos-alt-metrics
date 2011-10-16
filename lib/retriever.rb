@@ -204,6 +204,7 @@ class Retriever
         article = Article.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
         if article.valid?
+          Article.update_via_crossref(article)
           author.articles << article unless author.articles.include?(article)
           # Create shortDOI if it doesn't exist yet
           article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
@@ -233,6 +234,7 @@ class Retriever
           article = Article.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
           # Check that DOI is valid
           if article.valid?
+            Article.update_via_crossref(article)
             group.articles << article unless group.articles.include?(article)
             Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
           end

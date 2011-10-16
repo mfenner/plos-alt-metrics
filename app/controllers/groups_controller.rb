@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class GroupsController < ApplicationController
-  before_filter :authenticate_group!, :except => [ :index, :show ]
+  before_filter :authenticate_author!, :except => [ :index, :show ]
   before_filter :load_group, 
                 :only => [ :edit, :update, :destroy ]
 

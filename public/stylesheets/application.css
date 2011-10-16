@@ -319,6 +319,10 @@ span.service {
   clear: both;
 }
 
+span.journal {
+
+}
+
 /* digg_pagination from http://mislav.uniqpath.com/will_paginate/
 *
 */

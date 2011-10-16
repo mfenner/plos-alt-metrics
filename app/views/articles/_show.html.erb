@@ -17,17 +17,17 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-  <h2><%=h @article.title unless @article.title.blank? %></h2>
-  <div class="article">
-	  <%= link_to "http://dx.doi.org/" + h(@article.doi), "http://dx.doi.org/" + h(@article.doi) %><p>
-
-	<% unless @article.authors.empty? %>
-	  <% if @article.authors.count > 0 %>
-      <% @article.authors.each do |author| %>
-      	<%= link_to h(author.display_name), author_path(author.username) %>
-     <% end %>
-   <% end %>
-  <% end %>
+	<div itemscope itemtype="http://schema.org/ScholarlyArticle">
+    <h2><span itemprop="name"><%= @article.title %></span></h2>
+		 <span class="journal"><%= link_to @article.journal.title, journal_path(@article.journal) %>.</span> <%= @article.year %><%= @article.volume ? ":#{@article.volume}" : "" %> <%= @article.issue ? "(#{@article.issue})" : "" %><%= @article.first_page ? ";#{@article.first_page}" : "" %><%= @article.last_page and @article.last_page > @article.first_page ? "-#{@article.last_page}": "" %><br/><% unless @article.short_doi.blank? %><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %><% end %><p>
+			<% unless @article.authors.empty? %>
+			  <% if @article.authors.count > 0 %>
+		      <% @article.authors.each do |author| %>
+		      	<%= link_to h(author.display_name), author_path(author.username) %>
+		     <% end %>
+		   <% end %>
+		  <% end %>
+		<p>
 	</div>
 
 	<div id="source">
