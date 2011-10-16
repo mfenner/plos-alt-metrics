@@ -39,6 +39,9 @@ GEM
     addressable (2.2.6)
     arel (2.0.10)
     bcrypt-ruby (3.0.1)
+    bibtex-ruby (2.0.0)
+      latex-decode (>= 0.0.3)
+      multi_json (~> 1.0)
     bluecloth (2.1.0)
     builder (2.1.2)
     columnize (0.3.4)
@@ -67,6 +70,8 @@ GEM
     hashie (1.1.0)
     httpclient (2.2.1)
     i18n (0.5.0)
+    latex-decode (0.0.6)
+      unicode (~> 0.4)
     libxml-ruby (2.2.2)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
@@ -148,6 +153,7 @@ GEM
       multi_xml (~> 0.4.0)
       simple_oauth (~> 0.1.5)
     tzinfo (0.3.29)
+    unicode (0.4.0)
     warden (1.0.5)
       rack (>= 1.0)
     will_paginate (3.0.1)
@@ -157,6 +163,8 @@ PLATFORMS
 
 DEPENDENCIES
   SystemTimer (= 1.2.3)
+  addressable
+  bibtex-ruby
   bundler
   daemons (= 1.1.4)
   devise

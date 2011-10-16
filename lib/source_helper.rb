@@ -55,7 +55,7 @@ protected
     begin
       options = options.except(:retrieval)
 
-      url = URI.parse(uri)
+      url = Addressable::URI.parse(uri)
       
       if options.empty?
         response = Net::HTTP.get_response(url)

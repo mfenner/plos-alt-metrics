@@ -250,6 +250,135 @@ class Article < ActiveRecord::Base
     
     article
   end
+  
+  def self.update_via_crossref(article, options={})
+    # Update article information via CrossRef
+    
+    # First make sure you have correct DOI
+    doi = DOI::clean(article.doi)
+    
+    # Only use articles that have short DOI
+    short_doi = article.short_doi.blank? ? DOI::shorten(doi) : article.short_doi
+    if short_doi.blank?
+      article.destroy
+      return nil
+    end
+    
+    # Fetch article information from CrossRef
+    url = "http://www.crossref.org/openurl/?pid=#{APP_CONFIG['crossref_key']}&id=doi:"
+
+    Rails.logger.info "CrossRef query: #{doi}"
+
+    SourceHelper.get_xml(url + Addressable::URI.encode(doi) + "&noredirect=true", options) do |document|
+      document.root.namespaces.default_prefix = "crossref_result"
+      document.find("//crossref_result:body/crossref_result:query").each do |query_result|
+        # Delete article if DOI not found at CrossRef
+        if query_result.attributes.get_attribute("status").value != "resolved"
+          article = Article.find_by_doi(doi)
+          article.destroy
+        else
+          result = {}
+          %w[doi article_title year volume issue first_page last_page publication_type journal_title volume_title].each do |a|
+            first = query_result.find_first("crossref_result:#{a}")
+            if first
+              content = first.content
+              result[a.intern] = content
+            end
+          end
+          issn_print = query_result.find_first("crossref_result:issn[@type='print']") ? query_result.find_first("crossref_result:issn[@type='print']").content : ""
+          issn_electronic = query_result.find_first("crossref_result:issn[@type='electronic']") ? query_result.find_first("crossref_result:issn[@type='electronic']").content : ""
+          
+          isbn_print = query_result.find_first("crossref_result:isbn[@type='print']") ? query_result.find_first("crossref_result:isbn[@type='print']").content : ""
+          isbn_electronic = query_result.find_first("crossref_result:isbn[@type='electronic']") ? query_result.find_first("crossref_result:isbn[@type='electronic']").content : ""
+          
+          result[:doi] = query_result.find_first("crossref_result:doi")
+          result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
+        
+          contributors_element = query_result.find_first("crossref_result:contributors")
+          result[:contributors] = contributors_element ? extract_contributors(contributors_element) : nil
+        
+          unless issn_print.blank? and issn_electronic.blank?
+            # Remove dashes for consistency
+            unless issn_print.blank?
+              issn_print.gsub!(/[^0-9X]/, "")
+            end
+            unless issn_electronic.blank?
+              issn_electronic.gsub!(/[^0-9X]/, "")
+            end 
+            
+            journal = Journal.find(:first, :conditions => ["issn_print = ? OR issn_electronic = ?", issn_print, issn_electronic]) 
+            if journal
+              if (journal.title.blank? or journal.issn_print.blank? or journal.issn_electronic.blank?)
+                journal.update_attributes(:title => result[:journal_title],
+                                          :issn_print => issn_print,
+                                          :issn_electronic => issn_electronic)
+              end
+            else
+              journal = Journal.create(:title => result[:journal_title],
+                                    :issn_print => issn_print,
+                                    :issn_electronic => issn_electronic)
+            end
+            journal_id = journal.id
+          else
+            journal_id = nil
+          end
+          
+          unless isbn_print.blank? and isbn_electronic.blank?
+            
+            book = Book.find(:first, :conditions => ["isbn_print = ? OR isbn_electronic = ?", isbn_print, isbn_electronic]) 
+            if book
+              if (book.title.blank? or book.isbn_print.blank? or book.isbn_electronic.blank?)
+                book.update_attributes(:title => result[:volume_title],
+                                          :isbn_print => isbn_print,
+                                          :isbn_electronic => isbn_electronic)
+              end
+            else
+              book = Book.create(:title => result[:volume_title],
+                                    :isbn_print => isbn_print,
+                                    :isbn_electronic => isbn_electronic)
+            end
+            book_id = book.id
+          else
+            book_id = nil
+          end
+        
+          article.update_attributes(:doi => doi,
+                                  :short_doi => short_doi,
+                                  :title => result[:article_title],
+                                  :year => result[:year], 
+                                  :volume => result[:volume],
+                                  :issue => result[:issue],
+                                  :first_page => result[:first_page],
+                                  :last_page => result[:last_page],
+                                  :content_type => result[:content_type],
+                                  :publication_type => result[:publication_type],
+                                  :journal_id => journal_id,
+                                  :book_id => book_id,
+                                  :contributors => result[:contributors])
+        end
+      end
+    end  
+  end
+  
+  protected
+    def self.extract_contributors(contributors_element)
+      contributors = []
+      contributors_element.find("crossref_result:contributor").each do |c|
+        surname = c.find_first("crossref_result:surname")
+        surname = surname.content if surname
+        given_name = c.find_first("crossref_result:given_name")
+        given_name = given_name.content if given_name
+        given_name = given_name.split.map { |w| w.first.upcase }.join("") \
+          if given_name
+        contributor = [surname, given_name].compact.join(", ")
+        if c.attributes['first-author'] == 'true'
+          contributors.unshift contributor
+        else
+          contributors << contributor
+        end
+      end
+      contributors.join(" and ")
+    end
 
   private
     def create_retrievals
