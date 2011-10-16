@@ -15,7 +15,7 @@
 -%>
 
 <h2><span itemprop="name"><%= @journal.title %></span></h2>
-ISSN <%= @journal.issn_print.blank? ? @journal.issn_electronic : @journal.issn_print %><p>
+ISSN <%= @journal.issn_electronic %><p>
 
 <% unless @journal.articles.empty? %>
   <div id="article">

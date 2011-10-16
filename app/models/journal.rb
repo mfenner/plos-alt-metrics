@@ -19,6 +19,8 @@
 class Journal < ActiveRecord::Base
   has_many :articles
   
+  validates_uniqueness_of :issn_electronic
+  
   def articles_count
     self.articles.count
   end

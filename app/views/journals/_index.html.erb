@@ -23,7 +23,7 @@
 		    	<td class="index">
 			      <% unless journal.nil? %>
 							<span class="name"><%= link_to journal.title, journal_path(journal) %></span><br/>
-							<%= journal.issn_print.blank? ? journal.issn_electronic : journal.issn_print %>
+							<%= journal.issn_electronic %>
 		        <% end %>
 	      	</td>
 		    <% end %>  
