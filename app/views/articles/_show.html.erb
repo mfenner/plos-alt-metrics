@@ -21,7 +21,7 @@
     <h2><span itemprop="name"><%= @article.title %></span></h2>
 		 	<span class="journal">
        <% unless @article.journal.blank? %>
-         <%= link_to @article.journal.title, journal_path(@article.journal) %>.
+         <%= link_to @article.journal.title, journal_path(@article.journal.issn_electronic) %>.
        <% end %>
 				<% unless @article.book.blank? %>
          <%= @article.book.title %>.

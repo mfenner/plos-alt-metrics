@@ -259,6 +259,12 @@ class Article < ActiveRecord::Base
     # First make sure you have correct DOI
     doi = DOI::clean(article.doi)
     
+    # Delete article if cleaned DOI exists already
+    if article.doi != doi
+     article.destroy unless Article.where(:doi => doi).blank?
+     return nil
+    end
+    
     # Only use articles that have short DOI
     short_doi = article.short_doi.blank? ? DOI::shorten(doi) : article.short_doi
     if short_doi.blank?

@@ -22,7 +22,7 @@
 		    <% journals.each do |journal| %>  
 		    	<td class="index">
 			      <% unless journal.nil? %>
-							<span class="name"><%= link_to journal.title, journal_path(journal) %></span><br/>
+							<span class="name"><%= link_to journal.title, journal_path(journal.issn_electronic) %></span><br/>
 							<%= journal.issn_electronic %>
 		        <% end %>
 	      	</td>
