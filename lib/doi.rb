@@ -56,9 +56,10 @@ module DOI
     
     # Remove escaped characters
     doi = Addressable::URI.unencode(doi)
-    # Remove component DOIs from PLoS articles
+    # Remove component DOIs and preprint DOIs from PLoS articles
     if doi.match(/^10.1371/)
       doi.sub!(/\.s?[gt]00[1-9]$/, '')
+      doi.sub!(/\.eor$/, '')
     # Remove versions from Nature Precedings
     elsif doi.match(/^10.1038\/npre/)
       doi.sub!(/\.\d$/, '')
