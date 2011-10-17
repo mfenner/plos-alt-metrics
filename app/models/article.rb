@@ -261,7 +261,7 @@ class Article < ActiveRecord::Base
     
     # Delete article if cleaned DOI exists already
     if article.doi != doi
-     article.destroy unless Article.where(:doi => doi).blank?
+     article.destroy if Article.where(:doi => doi).size > 0
      return nil
     end
     
