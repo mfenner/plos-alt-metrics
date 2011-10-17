@@ -63,8 +63,8 @@ namespace :db do
 
     desc "Update one specified article"
     task :one => :environment do
-      doi = ENV["shortdoi"] or abort("shortDOI not specified (eg, 'shortdoi=foo')")
-      article = Article.find_by_short_doi(shortdoi) or abort("Article not found: #{shortdoi}")
+      short_doi = ENV["shortdoi"] or abort("shortDOI not specified (eg, 'shortdoi=foo')")
+      article = Article.find_by_short_doi(short_doi) or abort("Article not found: #{short_doi}")
       ENV["LAZY"] ||= "0"
       Retriever.update_articles([article])
     end
