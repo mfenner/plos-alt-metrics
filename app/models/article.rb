@@ -261,8 +261,9 @@ class Article < ActiveRecord::Base
     
     # Delete article if cleaned DOI exists already
     if article.doi != doi
-     article.destroy if Article.where(:doi => doi).size > 0
-     return nil
+      other_article = Article.find_by_doi(doi)
+      article.destroy unless other_article.blank?
+      return nil
     end
     
     # Only use articles that have short DOI
@@ -282,7 +283,6 @@ class Article < ActiveRecord::Base
       document.find("//crossref_result:body/crossref_result:query").each do |query_result|
         # Delete article if DOI not found at CrossRef
         if query_result.attributes.get_attribute("status").value != "resolved"
-          article = Article.find_by_doi(doi)
           article.destroy
         else
           result = {}
