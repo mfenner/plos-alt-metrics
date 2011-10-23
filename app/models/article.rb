@@ -305,16 +305,23 @@ class Article < ActiveRecord::Base
           contributors_element = query_result.find_first("crossref_result:contributors")
           result[:contributors] = contributors_element ? extract_contributors(contributors_element) : nil
         
-          unless issn_electronic.blank?
+          unless isbn_print.blank? and issn_electronic.blank?
             # Remove dashes for consistency
-            issn_electronic.gsub!(/[^0-9X]/, "")
+            unless issn_electronic.blank?
+              issn_electronic.gsub!(/[^0-9X]/, "")
+            end
             unless issn_print.blank?
               issn_print.gsub!(/[^0-9X]/, "")
             end
-            
-            journal = Journal.find_or_create_by_issn_electronic(:issn_electronic => issn_electronic,
+            unless issn_electronic.blank?
+              journal = Journal.find_or_create_by_issn_electronic(:issn_electronic => issn_electronic,
                                                                 :title => result[:journal_title],
                                                                 :issn_print => issn_print)
+            else
+              journal = Journal.find_or_create_by_issn_print(:issn_print => issn_print,
+                                                                :title => result[:journal_title],
+                                                                :issn_electronic => issn_electronic)
+            end
             journal_id = journal.id
           else
             journal_id = nil
