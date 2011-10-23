@@ -19,6 +19,7 @@
 -%>
 	<div itemscope itemtype="http://schema.org/ScholarlyArticle">
     <h2><span itemprop="name"><%= @article.title %></span></h2>
+    <span class="content_type"><%= @article.content_type.sub!(/_/, ' ').capitalize %>. </span>
 		 	<span class="journal">
        <% unless @article.journal.blank? %>
          <%= link_to @article.journal.title, journal_path(@article.journal.issn_electronic) %>.

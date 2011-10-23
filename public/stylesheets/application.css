@@ -323,6 +323,10 @@ span.journal {
 
 }
 
+span.content_type {
+  font-style: italic;
+}
+
 /* digg_pagination from http://mislav.uniqpath.com/will_paginate/
 *
 */

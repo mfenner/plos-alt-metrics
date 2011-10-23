@@ -37,6 +37,7 @@
 	      <tr>
 					<td class="name">	
 	      	  <span itemprop="name" class="name"><%= link_to article.title, article_path(article.short_doi) %></span><br/>
+	          <span class="content_type"><%= article.content_type.sub!(/_/, ' ').capitalize %>. </span>
 	          <span class="journal">
 	            <% unless article.journal.blank? %>
 		            <%= link_to article.journal.title, journal_path(article.journal) %>.

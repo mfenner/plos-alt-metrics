@@ -19,6 +19,7 @@
 class Journal < ActiveRecord::Base
   has_many :articles
   
+  validates_uniqueness_of :issn_print, :allow_blank => true
   validates_presence_of :issn_electronic
   validates_uniqueness_of :issn_electronic
   
