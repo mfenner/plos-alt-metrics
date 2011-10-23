@@ -19,7 +19,7 @@
 class Article < ActiveRecord::Base
   
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
-  has_many :sources, :through => :retrievals
+  has_many :sources, :through => :retrievals 
   has_many :citations, :through => :retrievals
   has_many :contributions
   has_many :authors, :through => :contributions

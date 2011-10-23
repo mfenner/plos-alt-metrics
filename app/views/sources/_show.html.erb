@@ -122,8 +122,10 @@
 <% else %>
 <ul>
   <% @samples.each do |retrieval| %>
-  <li><%= link_to retrieval.article.doi, article_path(retrieval.article.short_doi) %>:
-    <%= retrieval.total_citations_count %></li>
+    <% unless retrieval.article.blank? %>
+      <li><%= link_to retrieval.article.doi, article_path(retrieval.article.short_doi) %>:
+      <%= retrieval.total_citations_count %></li>
+    <% end %>
   <% end %>
 </ul>
 <% end %>
