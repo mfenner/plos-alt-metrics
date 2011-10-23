@@ -47,7 +47,7 @@ PlosAltMetrics::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
   
-  config.action_mailer.default_url_options = { :host => 'localhost' }
+  config.action_mailer.default_url_options = { :host => 'sciencecard.org' }
   
   # Configure Google Analytics, please add your settings
   config.middleware.use("Rack::GoogleAnalytics", :web_property_id => 'UA-362856-11')
