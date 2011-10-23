@@ -296,9 +296,6 @@ class Article < ActiveRecord::Base
           issn_print = query_result.find_first("crossref_result:issn[@type='print']") ? query_result.find_first("crossref_result:issn[@type='print']").content : ""
           issn_electronic = query_result.find_first("crossref_result:issn[@type='electronic']") ? query_result.find_first("crossref_result:issn[@type='electronic']").content : ""
           
-          isbn_print = query_result.find_first("crossref_result:isbn[@type='print']") ? query_result.find_first("crossref_result:isbn[@type='print']").content : ""
-          isbn_electronic = query_result.find_first("crossref_result:isbn[@type='electronic']") ? query_result.find_first("crossref_result:isbn[@type='electronic']").content : ""
-          
           result[:doi] = query_result.find_first("crossref_result:doi")
           result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
         
