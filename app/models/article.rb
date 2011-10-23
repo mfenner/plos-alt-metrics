@@ -317,14 +317,14 @@ class Article < ActiveRecord::Base
             unless issn_print.blank?
               issn_print.gsub!(/[^0-9X]/, "")
             end
-            unless issn_electronic.blank?
+            unless issn_print.blank?
+              journal = Journal.find_or_create_by_issn_print(:issn_print => issn_print,
+                                                             :title => result[:journal_title],
+                                                             :issn_electronic => issn_electronic)
+            else
               journal = Journal.find_or_create_by_issn_electronic(:issn_electronic => issn_electronic,
                                                                 :title => result[:journal_title],
-                                                                :issn_print => issn_print)
-            else
-              journal = Journal.find_or_create_by_issn_print(:issn_print => issn_print,
-                                                                :title => result[:journal_title],
-                                                                :issn_electronic => issn_print)
+                                                                :issn_print => issn_electronic)
             end
             journal_id = journal.id
           else
