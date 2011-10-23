@@ -45,7 +45,7 @@
 							<% unless article.book.blank? %>
 		            <%= article.book.title %>.
 		          <% end %>
-		        </span> <%= article.year %><%= article.volume ? ":#{article.volume}" : "" %> <%= article.issue ? "(#{article.issue})" : "" %><%= article.first_page ? ";#{article.first_page}" : "" %><%= article.last_page and article.last_page > article.first_page ? "-#{article.last_page}": "" %><br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
+		        </span> <%= article.formatted_citation %><br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
 				<% unless article.authors.empty? %>
 				  <% if article.authors.count > 0 %>
 		        <% article.authors.each do |author| %>
