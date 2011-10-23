@@ -28,9 +28,11 @@
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
+		      <% if source.prefix.blank? or @journal.title.match(/^PLoS/) %>
 		      <th class="count">
 				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.article_description + ": " + source.name %>
 			    </th>
+			    <% end %>
 			  <% end %>
 	    <% end %>
 	    <% @articles.each do |article| %>
@@ -55,6 +57,7 @@
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
+					      <% if source.prefix.blank? or article.doi.match(/^#{source.prefix}/) %>
 				        <td class="count">
 					        <% citation = article.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
@@ -65,6 +68,7 @@
 	                 <% end %>
 	               <% end %>
 					    </td>
+					    <% end %>
 				    <% end %>
 	   	  <% end %>
 		  </tr>

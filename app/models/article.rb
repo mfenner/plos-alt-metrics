@@ -296,13 +296,16 @@ class Article < ActiveRecord::Base
           issn_print = query_result.find_first("crossref_result:issn[@type='print']") ? query_result.find_first("crossref_result:issn[@type='print']").content : ""
           issn_electronic = query_result.find_first("crossref_result:issn[@type='electronic']") ? query_result.find_first("crossref_result:issn[@type='electronic']").content : ""
           
+          isbn_print = query_result.find_first("crossref_result:isbn[@type='print']") ? query_result.find_first("crossref_result:isbn[@type='print']").content : ""
+          isbn_electronic = query_result.find_first("crossref_result:isbn[@type='electronic']") ? query_result.find_first("crossref_result:isbn[@type='electronic']").content : ""
+          
           result[:doi] = query_result.find_first("crossref_result:doi")
           result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
         
           contributors_element = query_result.find_first("crossref_result:contributors")
           result[:contributors] = contributors_element ? extract_contributors(contributors_element) : nil
         
-          unless isbn_print.blank? and issn_electronic.blank?
+          unless issn_print.blank? and issn_electronic.blank?
             # Remove dashes for consistency
             unless issn_electronic.blank?
               issn_electronic.gsub!(/[^0-9X]/, "")

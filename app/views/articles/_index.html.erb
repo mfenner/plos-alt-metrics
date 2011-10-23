@@ -50,8 +50,14 @@
 	      	<% article.citations_by_category.each do |citations| %>  
             <% citations[:sources].each do |citation| %>
     	        <td class="count">
-               <%= link_to citation[:total], citation[:public_url] if citation[:total] > 0 %>
-             </td>
+							  <% if citation and citation[:total] > 0 %>
+                 <% if citation[:public_url] %>
+                   <%= link_to h(citation[:total]), citation[:public_url]  %>
+                 <% else %>
+                   <%= h(citation[:total]) %>
+                 <% end %>
+               <% end %>
+				    </td>
          <% end %>
    	  <% end %>
 	  </tr>
