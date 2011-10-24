@@ -96,7 +96,7 @@ class Author < ActiveRecord::Base
     result[:author][:citations] = []
     @categories.each do |category|
 		  category.sources.reusable.each do |source|
-	      result[:author][:citations] << [:source_id => source.id, :source_name => source.name, :count => self.citations_count(source)]
+	      result[:author][:citations] << {:source_id => source.id, :source_name => source.name, :count => self.citations_count(source)}
 	    end
     end
     
