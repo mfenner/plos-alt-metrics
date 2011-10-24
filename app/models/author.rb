@@ -103,6 +103,7 @@ class Author < ActiveRecord::Base
     result[:author][:articles] = []
     self.articles.each do |article|
       result[:author][:articles] << {:doi => article.doi, 
+        :shortdoi => article.short_doi,
         :title => article.title, 
         :year => article.year,
         :pub_med => article.pub_med,
