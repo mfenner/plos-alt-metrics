@@ -48,8 +48,8 @@
 		        </span> <%= article.formatted_citation %><br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
 				<% unless article.authors.empty? %>
 				  <% if article.authors.count > 1 %>
+						<br>with 
 		        <% article.authors.each do |author| %>
-		          <br>with 
 		          <% if author.id != @author.id %>
 	          	  <%= link_to author.display_name, author_path(author.username) %> 
 	            <% end %>
