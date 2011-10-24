@@ -49,6 +49,7 @@
 				<% unless article.authors.empty? %>
 				  <% if article.authors.count > 1 %>
 		        <% article.authors.each do |author| %>
+		          <br>with 
 		          <% if author.id != @author.id %>
 	          	  <%= link_to author.display_name, author_path(author.username) %> 
 	            <% end %>
