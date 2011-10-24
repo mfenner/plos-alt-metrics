@@ -81,7 +81,8 @@ class Author < ActiveRecord::Base
     result = { 
       :author => { 
         :name => name,
-        :mas => mas,  
+        :mas => mas, 
+        :mendeley => mendeley, 
         :authorclaim => authorclaim,
         :location => location,
         :description => description,
