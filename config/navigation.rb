@@ -51,7 +51,6 @@ SimpleNavigation::Configuration.run do |navigation|
     #
     primary.dom_class = 'navigation'
     primary.item :authors, 'Authors', authors_path
-    primary.item :groups, 'Groups', groups_path, :highlights_on => :subpath 
     primary.item :articles, 'Articles', articles_path, :highlights_on => :subpath 
     primary.item :journals, 'Journals', journals_path, :highlights_on => :subpath
     primary.item :about, 'About', about_path

@@ -16,4 +16,11 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<%= BibTeX::Bibliography.new << @article.to_bib %>
+<% bibliography = BibTeX::Bibliography.new %>
+
+<% unless @author.articles.empty? %>
+  <% @author.articles.each do |article| %>
+    <% bibliography << article.to_bib %>
+  <% end %>
+<% end %>
+<%= bibliography %>

@@ -118,6 +118,14 @@ class Author < ActiveRecord::Base
     result.to_json(options)
   end
   
+  def to_bib
+    bibliography = BibTeX::Bibliography.new
+    self.articles.each do |article|
+      bibliography << article.bib_entry
+    end
+    bibliography
+  end
+  
   def articles_count
     self.articles.count
   end

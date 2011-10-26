@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'bibtex'
+
 class Article < ActiveRecord::Base
   
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
@@ -23,6 +25,7 @@ class Article < ActiveRecord::Base
   has_many :citations, :through => :retrievals
   has_many :contributions
   has_many :authors, :through => :contributions
+  has_many :contributors, :order => :position
   has_and_belongs_to_many :groups
   belongs_to :journal
   belongs_to :book
@@ -223,6 +226,116 @@ class Article < ActiveRecord::Base
     result.to_json(options)
   end
   
+  def to_bib
+    # Define BibTeX citation
+    case content_type
+    when "journal_article"
+      bib_entry = BibTeX::Entry.new({
+         :type => "article",
+         :title => title,
+         :author => contributors_with_names,
+         :doi => doi,
+         :url => "http://doi.org/" + short_doi,
+         :journal => journal ? journal.title : ""})
+      bib_entry.add(:year => year) unless year.blank?
+      bib_entry.add(:volume => volume) unless volume.blank?
+      bib_entry.add(:number => issue) unless issue.blank?
+      bib_entry.add(:pages => pages) unless pages.blank?
+    when "book_content"
+      bib_entry = BibTeX::Entry.new({
+         :type => "incollection",
+         :title => title,
+         :author => contributors_with_names,
+         :doi => doi,
+         :url => "http://doi.org/" + short_doi,
+         :publisher => "",
+         :booktitle => book ? book.title : ""})
+      bib_entry.add(:year => year) unless year.blank?
+      bib_entry.add(:volume => volume) unless volume.blank?
+      bib_entry.add(:number => issue) unless issue.blank?
+      bib_entry.add(:pages => pages) unless pages.blank?
+    when "conference_paper"
+      bib_entry = BibTeX::Entry.new({
+         :type => "inproceedings",
+         :title => title,
+         :author => contributors_with_names,
+         :doi => doi,
+         :url => "http://doi.org/" + short_doi,
+         :booktitle => book ? book.title : ""})
+      bib_entry.add(:year => year) unless year.blank?
+      bib_entry.add(:volume => volume) unless volume.blank?
+      bib_entry.add(:number => issue) unless issue.blank?
+      bib_entry.add(:pages => pages) unless pages.blank?
+    end
+  end
+  
+  def pages
+    (first_page ? first_page : "") + ((first_page and last_page) ? "-" : "") + (last_page ? last_page : "")
+  end
+  
+  def to_ris (options={})
+    # Define RIS citation
+    case content_type
+    when "journal_article"
+      ris = ["TY  - JOUR",
+             "T1  - #{title}",
+             "DO  - #{doi}",
+             "UR  - http://doi.org/#{short_doi}"]
+      contributors.each do |contributor|
+        ris << "AU  - #{contributor.name}"
+      end  
+      ris << "JO  - #{journal.title}" unless journal.blank?
+      ris << "PY  - #{year}" unless year.blank?
+      ris << "VL  - #{volume}" unless volume.blank?
+      ris << "IS  - #{issue}" unless issue.blank?
+      ris << "SP  - #{pages}" unless pages.blank?
+      ris << "ER  - "
+      ris << ""
+      ris.join("\r\n")
+    when "book_content"
+      ris = ["TY  - CHAP",
+             "T1  - #{title}",
+             "DO  - #{doi}",
+             "UR  - http://doi.org/#{short_doi}"]
+      contributors.each do |contributor|
+        ris << "AU  - #{contributor.name}"
+      end
+      ris << "T2  - #{book.title}" unless book.blank?
+      ris << "SN  - #{book.isbn_print}" unless book.blank?
+      ris << "PY  - #{year}" unless year.blank?
+      ris << "VL  - #{volume}" unless volume.blank?
+      ris << "IS  - #{issue}" unless issue.blank?
+      ris << "SP  - #{pages}" unless pages.blank?
+      ris << "ER  - "
+      ris << ""
+      ris.join("\r\n")
+    when "conference_paper"
+      ris = ["TY  - CPAPER",
+             "T1  - #{title}",
+             "DO  - #{doi}",
+             "UR  - http://doi.org/#{short_doi}"]
+      contributors.each do |contributor|
+        ris << "AU  - #{contributor.name}"
+      end
+      ris << "T2  - #{book.title}" unless book.blank?
+      ris << "PY  - #{year}" unless year.blank?
+      ris << "VL  - #{volume}" unless volume.blank?
+      ris << "IS  - #{issue}" unless issue.blank?
+      ris << "SP  - #{pages}" unless pages.blank?
+      ris << "ER  - "
+      ris << ""
+      ris.join("\r\n")
+    end
+  end
+  
+  def contributors_with_names
+    names = []
+    contributors.each do |contributor| 
+      names << contributor.name
+    end
+    names = names.empty? ? "" : names.join(" and ")
+  end
+  
   def self.fetch_from_mendeley(uuid, options={})
     # Fetch article information, return nil if no response 
     url = "http://api.mendeley.com/oapi/documents/details/#{uuid}?consumer_key=#{APP_CONFIG['mendeley_key']}"
@@ -290,7 +403,7 @@ class Article < ActiveRecord::Base
           article.destroy
         else
           result = {}
-          %w[doi article_title year volume issue first_page last_page publication_type journal_title volume_title].each do |a|
+          %w[doi article_title year volume issue first_page last_page journal_title volume_title].each do |a|
             first = query_result.find_first("crossref_result:#{a}")
             if first
               content = first.content
@@ -307,7 +420,7 @@ class Article < ActiveRecord::Base
           result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
         
           contributors_element = query_result.find_first("crossref_result:contributors")
-          result[:contributors] = contributors_element ? extract_contributors(contributors_element) : nil
+          extract_contributors(contributors_element, article) if contributors_element
         
           unless issn_print.blank? and issn_electronic.blank?
             # Remove dashes for consistency
@@ -331,11 +444,16 @@ class Article < ActiveRecord::Base
             journal_id = nil
           end
           
-          unless isbn_electronic.blank?
-            
-            book = Book.find_or_create_by_isbn_electronic(:isbn_electronic => isbn_electronic,
+          unless isbn_print.blank? and isbn_electronic.blank?
+            unless isbn_print.blank?
+              book = Book.find_or_create_by_isbn_print(:isbn_print => isbn_print,
+                                                       :title => result[:volume_title],
+                                                       :isbn_electronic => isbn_electronic)
+            else
+              book = Book.find_or_create_by_isbn_electronic(:isbn_electronic => isbn_electronic,
                                                           :title => result[:volume_title],
-                                                          :isbn_print => isbn_print)
+                                                          :isbn_print => isbn_electronic)
+            end
             book_id = book.id
           else
             book_id = nil
@@ -350,17 +468,17 @@ class Article < ActiveRecord::Base
                                   :first_page => result[:first_page],
                                   :last_page => result[:last_page],
                                   :content_type => result[:content_type],
-                                  :publication_type => result[:publication_type],
                                   :journal_id => journal_id,
-                                  :book_id => book_id,
-                                  :contributors => result[:contributors])
+                                  :book_id => book_id)
         end
       end
     end  
   end
   
   protected
-    def self.extract_contributors(contributors_element)
+    def self.extract_contributors(contributors_element, article)
+      # Remove contributors if they exist, then create them from scratch
+      article.contributors.delete_all
       contributors = []
       contributors_element.find("crossref_result:contributor").each do |c|
         surname = c.find_first("crossref_result:surname")
@@ -369,14 +487,15 @@ class Article < ActiveRecord::Base
         given_name = given_name.content if given_name
         given_name = given_name.split.map { |w| w.first.upcase }.join("") \
           if given_name
-        contributor = [surname, given_name].compact.join(", ")
-        if c.attributes['first-author'] == 'true'
-          contributors.unshift contributor
-        else
-          contributors << contributor
-        end
+        position = nil
+        position = 1 if c.attributes['sequence'] == 'first'
+        role = c.attributes['contributor_role']
+        article.contributors << Contributor.new(:surname => surname,
+                                                :given_name => given_name,
+                                                :position => position,
+                                                :role => role)
       end
-      contributors.join(" and ")
+      article.contributors
     end
 
   private

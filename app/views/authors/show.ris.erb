@@ -16,4 +16,11 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<%= BibTeX::Bibliography.new << @article.to_bib %>
+Provider: ScienceCard
+Content:text/plain; charset="UTF-8"
+
+<% unless @author.articles.empty? %>
+  <% @author.articles.each do |article| %>
+<%= article.to_ris %>
+  <% end %>
+<% end %>

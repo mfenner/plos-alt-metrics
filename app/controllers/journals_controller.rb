@@ -65,6 +65,8 @@ class JournalsController < ApplicationController
       end
       format.csv  { render :csv => @journal }
       format.json { render :json => @journal.to_json, :callback => params[:callback] }
+      format.bib { render :bib => @journal }
+      format.ris { render :ris => @journal }
     end
   end
 
@@ -147,7 +149,7 @@ protected
   def load_journal(options={})
     # Load one journal given query params, for the non-#index actions
     # Use :username as :id
-    @journal = Journal.find_by_issn_electronic!(params[:id])
+    @journal = Journal.find_by_issn_print!(params[:id])
     if @journal.nil?
       redirect_to :action => 'index' and return
     end

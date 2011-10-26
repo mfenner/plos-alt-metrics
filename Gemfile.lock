@@ -36,11 +36,12 @@ GEM
       activemodel (= 3.0.10)
       activesupport (= 3.0.10)
     activesupport (3.0.10)
+    acts_as_list (0.1.4)
     addressable (2.2.6)
     arel (2.0.10)
     bcrypt-ruby (3.0.1)
-    bibtex-ruby (2.0.0)
-      latex-decode (>= 0.0.3)
+    bibtex-ruby (2.0.1)
+      latex-decode (>= 0.0.6)
       multi_json (~> 1.0)
     bluecloth (2.1.0)
     builder (2.1.2)
@@ -70,7 +71,7 @@ GEM
     hashie (1.1.0)
     httpclient (2.2.1)
     i18n (0.5.0)
-    latex-decode (0.0.6)
+    latex-decode (0.0.8)
       unicode (~> 0.4)
     libxml-ruby (2.2.2)
     linecache (0.46)
@@ -163,8 +164,9 @@ PLATFORMS
 
 DEPENDENCIES
   SystemTimer (= 1.2.3)
+  acts_as_list
   addressable
-  bibtex-ruby
+  bibtex-ruby (~> 2.0.1)
   bundler
   daemons (= 1.1.4)
   devise

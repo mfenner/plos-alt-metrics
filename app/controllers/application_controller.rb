@@ -10,5 +10,4 @@ class ApplicationController < ActionController::Base
     author_path(resource.username)
   end
   
-  require 'bibtex'
 end

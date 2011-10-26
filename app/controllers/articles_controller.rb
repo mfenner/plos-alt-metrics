@@ -87,6 +87,7 @@ class ArticlesController < ApplicationController
       format.csv  { render :csv => @article }
       format.json { render :json => @article.to_json(format_options), :callback => params[:callback] }
       format.bib { render :bib => @article }
+      format.ris { render :ris => @article }
     end
   end
 

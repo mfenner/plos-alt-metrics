@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111015192527) do
+ActiveRecord::Schema.define(:version => 20111026164206) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -22,10 +22,10 @@ ActiveRecord::Schema.define(:version => 20111015192527) do
   end
 
   create_table "articles", :force => true do |t|
-    t.string   "doi",                                                 :null => false
+    t.string   "doi",                                                :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "retrieved_at",     :default => '1970-01-01 00:00:00', :null => false
+    t.datetime "retrieved_at",    :default => '1970-01-01 00:00:00', :null => false
     t.string   "pub_med"
     t.string   "pub_med_central"
     t.date     "published_on"
@@ -43,8 +43,6 @@ ActiveRecord::Schema.define(:version => 20111015192527) do
     t.string   "short_doi"
     t.integer  "book_id"
     t.string   "content_type"
-    t.string   "publication_type"
-    t.text     "contributors"
   end
 
   add_index "articles", ["doi"], :name => "index_articles_on_doi", :unique => true
@@ -128,6 +126,16 @@ ActiveRecord::Schema.define(:version => 20111015192527) do
     t.datetime "updated_at"
     t.boolean  "mas",         :default => true
     t.boolean  "authorclaim", :default => false
+  end
+
+  create_table "contributors", :force => true do |t|
+    t.integer  "article_id"
+    t.string   "surname"
+    t.string   "given_name"
+    t.string   "role"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "friendships", :force => true do |t|
