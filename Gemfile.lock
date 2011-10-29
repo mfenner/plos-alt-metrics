@@ -167,6 +167,7 @@ DEPENDENCIES
   acts_as_list
   addressable
   bibtex-ruby (~> 2.0.1)
+  builder (~> 2.1.2)
   bundler
   daemons (= 1.1.4)
   devise
