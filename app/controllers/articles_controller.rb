@@ -58,6 +58,7 @@ class ArticlesController < ApplicationController
       format.xml  { render :xml => @articles }
       format.json { render :json => @articles, :callback => params[:callback] }
       format.csv  { render :csv => @articles }
+      format.rss { render :rss => @articles }
     end
   end
 

@@ -20,9 +20,9 @@ class Contributor < ActiveRecord::Base
     # Add periods if given name is abbreviated, i.e. consists only of capital letters
     abbr = given_name.scan(/[A-Z]/)
     if abbr.length == given_name.length
-      surname + "," + abbr.join(".") + "."
+      surname + ", " + abbr.join(".") + "."
     else
-      surname + "," + given_name
+      surname + ", " + given_name
     end
   end
 end

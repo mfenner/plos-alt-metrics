@@ -24,6 +24,10 @@ class Journal < ActiveRecord::Base
   validates_presence_of :issn_electronic
   validates_uniqueness_of :issn_electronic
   
+  def issn
+    issn_print[0..3] + "-" + issn_print[4..7]
+  end
+  
   def articles_count
     self.articles.count
   end

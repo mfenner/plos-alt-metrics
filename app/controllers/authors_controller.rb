@@ -67,6 +67,7 @@ class AuthorsController < ApplicationController
       format.json { render :json => @author.to_json, :callback => params[:callback] }
       format.bib { render :bib => @author }
       format.ris { render :ris => @author }
+      format.rss { render :rss => @author }
     end
   end
 
