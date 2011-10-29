@@ -9,7 +9,7 @@ module ApplicationHelper
   end
 
   def xml_date(date)
-    date.blank? ? nil : date.strftime("%Y-%m-%dT%H:%M:%S")
+    date.blank? ? nil : date.strftime("%Y-%m-%d")
   end
   
   def formatted_citation(article, options = {})

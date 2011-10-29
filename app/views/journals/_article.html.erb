@@ -41,7 +41,7 @@
 	      	  <span itemprop="name" class="name"><%= link_to article.title, article_path(article.short_doi) %></span><br/>
 	          <%= formatted_citation(article, { :without_links => true }).html_safe %>
 						<% if article.content_type != "journal_article" %>
-	            <span class="content_type">- <%= article.content_type.sub!(/_/, ' ').capitalize %></span>
+	            <span class="content_type"><%= article.content_type.sub!(/_/, ' ').capitalize %></span>
 	          <% end %>
 	          <br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
 				<% unless article.authors.empty? %>
