@@ -37,15 +37,11 @@
 	      <tr>
 	      	<td class="name">	
 	      	  <span itemprop="name" class="name"><%= link_to article.title, article_path(article.short_doi) %></span><br/>
-	          <span class="content_type"><%= article.content_type.sub!(/_/, ' ').capitalize %>. </span>
-	          <span class="journal">
-	            <% unless article.journal.blank? %>
-		            <%= link_to article.journal.title, journal_path(article.journal.issn_print) %>.
-		          <% end %>
-							<% unless article.book.blank? %>
-		            <%= article.book.title %>.
-		          <% end %>
-		        </span> <%= article.formatted_citation %><br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
+	          <%= formatted_citation(article).html_safe %>
+	          <% if article.content_type != "journal_article" %>
+	            <span class="content_type"><%= article.content_type.sub!(/_/, ' ').capitalize %>. </span>
+	          <% end %>
+	          <br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
 				<% unless article.authors.empty? %>
 				  <% if article.authors.count > 1 %>
 						<br>with 

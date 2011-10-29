@@ -8,6 +8,7 @@ xml.rss(:version=>"1.0") do
       xml.item do
         xml.rdf :about, "http://dx.doi.org/#{article.doi}"
         xml.title article.title
+        xml.description formatted_citation(article, { :without_links => true })
         xml.link "http://doi.org/#{article.short_doi}"
         xml.dc :title, article.title
         article.contributors.each do |contributor|

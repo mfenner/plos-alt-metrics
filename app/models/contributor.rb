@@ -25,4 +25,13 @@ class Contributor < ActiveRecord::Base
       surname + ", " + given_name
     end
   end
+  
+  def brief_name
+    abbr = given_name.scan(/[A-Z]/)
+    if abbr.length == given_name.length
+      surname + " " + given_name
+    else
+      surname + " " + given_name[0..0]
+    end
+  end
 end

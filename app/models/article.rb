@@ -95,10 +95,6 @@ class Article < ActiveRecord::Base
     self
   end
   
-  def formatted_citation
-    self.year.to_s + (self.volume ? ":#{self.volume}" : "") + (self.issue ? " (#{self.issue})" : "") + (self.first_page ? ";#{self.first_page}" : "") + (self.last_page ? "-#{self.last_page}": "")
-  end
-  
   #Get citation count by category and sources from the activerecord data
   def citations_by_category
     results = {}
@@ -334,6 +330,20 @@ class Article < ActiveRecord::Base
       names << contributor.name
     end
     names = names.empty? ? "" : names.join(" and ")
+  end
+  
+  def contributors_to_display
+    names = []
+    contributors.each do |contributor| 
+      names << contributor.brief_name
+    end
+    return "" if names.empty?
+    if names.size > 6
+      names = names[0..5] 
+      names = names.join(", ") + ", et al"
+    else
+      names = names.join(", ")
+    end
   end
   
   def self.fetch_from_mendeley(uuid, options={})
