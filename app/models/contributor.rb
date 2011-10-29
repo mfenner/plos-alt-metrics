@@ -17,6 +17,7 @@ class Contributor < ActiveRecord::Base
   acts_as_list :scope => :article
   
   def name
+    return surname if given_name.blank?
     # Add periods if given name is abbreviated, i.e. consists only of capital letters
     abbr = given_name.scan(/[A-Z]/)
     if abbr.length == given_name.length
@@ -27,6 +28,7 @@ class Contributor < ActiveRecord::Base
   end
   
   def brief_name
+    return surname if given_name.blank?
     abbr = given_name.scan(/[A-Z]/)
     if abbr.length == given_name.length
       surname + " " + given_name
