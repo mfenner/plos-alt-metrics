@@ -8,4 +8,7 @@ module ApplicationHelper
     Author.search_for_authors(author)
   end
 
+  def xml_date(date)
+    date.blank? ? nil : date.strftime("%Y-%m-%dT%H:%M:%S")
+  end
 end
