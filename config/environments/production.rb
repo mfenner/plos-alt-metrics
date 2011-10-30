@@ -57,5 +57,5 @@ PlosAltMetrics::Application.configure do
   config.middleware.use("ExceptionNotifier",
     :email_prefix => "[ScienceCard Error] ",
     :sender_address => %{"ScienceCard" <info@sciencecard.org>},
-    :exception_recipients => %w{fenner.martin@mh-hannover.de})
+    :exception_recipients => %w{martin.h.fenner@googlemail.com})
 end
