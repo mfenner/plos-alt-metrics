@@ -13,7 +13,25 @@ module ApplicationHelper
   end
   
   def formatted_citation(article, options = {})
-    formatted_citation = (article.contributors.blank? ? "" : article.contributors_to_display + ". ")
+    formatted_citation = ""
+    unless article.contributors.blank? 
+      names = []
+      article.contributors.each do |contributor|
+        unless (contributor.author_id.blank? or options[:without_links])  
+          names << link_to(contributor.brief_name, author_path(contributor.author.username))
+        else
+          names << contributor.brief_name
+        end
+      end
+      if names.empty?
+        formatted_citation << ""
+      elsif names.size > 6
+        names = names[0..5] 
+        formatted_citation << names.join(", ") + ", et al. "
+      else
+        formatted_citation << names.join(", ") + ". "
+      end
+    end
     if options[:without_links] 
       formatted_citation << article.journal.title + ". " unless article.journal.blank?
     else

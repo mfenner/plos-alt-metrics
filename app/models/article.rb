@@ -23,9 +23,8 @@ class Article < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals 
   has_many :citations, :through => :retrievals
-  has_many :contributions
-  has_many :authors, :through => :contributions
-  has_many :contributors, :order => :position
+  has_many :authors, :through => :contributors, :uniq => true
+  has_many :contributors, :order => :position, :dependent => :destroy, :conditions => "contributors.service = 'mas'"
   has_and_belongs_to_many :groups
   belongs_to :journal
   belongs_to :book
@@ -332,20 +331,6 @@ class Article < ActiveRecord::Base
     names = names.empty? ? "" : names.join(" and ")
   end
   
-  def contributors_to_display
-    names = []
-    contributors.each do |contributor| 
-      names << contributor.brief_name
-    end
-    return "" if names.empty?
-    if names.size > 6
-      names = names[0..5] 
-      names = names.join(", ") + ", et al"
-    else
-      names = names.join(", ")
-    end
-  end
-  
   def self.fetch_from_mendeley(uuid, options={})
     # Fetch article information, return nil if no response 
     url = "http://api.mendeley.com/oapi/documents/details/#{uuid}?consumer_key=#{APP_CONFIG['mendeley_key']}"
@@ -429,8 +414,8 @@ class Article < ActiveRecord::Base
           result[:doi] = query_result.find_first("crossref_result:doi")
           result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
         
-          contributors_element = query_result.find_first("crossref_result:contributors")
-          extract_contributors(contributors_element, article) if contributors_element
+          #contributors_element = query_result.find_first("crossref_result:contributors")
+          #extract_contributors(contributors_element, article) if contributors_element
         
           unless issn_print.blank? and issn_electronic.blank?
             # Remove dashes for consistency
@@ -503,7 +488,8 @@ class Article < ActiveRecord::Base
         article.contributors << Contributor.new(:surname => surname,
                                                 :given_name => given_name,
                                                 :position => position,
-                                                :role => role)
+                                                :role => role,
+                                                :service => "crossref")
       end
       article.contributors
     end

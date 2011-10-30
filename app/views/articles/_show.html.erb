@@ -24,14 +24,6 @@
         <span class="content_type"><%= @article.content_type.sub!(/_/, ' ').capitalize %></span>
       <% end %>
 		  <br/><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %><p>
-			<% unless @article.authors.empty? %>
-			  <% if @article.authors.count > 0 %>
-		      <% @article.authors.each do |author| %>
-		      	<%= link_to h(author.display_name), author_path(author.username) %>
-		     <% end %>
-		   <% end %>
-		  <% end %>
-		<p>
 	</div>
 
 	<div id="source">

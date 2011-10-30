@@ -22,8 +22,8 @@ class Author < ActiveRecord::Base
   
   has_many :positions
   has_many :authentications
-  has_many :contributions, :dependent => :destroy
-  has_many :articles, :through => :contributions
+  has_many :contributors, :dependent => :destroy
+  has_many :articles, :through => :contributors, :uniq => true
   has_many :members
   has_many :groups, :through => :members
   has_many :friendships
@@ -230,6 +230,12 @@ class Author < ActiveRecord::Base
     SourceHelper.get_xml(url, options) do |document|
       results = []
       document.root.namespaces.default_prefix = 'amf'
+      person = document.find_first("//amf:person")
+      contributor = {}
+      contributor["given_name"] = ""
+      contributor["given_name"] << person.find_first("amf:givenname").content if person.find_first("amf:givenname")
+      contributor["given_name"] << (contributor["given_name"].blank? ? "" : " ") + person.find_first("amf:additionalname").content if person.find_first("amf:additionalname")
+      contributor["surname"] = person.find_first("amf:familyname").content if person.find_first("amf:familyname")
       document.find("//amf:isauthorof/amf:text").each do |article|
         ref = article.attributes.get_attribute("ref").value
         # Only use article if reference has DOI
@@ -239,7 +245,7 @@ class Author < ActiveRecord::Base
         result["Title"] = article.find_first("amf:title").content
         results << result
       end
-      results
+      { :contributor => contributor, :articles => results }
     end
   end
   

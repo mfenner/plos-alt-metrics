@@ -14,7 +14,10 @@
 
 class Contributor < ActiveRecord::Base
   belongs_to :article
+  belongs_to :author
   acts_as_list :scope => :article
+  
+  attr_accessible :article_id, :author_id, :service, :mas, :authorclaim, :surname, :given_name, :role
   
   def name
     return surname if given_name.blank?

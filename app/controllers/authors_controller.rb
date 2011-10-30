@@ -125,12 +125,13 @@ class AuthorsController < ApplicationController
     respond_to do |format|
       if @author.update_attributes(params[:author])
         if params[:service] == "mas"
+          # First remove all mas article claims, e.g. because Microsoft Academic Search ID was changed or set to empty 
+          @author.contributors.where(:service => "mas").each do |contributor|
+            contributor.update_attributes(:author_id => nil)
+          end
+          
           # Fetch articles from author, return nil if no response
           results = Author.fetch_articles_from_mas(@author)
-          # First remove all mas article claims, e.g. because Microsoft Academic Search ID was changed or set to empty 
-          @author.contributions.where(:mas => true).each do |contribution|
-            contribution.update_attributes(:mas => false)
-          end
           
           unless results.empty?
             results.each do |result|
@@ -138,46 +139,52 @@ class AuthorsController < ApplicationController
               unless result["DOI"].nil? or result["Title"].nil?
                 #result["DOI"] = DOI::clean(result["DOI"])
                 article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                article.save
                 # Check that DOI is valid
                 if article.valid?
                   article.update_attributes(:mas => result["ID"])
-                  contribution = Contribution.find_or_create_by_author_id_and_article_id(:author_id => @author.id, :article_id => article.id)
-                  contribution.update_attributes(:mas => true)
+                  result["Author"].each do |author|
+                    contributor = Contributor.find_or_create_by_article_id_and_mas_and_service(:article_id => article.id,
+                                                            :mas => author["ID"],
+                                                            :service => "mas",
+                                                            :surname => author["LastName"],
+                                                            :given_name => author["FirstName"]) 
+                    contributor.update_attributes(:author_id => @author.id) if (author["ID"].to_s == @author.mas)
+                  end
                   Article.update_via_crossref(article)
-                  # Create shortDOI if it doesn't exist yet
-                  #article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
                 end
               end
             end
           end
-          # Remove contributions if no claims are found
-          @author.contributions.where(:mas => false, :authorclaim => false).delete_all
         elsif params[:service] == "authorclaim"
+          # First remove all authorclaim article claims, e.g. because AuthorClaim ID was changed or set to empty
+          @author.contributors.where(:service => "authorclaim").each do |contributor|
+            contributor.update_attributes(:author_id => nil)
+          end
+          
           # Fetch articles from author, return nil if no response
           results = Author.fetch_articles_from_authorclaim(@author)
-          # First remove all authorclaim article claims, e.g. because AuthorClaim ID was changed or set to empty
-          @author.contributions.where(:authorclaim => true).each do |contribution|
-            contribution.update_attributes(:authorclaim => false)
-          end
-          unless results.empty?
-            results.each do |result|
+          
+          unless results.blank?
+            results[:articles].each do |result|
               # Only add articles with DOI and title
               unless result["DOI"].nil? or result["Title"].nil?
                 #result["DOI"] = DOI::clean(result["DOI"])
                 article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                article.save
                 # Check that DOI is valid
                 if article.valid?
-                  contribution = Contribution.find_or_create_by_author_id_and_article_id(:author_id => @author.id, :article_id => article.id)
-                  contribution.update_attributes(:authorclaim => true)
-                  Article.update_via_crossref(contribution.article)
-                  # Create shortDOI if it doesn't exist yet
-                  #article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
+                  contributor = Contributor.create(:article_id => article.id,
+                                                          :author_id => @author.id,
+                                                          :surname => results[:contributor]["surname"],
+                                                          :given_name => results[:contributor]["given_name"],
+                                                          :service => "authorclaim",
+                                                          :authorclaim => @author.authorclaim)
                 end
+                Article.update_via_crossref(article)
               end
             end
           end
-          # Remove contributions if no claims are found
-          @author.contributions.where(:mas => false, :authorclaim => false).delete_all
         elsif params[:service] == "twitter"
           Author.update_via_twitter(@author)
         end

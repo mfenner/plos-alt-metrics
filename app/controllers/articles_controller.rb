@@ -41,7 +41,7 @@ class ArticlesController < ApplicationController
       
       if author_signed_in?
         # Fetch all articles by the authors you are following
-        @articles = collection.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 10
+        @articles = collection.paginate :conditions => ["FIND_IN_SET(contributors.author_id, '?')",current_author.friends], :include => [:authors, :contributors], :page => params[:page], :per_page => 10
       else
         @articles = collection.paginate :page => params[:page], :per_page => 10
       end
