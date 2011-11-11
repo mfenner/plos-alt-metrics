@@ -16,12 +16,16 @@
 # Specify range of citations returned with { :startidx => 1, :endidx => 50 }
 
 class Altmetric < Source
+  
+  # Requires Mendeley Consumer Key
+  def uses_partner_id; true; end
 
   def perform_query(article, options = {})
   
     url = "http://api.altmetric.com/unstable/doi/" + CGI.escape(article.doi)
-    Rails.logger.info "Altmetric query: #{url}"
-    results = SourceHelper.get_json(url, options)
+    consumer_key= "&consumer_key=" + partner_id.to_s
+    Rails.logger.info "Altmetric query: #{url + consumer_key}"
+    results = SourceHelper.get_json(url + consumer_key, options)
     return [] if results.blank? 
     
     # Return 0 if no blog posts discussing this DOI found
