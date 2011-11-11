@@ -23,7 +23,7 @@ class Altmetric < Source
   def perform_query(article, options = {})
   
     url = "http://api.altmetric.com/unstable/doi/" + CGI.escape(article.doi)
-    consumer_key= "&consumer_key=" + partner_id.to_s
+    consumer_key= "?key=" + partner_id.to_s
     Rails.logger.info "Altmetric query: #{url + consumer_key}"
     results = SourceHelper.get_json(url + consumer_key, options)
     return [] if results.blank? 
