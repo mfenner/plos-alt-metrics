@@ -1,4 +1,4 @@
-<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas"].include?(params[:service]) %>
+<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas", "authorclaim", "scopus"].include?(params[:service]) %>
 	<div class="service">
 	  <%= image_tag "twitter.png", :class => "photo_mini", :title => "Twitter" %><br/>
 	  <span class="name"><%= link_to "@#{@author.username}", "http://twitter.com/" + @author.username %></span>
@@ -6,21 +6,21 @@
 <% end %>
 
 <% if !@author.mendeley.blank? or current_author == @author or current_author.try(:admin?) %>
-	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mas", "authorclaim"].include?(params[:service]) %>
+	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mas", "authorclaim", "scopus"].include?(params[:service]) %>
 	  <div id="mendeley">
 	    <%= render :partial => 'mendeley' %>
 	  </div>
 	<% end %>
 <% end %>
 <% if !@author.mas.blank? or current_author == @author or current_author.try(:admin?) %>
-  <% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "authorclaim"].include?(params[:service]) %>
+  <% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "authorclaim", "scopus"].include?(params[:service]) %>
 	  <div id="mas">
 	    <%= render :partial => 'mas' %>
 	  </div>
 	<% end %>
 <% end %>
 <% if !@author.authorclaim.blank? or current_author == @author or current_author.try(:admin?) %>
-	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas"].include?(params[:service]) %>
+	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas", "scopus"].include?(params[:service]) %>
 	  <div id="authorclaim">
 	    <%= render :partial => 'authorclaim' %>
 	  </div>

@@ -185,6 +185,38 @@ class AuthorsController < ApplicationController
               end
             end
           end
+        elsif params[:service] == "scopus"
+          # First remove all scopus article claims, e.g. because Scopus Author ID was changed or set to empty 
+          @author.contributors.where(:service => "scopus").each do |contributor|
+            contributor.update_attributes(:author_id => nil)
+          end
+
+          # Fetch articles from author, return nil if no response
+          results = Author.fetch_articles_from_scopus(@author)
+
+          unless results.empty?
+            results.each do |result|
+              # Only add articles with DOI and title
+              unless result["DOI"].nil? or result["Title"].nil?
+                #result["DOI"] = DOI::clean(result["DOI"])
+                article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                article.save
+                # Check that DOI is valid
+                if article.valid?
+                  article.update_attributes(:scopus => result["ID"])
+                  result["Author"].each do |author|
+                    contributor = Contributor.find_or_create_by_article_id_and_scopus_and_service(:article_id => article.id,
+                                                            :scopus => author["ID"],
+                                                            :service => "scopus",
+                                                            :surname => author["LastName"],
+                                                            :given_name => author["FirstName"]) 
+                    contributor.update_attributes(:author_id => @author.id) if (author["ID"].to_s == @author.mas)
+                  end
+                  Article.update_via_crossref(article)
+                end
+              end
+            end
+          end
         elsif params[:service] == "twitter"
           Author.update_via_twitter(@author)
         end

@@ -5,7 +5,7 @@ module ApplicationHelper
   end
   
   def mas_choices(author)
-    Author.search_for_authors(author)
+    Author.search_for_mas_authors(author)
   end
 
   def xml_date(date)

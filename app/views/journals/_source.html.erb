@@ -1,32 +1,28 @@
 <table>
+	<% active_categories.each do |category| %>
 	<tr>
-		<% active_categories.each do |category| %>
-	    <td class="source_title" colspan="<%= category.sources.active.count %>">
-		    <h2><%= h(category.name) %></h2>
-		    <%= h(category.group_description) %>
+    <td class="source_title" colspan="<%= category.sources.active.count %>">
+	    <h2><%= h(category.name) %></h2>
+	    <%= h(category.group_description) %>
+    </td>
+	</tr>
+	<tr>
+    <% category.sources.reusable.each do |source| %>
+      <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
+      <td class="source">
+		    <%= image_tag source.class.to_s.downcase + ".gif" %>
 	    </td>
-    <% end %>
-	</tr>
-	<tr>
-	  <% active_categories.each do |category| %>
-	    <% category.sources.reusable.each do |source| %>
-	      <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
-	      <td class="source">
-			    <%= image_tag source.class.to_s.downcase + ".gif" %>
-		    </td>
-		    <% end %>
-		  <% end %>
-    <% end %>
-	</tr>
-	<tr>
-		 <% active_categories.each do |category| %>
-		    <% category.sources.reusable.each do |source| %>
-		      <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
-	      <td class="source_count">
-			    <%= @journal.citations_count(source) %>
-		    </td>
-		    <% end %>
 	    <% end %>
-    <% end %>
+	  <% end %>
 	</tr>
+	<tr>
+    <% category.sources.reusable.each do |source| %>
+      <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
+     <td class="source_count">
+	    <%= @journal.citations_count(source) %>
+    </td>
+    <% end %>
+   <% end %>
+	</tr>		
+  <% end %>
 </table>

@@ -23,8 +23,8 @@ class Article < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals 
   has_many :citations, :through => :retrievals
-  has_many :authors, :through => :contributors, :uniq => true
-  has_many :contributors, :order => :position, :dependent => :destroy, :conditions => "contributors.service = 'mas'"
+  has_many :authors, :through => :contributors
+  has_many :contributors, :order => :position, :dependent => :destroy #, :conditions => "contributors.service = 'mas'"
   has_and_belongs_to_many :groups
   belongs_to :journal
   belongs_to :book
