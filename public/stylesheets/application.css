@@ -145,7 +145,7 @@ div.flash {
 }
 
 #profile {
-  padding-bottom: 0.5em;
+  padding-bottom: 0;
 }
   
 .page{
@@ -266,7 +266,7 @@ div.edit {
 td.source_title {
   width: 200px;
   padding-left: 0em;
-  padding-top: 1em;
+  padding-top: 0em;
   padding-bottom: 1em;
   vertical-align: top;
   font-size: smaller;
