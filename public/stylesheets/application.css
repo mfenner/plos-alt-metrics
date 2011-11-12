@@ -266,14 +266,14 @@ div.edit {
 td.source_title {
   width: 200px;
   padding-left: 0em;
-  padding-top: 0em;
+  padding-top: 1em;
   padding-bottom: 1em;
   vertical-align: top;
   font-size: smaller;
 }
 
 td.source_count {
-  padding-top: 0.5em;
+  padding-top: 0;
   font-style: italic;
   font-size: xx-large;
   text-align: center;
