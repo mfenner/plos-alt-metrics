@@ -306,7 +306,7 @@ td.photo {
   height: 160px;
 }
 
-div#mas, div#mendeley, div#authorclaim, div#scopus {
+div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar {
   padding-top: 0.5em;
   clear: both;
 }

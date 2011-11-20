@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111105105602) do
+ActiveRecord::Schema.define(:version => 20111120194344) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20111105105602) do
     t.string   "last_sign_in_ip"
     t.string   "authorclaim"
     t.string   "scopus"
+    t.string   "googlescholar"
   end
 
   create_table "books", :force => true do |t|

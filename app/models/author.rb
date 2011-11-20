@@ -36,7 +36,7 @@ class Author < ActiveRecord::Base
     end
   end
   
-  attr_accessible :username, :name, :mas, :mendeley, :authorclaim, :twitter, :location, :description, :image, :website, :remember_me
+  attr_accessible :username, :name, :mas, :mendeley, :authorclaim, :googlescholar, :twitter, :location, :description, :image, :website, :remember_me
   
   validates_numericality_of :mas, :allow_blank => true
   validates_uniqueness_of :mas, :allow_blank => true
