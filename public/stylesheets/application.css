@@ -328,6 +328,15 @@ span.content_type {
   font-style: italic;
 }
 
+img.altmetrics {
+  width: 100px;
+}
+
+div.altmetrics {
+  text-align: right;
+  margin-right: 2em;
+}
+
 /* digg_pagination from http://mislav.uniqpath.com/will_paginate/
 *
 */
