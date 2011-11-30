@@ -1,5 +1,6 @@
 config/database.yml
 config/settings.yml
+config/deploy.rb
 db/*.sqlite3
 *.rbc
 *.sassc
@@ -16,7 +17,5 @@ capybara-*.html
 /coverage/
 /spec/tmp/*
 **.orig
-config/*.yml
-config/deploy.rb
 rerun.txt
 pickle-email-*.html
