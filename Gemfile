@@ -5,7 +5,7 @@ gem 'rails', '3.0.10'
 gem 'mysql'
 gem 'will_paginate', '>=3.0'
 gem 'bundler'
-gem "rake", "0.9.2"
+gem "rake"
 gem 'daemons', "1.1.4"
 gem 'fastercsv', "1.5.4"
 gem 'haml', "3.1.3"

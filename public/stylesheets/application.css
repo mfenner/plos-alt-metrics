@@ -27,7 +27,7 @@ body {
   padding: 0;
   top: 0;
   left: 0;
-  background-color: #efecca;
+  background-color: #e2f0d6;
 }
 
 input, textarea, select {
@@ -61,7 +61,7 @@ a {
 aside, nav, footer, header, section { display: block }
 
 header {
-  background-color: #d3ceaa;
+  background-color: #95ab63;
   padding-top: 0.25em;
   padding-left: 2.5em;
   padding-bottom: 0em;
@@ -78,12 +78,12 @@ nav {
 }
   nav .content {
     padding: 0;
-    background-color: #d3ceaa;
+    background-color: #95ab63;
     min-height: 100px; }
   nav #navigation {
     float: left;
     width: 100%;
-    background-color: #d3ceaa; }
+    background-color: #95ab63; }
     nav #navigation ul {
       height: 25px;
       margin: 0 30px 0 0;
@@ -100,21 +100,21 @@ nav {
           margin: 0;
           margin-right: 6px;
           padding: 4px 8px 6px;
-          background-color: #e6e2af;
-          border-color: #e6e2af;
+          background-color: #bdd684;
+          border-color: #bdd684;
           border-style: solid;
           border-width: 1px;
           color: #002f2f;
           text-decoration: none; }
           nav #navigation ul li a:hover {
-            background-color: #efecca;; 
+            background-color: #e2f0d6;; 
             color: #002f2f;
             border: 1px solid;
-            border-color: #efecca;; }
+            border-color: #e2f0d6;; }
         nav #navigation ul li a.selected {
-          background-color: #efecca;;
+          background-color: #e2f0d6;;
           border: 1px solid;
-          border-color: #efecca;;
+          border-color: #e2f0d6;;
           color: #002f2f;
           margin-right: 6px;
           font-weight: bold; }
@@ -124,7 +124,7 @@ li.login {
 }
 
 #content {
-  background-color: #efecca;;
+  background-color: #e2f0d6;;
   padding: 1em 2em 1em 2em;
 }
 
