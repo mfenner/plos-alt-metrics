@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  author_id: 1
+  comment_id: 1
+  rhetoric: 1
+  method: false
+  data: false
+  discussion: false
+  author: false
+
+two:
+  author_id: 1
+  comment_id: 1
+  rhetoric: 1
+  method: false
+  data: false
+  discussion: false
+  author: false

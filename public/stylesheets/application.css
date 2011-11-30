@@ -18,7 +18,7 @@
  */
 
 body, input, textarea, select {
-  font-family: 'Georgia', sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   font-size: medium; 
 }
   
@@ -104,18 +104,18 @@ nav {
           border-color: #bdd684;
           border-style: solid;
           border-width: 1px;
-          color: #002f2f;
+          color: #10222b;
           text-decoration: none; }
           nav #navigation ul li a:hover {
             background-color: #e2f0d6;; 
-            color: #002f2f;
+            color: #10222b;
             border: 1px solid;
             border-color: #e2f0d6;; }
         nav #navigation ul li a.selected {
           background-color: #e2f0d6;;
           border: 1px solid;
           border-color: #e2f0d6;;
-          color: #002f2f;
+          color: #10222b;
           margin-right: 6px;
           font-weight: bold; }
 
@@ -134,7 +134,7 @@ div.flash {
     padding: 2px 5px;
     margin: 0px auto 1em;
     display: inline-block;
-    color: #002f2f;
+    color: #10222b;
     background-color: #a5e583;
     text-shadow: 0px -1px 0px rgba(255, 255, 255, 0.2);
     -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1); }
@@ -153,20 +153,20 @@ div.flash {
 }
  
 h1 {
-  color: #002f2f;
+  color: #10222b;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
    
 h2 {
-  color: #002f2f;
+  color: #10222b;
   font-size: x-large;
   margin-top: 0;
   margin-bottom: 0;
 }
 
 h3 {
-  color: #002f2f;
+  color: #10222b;
   font-size: large;
   margin-top: 0;
   margin-bottom: 0.5em;
@@ -220,7 +220,7 @@ span.name {
 }
 
 span.search {
-  color: #002f2f;
+  color: #10222b;
   font-size: large;
 }
 

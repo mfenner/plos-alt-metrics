@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111120194344) do
+ActiveRecord::Schema.define(:version => 20111130195632) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -37,7 +37,6 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
     t.text     "last_page"
     t.integer  "year"
     t.integer  "mas"
-    t.string   "mendeley"
     t.string   "mendeley_url"
     t.string   "scopus"
     t.string   "short_doi"
@@ -47,9 +46,9 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
 
   add_index "articles", ["doi"], :name => "index_articles_on_doi", :unique => true
 
-  create_table "articles_groups", :id => false, :force => true do |t|
+  create_table "articles_authors", :id => false, :force => true do |t|
     t.integer "article_id"
-    t.integer "group_id"
+    t.integer "author_id"
   end
 
   create_table "authentications", :force => true do |t|
@@ -79,7 +78,6 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
     t.string   "location"
     t.text     "description"
     t.string   "mendeley"
-    t.integer  "contributions_count"
     t.string   "twitter"
     t.integer  "sign_in_count",       :default => 0
     t.datetime "current_sign_in_at"
@@ -119,6 +117,17 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
   add_index "citations", ["retrieval_id", "uri"], :name => "index_citations_on_retrieval_id_and_uri", :unique => true
   add_index "citations", ["retrieval_id"], :name => "index_citations_on_retrieval_id"
 
+  create_table "comments", :force => true do |t|
+    t.integer  "article_id"
+    t.text     "body"
+    t.string   "original_id"
+    t.string   "content_type"
+    t.string   "author"
+    t.string   "url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "contributors", :force => true do |t|
     t.integer  "article_id"
     t.string   "surname"
@@ -142,16 +151,6 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
     t.datetime "updated_at"
   end
 
-  create_table "groups", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "mendeley"
-    t.text     "description"
-    t.integer  "articles_count"
-    t.integer  "members_count"
-  end
-
   create_table "histories", :force => true do |t|
     t.integer  "retrieval_id",                   :null => false
     t.integer  "year",                           :null => false
@@ -171,19 +170,23 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
     t.datetime "updated_at"
   end
 
-  create_table "members", :force => true do |t|
-    t.integer  "author_id"
-    t.integer  "group_id"
-    t.boolean  "admin",      :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "positions", :force => true do |t|
     t.integer  "author_id"
     t.integer  "affiliation_id"
     t.boolean  "is_active"
     t.integer  "staleness",      :default => 1209600
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ratings", :force => true do |t|
+    t.integer  "author_id"
+    t.integer  "comment_id"
+    t.integer  "rhetoric"
+    t.boolean  "method"
+    t.boolean  "data"
+    t.boolean  "discussion"
+    t.boolean  "author"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -217,7 +220,7 @@ ActiveRecord::Schema.define(:version => 20111120194344) do
     t.string   "salt"
     t.string   "searchURL"
     t.integer  "timeout",       :default => 30,     :null => false
-    t.integer  "category_id"
+    t.integer  "group_id"
     t.datetime "disable_until"
     t.integer  "disable_delay", :default => 10,     :null => false
     t.string   "partner_id"

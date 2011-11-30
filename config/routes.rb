@@ -14,6 +14,10 @@
 # limitations under the License.
 
 PlosAltMetrics::Application.routes.draw do
+  resources :comments
+
+  resources :ratings
+
   devise_for :authors, :controllers => { :omniauth_callbacks => "authors/omniauth_callbacks" } do
     get '/authors/auth/:provider' => 'authors/omniauth_callbacks#passthru'
     get 'sign_in', :to => 'authors/sessions#new', :as => :new_author_session
@@ -24,7 +28,7 @@ PlosAltMetrics::Application.routes.draw do
   #match "/group/articles(/:id)(.:format)" => "groups#groupArticleSummaries"
   
   resources :groups
-  resources :journals
+  resources :citations
   
   # Admin resources
   resources :sources

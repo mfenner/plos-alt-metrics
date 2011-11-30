@@ -50,9 +50,9 @@ SimpleNavigation::Configuration.run do |navigation|
     #                            against the current URI.  You may also use a proc, or the symbol <tt>:subpath</tt>. 
     #
     primary.dom_class = 'navigation'
-    primary.item :authors, 'Authors', authors_path
+    primary.item :comments, 'Comments', comments_path, :highlights_on => :subpath
     primary.item :articles, 'Articles', articles_path, :highlights_on => :subpath 
-    primary.item :journals, 'Journals', journals_path, :highlights_on => :subpath
+    primary.item :authors, 'Users', authors_path
     primary.item :about, 'About', about_path
 
     # Add an item which has a sub navigation (same params, but with block)

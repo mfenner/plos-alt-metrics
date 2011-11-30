@@ -9,7 +9,7 @@ class AddContributorColumns < ActiveRecord::Migration
       t.string :scopus
     end
    
-    drop_table :contributions
+    #drop_table :contributions
   end
 
   def self.down

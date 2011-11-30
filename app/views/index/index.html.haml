@@ -18,38 +18,5 @@
   # limitations under the License.
 #index
   :markdown
-    What is ScienceCard?
+    What is CrowdoMeter?
     ===================
-
-    ScienceCard is a web service that collects all scientific articles published by an author and displays their aggregate article-level metrics. ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort, and to export and reuse this information elsewhere. To make this as effortless as possible, ScienceCard relies on unique identifiers for authors (currently identifiers from Microsoft Academic Search and AuthorClaim) and articles (currently digital object identifiers or DOIs). Future versions will add more author identifiers services, including ORCID when the service launches in 2012, as well as other identifiers for scholarly content (e.g. from ArXiV).
-
-    ScienceCard uses freely available sources for the article-level metrics. Some sources are only available from some publishers (e.g. HTML page views or PDF downloads), or when you are a publisher yourself (e.g. CrossRef).
-
-    Getting Started
-    ===============
-
-    You can search for ScienceCards by author name or Twitter nickname. You can also go directly to a ScienceCard using the Twitter nickname, e.g. <a href="http://sciencecard.org/mfenner">http://sciencecard.org/mfenner</a>. Only ScienceCards of authors that have registered with ScienceCard are displayed.
-
-    To create your own ScienceCard, create an account by logging in via Twitter. Next add at least one author identifier - currently Microsoft Academic Search and AuthorClaim are supported.
-			
-    ScienceCard will then fetch all papers associated with this author identifier, and their available article-level metrics (citations, bookmarks, etc.). This may take a while, so you should revisit some time after registering. Once set up, the publications and article-level metrics are then automatically updated.
-
-    The Content
-    ===============
-
-    ScienceCard would not be possible without the content retrieved from Twitter, Mendeley, PubMed Central, CiteULike, Scopus, Microsoft Academic Search and CrossRef. Other services will be added in the future. 
-
-    The ScienceCard API
-    ===============
-
-    ScienceCard is not only a website, but also provides an Application Programming Interface (API) so that the content can be reused elsewhere. All author pages are available in html, json, xml, csv, bib and ris formats, simply append the format to the author page, e.g. <a href="http://sciencecard.org/mfenner.json">http://sciencecard.org/mfenner.json</a> or <a href="http://sciencecard.org/mfenner.bib">http://sciencecard.org/mfenner.bib</a>. You can import references into your reference manager using the bib or ris format. The <a href="http://wordpress.org/extend/plugins/contact-info-options/">Contact Info Options</a> Wordpress plugin adds a ScienceCard field to the user profile, so you can display ScienceCard information in your Wordpress author page.
-
-    Setting up your own Server
-    ===============
-
-    ScienceCard is an open source application based on the PLoS Article-Level Metrics Developer API Server. This means that you can download and install the software and run your own ScienceCard server. here are at least two good reasons to do this: a) you are a publisher and want to provide article-level metrics for your authors or b) you are an institution and want to provide these metrics for your researchers. ScienceCard uses the <a href="http://rubyonrails.org/">Ruby on Rails</a> web framework and can easily be extended, e.g. if you want to allow researchers to log in using their institutional accounts.
-			
-    More Information
-    ===================
-
-    For more information about this application, please visit the Github repository at <a href="https://github.com/mfenner/plos-alt-metrics">https://github.com/mfenner/plos-alt-metrics</a>. This code is based on the PLoS Article-Level Metrics Developer API Server, more information is at <a href="http://article-level-metrics.plos.org/">http://article-level-metrics.plos.org/</a>. For questions about ScienceCard please contact Martin Fenner at his <a href="http://blogs.plos.org/mfenner">Blog</a>, at <a href="http://github.com/mfenner">Github</a> or via <a href="http://twitter.com/mfenner">Twitter</a>.

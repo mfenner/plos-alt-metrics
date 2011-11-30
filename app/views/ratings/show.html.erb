@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Author:</b>
+  <%= @rating.author_id %>
+</p>
+
+<p>
+  <b>Comment:</b>
+  <%= @rating.comment_id %>
+</p>
+
+<p>
+  <b>Rhetoric:</b>
+  <%= @rating.rhetoric %>
+</p>
+
+<p>
+  <b>Method:</b>
+  <%= @rating.method %>
+</p>
+
+<p>
+  <b>Data:</b>
+  <%= @rating.data %>
+</p>
+
+<p>
+  <b>Discussion:</b>
+  <%= @rating.discussion %>
+</p>
+
+<p>
+  <b>Author:</b>
+  <%= @rating.author %>
+</p>
+
+
+<%= link_to 'Edit', edit_rating_path(@rating) %> |
+<%= link_to 'Back', ratings_path %>
