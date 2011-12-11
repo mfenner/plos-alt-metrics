@@ -14,7 +14,7 @@
 # limitations under the License.
 
 PlosAltMetrics::Application.routes.draw do
-  resources :comments
+  resources :posts
 
   resources :ratings
 
