@@ -1,0 +1,24 @@
+<% unless @posts.empty? %>
+	<table class="index">
+		<th class="name"><%= pluralize(@posts, 'Comment') %></th>
+    <% @posts.each do |post| %>
+      <tr>
+      	<td class="name">	
+      	  <span itemprop="name" class="name"><%= link_to post.name, post_path(post) %></span><br/>
+          <br/><%= link_to post.url, post.url, :itemprop => "url" %>
+      	</td>
+				    </td>
+	  </tr>
+    <% end %>
+    <tr>
+	    <td class="pagination">
+		    <div class="pagination">
+			    <%= will_paginate @posts %>
+			  </div>
+		  </td>
+		  <td class="count"></td>
+		</tr>
+	</table>
+  <% else %>
+    <h2>No posts found</h2>
+  <% end %>
