@@ -64,8 +64,6 @@ SimpleNavigation::Configuration.run do |navigation|
     # You can also specify a condition-proc that needs to be fullfilled to display an item.
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
-    primary.item :sources, 'Sources', Proc.new { sources_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath 
-    primary.item :categories, 'Categories', Proc.new { categories_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath 
     primary.item :sign_in, 'Sign in with Twitter', Proc.new { author_omniauth_authorize_path(:twitter) }, :if => Proc.new { !author_signed_in? }, :class => 'login'
     primary.item :signed_in, current_author.nil? ? "" : "Signed in as #{current_author.display_name}", Proc.new { author_path(current_author.username) }, :if => Proc.new { author_signed_in? }, :class => 'login'
     primary.item :sign_out, 'Sign out', Proc.new { destroy_author_session_path }, :method => :delete, :if => Proc.new { author_signed_in? }, :class => 'login'

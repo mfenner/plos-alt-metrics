@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111130195632) do
+ActiveRecord::Schema.define(:version => 20111211211010) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -117,17 +117,6 @@ ActiveRecord::Schema.define(:version => 20111130195632) do
   add_index "citations", ["retrieval_id", "uri"], :name => "index_citations_on_retrieval_id_and_uri", :unique => true
   add_index "citations", ["retrieval_id"], :name => "index_citations_on_retrieval_id"
 
-  create_table "comments", :force => true do |t|
-    t.integer  "article_id"
-    t.text     "body"
-    t.string   "original_id"
-    t.string   "content_type"
-    t.string   "author"
-    t.string   "url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "contributors", :force => true do |t|
     t.integer  "article_id"
     t.string   "surname"
@@ -175,6 +164,17 @@ ActiveRecord::Schema.define(:version => 20111130195632) do
     t.integer  "affiliation_id"
     t.boolean  "is_active"
     t.integer  "staleness",      :default => 1209600
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "posts", :force => true do |t|
+    t.integer  "article_id"
+    t.text     "body"
+    t.string   "original_id"
+    t.string   "content_type"
+    t.string   "author"
+    t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
