@@ -39,7 +39,7 @@
 <body>
   <header>
 	  <h1><%= APP_CONFIG['application'] %></h1>
-    <% if ["articles", "authors", "groups", "journals"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
+    <% if ["posts"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
       <div class='search'>
         <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do %>
         <span class="search">Search</span>

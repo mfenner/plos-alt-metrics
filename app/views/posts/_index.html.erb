@@ -1,11 +1,11 @@
 <% unless @posts.empty? %>
 	<table class="index">
-		<th class="name"><%= pluralize(@posts, 'Comment') %></th>
+		<th class="name"><%= pluralize(@posts.total_entries, 'Tweet') %></th>
     <% @posts.each do |post| %>
       <tr>
       	<td class="name">	
-      	  <span itemprop="name" class="name"><%= link_to post.name, post_path(post) %></span><br/>
-          <br/><%= link_to post.url, post.url, :itemprop => "url" %>
+	        <%= link_to "@#{post.author}", post.author_with_link %><br />
+      	  <%= post.body_with_links.html_safe %>
       	</td>
 				    </td>
 	  </tr>

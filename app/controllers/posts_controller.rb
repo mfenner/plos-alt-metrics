@@ -2,10 +2,21 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.xml
   def index
-    @posts = Post.all
+    unless params[:q].blank?
+      @posts = Post.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :order => 'posts.original_id' 
+    else
+      @posts = Post.paginate :page => params[:page], :per_page => 10, :conditions => ["posts.content_type = 'tweet'"]
+    end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html do 
+        if request.xhr?
+          render :partial => "index" 
+        end
+      end
       format.xml  { render :xml => @posts }
     end
   end

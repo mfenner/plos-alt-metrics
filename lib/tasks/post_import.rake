@@ -26,38 +26,41 @@ task :post_import => :environment do
   updated = []
   sources = Source.all
   
-  while (line = STDIN.gets)
-    raw_doi, raw_published_on, raw_title = line.strip.split(" ", 3)
-    doi = DOI::from_uri raw_doi.strip
-    published_on = Date.parse(raw_published_on.strip) if raw_published_on
-    title = raw_title.strip if raw_title
-    if (doi =~ DOI::FORMAT) and !published_on.nil? and !title.nil?
-      valid << [doi, published_on, title]
+  file = File.open('import.json')
+  contents = file.read
+  posts = ActiveSupport::JSON.decode(contents)
+  
+  posts.each do |post|
+    body, original_id, url, content_type, author = post["body"], post["original_id"], post["url"], post["type"], post["authors"][0]
+    papers_cited = post["papers_cited"][0]
+    #title, article_url = papers_cited["title"], papers_cited["url"]
+    if !body.nil?
+      valid << [body, original_id, url, content_type, author]
     else
-      puts "Ignoring DOI: #{raw_doi}, #{raw_published_on}, #{raw_title}"
-      invalid << [raw_doi, raw_published_on, raw_title]
+      puts "Ignoring post: #{body}, #{original_id}, #{url}, #{content_type}"
+      invalid << [body, original_id, url, content_type, author]
     end
   end
   puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
   if valid.size > 0
-    valid.each do |doi, published_on, title|
-      existing = Article.find_by_doi(doi)
+    valid.each do |body, original_id, url, content_type, author|
+      existing = Post.find_by_original_id(original_id)
       unless existing
-        article = Article.create(:doi => doi, :published_on => published_on, 
-                       :title => title)
-        RetrievalWorker.async_retrieval(:article_id => article.id) 
-        created << doi
+        #unless title.nil?
+        #  article = Article.create(:title => title,
+        #                           :url => article_url)
+        #end
+        post = Post.create(:article_id => nil,
+                           :body => body,
+                           :original_id => original_id, 
+                           :url => url,
+                           :author => author,
+                           :content_type => content_type)
+        created << body
       else
-        if existing.published_on != published_on or existing.title != title
-          existing.published_on = published_on
-          existing.title = title
-          existing.save!
-          updated << doi
-        else
-          duplicate << doi
-        end
+        duplicate << body
       end
     end
   end
-  puts "Saved #{created.size} new articles, updated #{updated.size} articles, ignored #{duplicate.size} other existing articles"
+  puts "Saved #{created.size} new posts, ignored #{duplicate.size} other existing posts"
 end
