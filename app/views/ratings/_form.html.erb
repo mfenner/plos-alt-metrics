@@ -8,6 +8,6 @@
 	<%= form.check_box(:conclusions) %> Describes conclusions presented in the cited paper. (<%= link_to "cito:usesConclusionsFrom", "http://speroni.web.cs.unibo.it/cgi-bin/lode/req.py?req=http:/purl.org/spar/cito#d3e1022" %>)<p>
 </div>
 <div class="submit">
-  <%= link_to_remote "Cancel", :update => "index", :url => posts_path(:page => params[:page]), :method => :get %>
+  <%= link_to_remote "Cancel", :update => "index", :url => posts_path(:page => params[:page], :q => params[:q]), :method => :get %>
   <%= form.submit("Submit") %>
 </div>
