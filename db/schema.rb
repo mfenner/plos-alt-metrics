@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111214201545) do
+ActiveRecord::Schema.define(:version => 20111219110406) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20111214201545) do
     t.string   "short_doi"
     t.integer  "book_id"
     t.string   "content_type"
+    t.boolean  "conclusions"
     t.string   "url"
   end
 
@@ -88,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20111214201545) do
     t.string   "authorclaim"
     t.string   "scopus"
     t.string   "googlescholar"
+    t.integer  "ratings_count"
   end
 
   create_table "books", :force => true do |t|
@@ -182,14 +184,14 @@ ActiveRecord::Schema.define(:version => 20111214201545) do
 
   create_table "ratings", :force => true do |t|
     t.integer  "author_id"
-    t.integer  "comment_id"
-    t.integer  "rhetoric"
+    t.string   "rhetoric"
     t.boolean  "method"
     t.boolean  "data"
-    t.boolean  "discussion"
-    t.boolean  "author"
+    t.boolean  "is_author"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "post_id"
+    t.boolean  "conclusions"
   end
 
   create_table "retrievals", :force => true do |t|

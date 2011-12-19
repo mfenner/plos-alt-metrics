@@ -1,0 +1,10 @@
+<td class="rating">
+  <% unless post.ratings.empty? %>
+    <strong><%= pluralize(post.ratings.count, 'Rating') %></strong><br />
+    <%= post.rhetoric.html_safe %>
+    <%= post.is_author.html_safe if post.is_author %>
+    <%= post.method.html_safe if post.method %>
+    <%= post.data.html_safe if post.data %>
+    <%= post.conclusions.html_safe if post.conclusions %>
+  <% end %>
+</td>

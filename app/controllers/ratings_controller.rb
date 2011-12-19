@@ -40,32 +40,41 @@ class RatingsController < ApplicationController
   # POST /ratings
   # POST /ratings.xml
   def create
+    unless params[:q].blank?
+      @posts = Post.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :order => 'posts.original_id' 
+    else
+      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)
+    end
+    @post = Post.find(params[:rating][:post_id])
+    
     @rating = Rating.new(params[:rating])
-
+    @rating.save
+    
     respond_to do |format|
-      if @rating.save
-        format.html { redirect_to(@rating, :notice => 'Rating was successfully created.') }
-        format.xml  { render :xml => @rating, :status => :created, :location => @rating }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @rating.errors, :status => :unprocessable_entity }
-      end
+      format.html { render 'posts/index' }
     end
   end
 
   # PUT /ratings/1
   # PUT /ratings/1.xml
   def update
+    unless params[:q].blank?
+      @posts = Post.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :order => 'posts.original_id' 
+    else
+      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)
+    end
     @rating = Rating.find(params[:id])
-
+    @post = @rating.post
+    @rating.update_attributes(params[:rating])
+    
     respond_to do |format|
-      if @rating.update_attributes(params[:rating])
-        format.html { redirect_to(@rating, :notice => 'Rating was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @rating.errors, :status => :unprocessable_entity }
-      end
+      format.html { render :partial => 'posts/index' }
     end
   end
 

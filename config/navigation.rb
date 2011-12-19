@@ -50,7 +50,7 @@ SimpleNavigation::Configuration.run do |navigation|
     #                            against the current URI.  You may also use a proc, or the symbol <tt>:subpath</tt>. 
     #
     primary.dom_class = 'navigation'
-    primary.item :posts, 'Posts', posts_path, :highlights_on => :subpath
+    primary.item :posts, 'Tweets', posts_path, :highlights_on => :subpath
     # primary.item :articles, 'Articles', articles_path, :highlights_on => :subpath 
     primary.item :authors, 'Users', authors_path
     primary.item :about, 'About', about_path

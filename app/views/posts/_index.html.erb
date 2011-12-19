@@ -1,24 +1,42 @@
 <% unless @posts.empty? %>
 	<table class="index">
-		<th class="name"><%= pluralize(@posts.total_entries, 'Tweet') %></th>
+		<tr>
+		  <th class="name" colspan="2"><%= pluralize(@posts.total_entries, 'Tweet') %></th>
+		</tr>
     <% @posts.each do |post| %>
-      <tr>
-      	<td class="name">	
-	        <%= link_to "@#{post.author}", post.author_with_link %><br />
-      	  <%= post.body_with_links.html_safe %>
-      	</td>
-				    </td>
-	  </tr>
-    <% end %>
+		  <% if controller.action_name == "edit" and post.id == @post.id %>
+		    <% if @rating.created_at.nil? %>
+		      <%= render :partial => 'ratings/new' %>
+		    <% else %>
+          <%= render :partial => 'ratings/edit' %>
+        <% end %>
+      <% else %>
+        <tr id="post_<%= post.id %>">
+      	  <td class="name">
+	          <%= image_tag "http://api.twitter.com/1/users/profile_image/#{post.author}", :class => "photo_mini" %>
+	          <div class="body">
+	            <span class="name"><%= link_to "@#{post.author}", post.author_with_link %></span>
+	            <% if author_signed_in? %>
+	              <span class="post_links"><%= link_to_remote (image_tag("add_comment.gif") + " Rate"), { :update => "index", 
+                                                   :url => edit_post_url(:id => post, :author_id => current_author.id, :page => params[:page]), 
+                                                   :method => :get },
+                                                   :title => "Rate this post" %></span>
+             <% end %><br />
+      	     <%= post.body_with_links.html_safe %>
+            </div>
+      	  </td>
+          <%= render :partial => 'posts/rating', :locals => { :post => post } %>
+	      </tr>
+		  <% end %>
+		<% end %>
     <tr>
-	    <td class="pagination">
+	    <td class="pagination" colspan="2">
 		    <div class="pagination">
 			    <%= will_paginate @posts %>
 			  </div>
 		  </td>
-		  <td class="count"></td>
 		</tr>
 	</table>
-  <% else %>
-    <h2>No posts found</h2>
-  <% end %>
+<% else %>
+  <h2>No posts found</h2>
+<% end %>

@@ -15,7 +15,6 @@
 
 PlosAltMetrics::Application.routes.draw do
   resources :posts
-
   resources :ratings
 
   devise_for :authors, :controllers => { :omniauth_callbacks => "authors/omniauth_callbacks" } do
@@ -40,6 +39,6 @@ PlosAltMetrics::Application.routes.draw do
   # Authors are in default path, should therefore be defined after admin resources. 
   # Root goes to authors#index, needs to be defined.
   resources :authors, :path => "/"
-  root :to => "authors#index"
+  root :to => "posts#index"
 
 end

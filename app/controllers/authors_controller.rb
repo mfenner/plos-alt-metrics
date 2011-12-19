@@ -24,13 +24,9 @@ class AuthorsController < ApplicationController
       @authors = Author.paginate :page => params[:page], 
         :per_page => 12,
         :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or authors.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]],
-        :order => 'authors.sort_name, authors.username' 
+        :order => 'ratings_count'
     else
-      if author_signed_in?
-        @authors = current_author.friends.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
-      else
-        @authors = []
-      end
+      @authors = Author.paginate :page => params[:page], :per_page => 12, :order => 'ratings_count'
     end
     
     respond_to do |format|

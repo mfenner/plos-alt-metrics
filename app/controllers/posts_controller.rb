@@ -8,7 +8,7 @@ class PostsController < ApplicationController
         :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
         :order => 'posts.original_id' 
     else
-      @posts = Post.paginate :page => params[:page], :per_page => 10, :conditions => ["posts.content_type = 'tweet'"]
+      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)
     end
 
     respond_to do |format|
@@ -45,7 +45,29 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
+    unless params[:q].blank?
+      @posts = Post.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :order => 'posts.original_id' 
+    else
+      @posts = Post.paginate :page => params[:page], :per_page => 10, :conditions => ["posts.content_type = 'tweet'"]
+    end
+    
     @post = Post.find(params[:id])
+    @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
+    
+    if @rating.nil?
+      if @post.body.match(/^RT/)
+        @rating = Rating.new(:rhetoric => "agreesWith") 
+      else
+        @rating = Rating.new(:rhetoric => "discusses") 
+      end
+    end
+    
+    if request.xhr?
+      render :partial => "index" 
+    end
   end
 
   # POST /posts
@@ -68,15 +90,26 @@ class PostsController < ApplicationController
   # PUT /posts/1.xml
   def update
     @post = Post.find(params[:id])
-
+    
+    unless params[:q].blank?
+      @posts = Post.paginate :page => params[:page], 
+        :per_page => 10,
+        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :order => 'posts.original_id' 
+    else
+      @posts = Post.paginate :page => params[:page], :per_page => 10, :conditions => ["posts.content_type = 'tweet'"]
+    end
+    
+    @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
+    if @rating.nil?
+      @rating = Rating.new(params[:rating])
+      @rating.save
+    else
+      @rating.update_attributes(params[:rating])
+    end
+    
     respond_to do |format|
-      if @post.update_attributes(params[:post])
-        format.html { redirect_to(@post, :notice => 'Post was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
-      end
+      format.html { render :partial => 'index' }
     end
   end
 
