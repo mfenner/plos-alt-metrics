@@ -54,7 +54,7 @@ class RatingsController < ApplicationController
     @rating.save
     
     respond_to do |format|
-      format.html { render 'posts/index' }
+      format.html { render :partial => 'posts/index' }
     end
   end
 
