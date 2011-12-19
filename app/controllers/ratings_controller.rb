@@ -43,7 +43,7 @@ class RatingsController < ApplicationController
     unless params[:q].blank?
       @posts = Post.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
         :order => 'posts.original_id' 
     else
       @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)
@@ -64,7 +64,7 @@ class RatingsController < ApplicationController
     unless params[:q].blank?
       @posts = Post.paginate :page => params[:page], 
         :per_page => 10,
-        :conditions => ["posts.content_type = 'tweet' AND posts.body REGEXP ?", params[:q]],
+        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
         :order => 'posts.original_id' 
     else
       @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)

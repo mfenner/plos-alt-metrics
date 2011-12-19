@@ -52,7 +52,7 @@ SimpleNavigation::Configuration.run do |navigation|
     primary.dom_class = 'navigation'
     primary.item :posts, 'Tweets', posts_path, :highlights_on => :subpath
     # primary.item :articles, 'Articles', articles_path, :highlights_on => :subpath 
-    primary.item :authors, 'Users', authors_path
+    primary.item :authors, 'Users', authors_path, :highlights_on => :subpath
     primary.item :about, 'About', about_path
 
     # Add an item which has a sub navigation (same params, but with block)

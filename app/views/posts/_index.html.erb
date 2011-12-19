@@ -32,7 +32,7 @@
     <tr>
 	    <td class="pagination" colspan="2">
 		    <div class="pagination">
-			    <%= will_paginate @posts %>
+			    <%= will_paginate @posts, :params => { :controller => :posts, :authenticity_token => nil } %>
 			  </div>
 		  </td>
 		</tr>
