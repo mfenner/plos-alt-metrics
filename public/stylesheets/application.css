@@ -380,6 +380,10 @@ div.submit {
   color: grey;
 }
 
+ol {
+  margin-top: 0.25em;
+}
+
 /* digg_pagination from http://mislav.uniqpath.com/will_paginate/
 *
 */

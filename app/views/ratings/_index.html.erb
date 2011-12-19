@@ -1,0 +1,12 @@
+<h2>Summary</h2>
+
+<%= pluralize(@ratings.count, 'Rating') %> for <%= pluralize(@posts.count, 'Post') %>.<p>
+
+
+<h2>Most active users</h2>
+
+<ol>
+	<% @authors.each do |author| %>
+	  <li><%= link_to author.name, author_url(author.username) %> - <%= author.ratings_count %> Ratings</li>
+	<% end %>
+</ol>

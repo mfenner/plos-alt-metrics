@@ -3,10 +3,11 @@ class RatingsController < ApplicationController
   # GET /ratings.xml
   def index
     @ratings = Rating.all
+    @posts = Post.where(:content_type => 'tweet')
+    @authors = Author.order('ratings_count desc').limit(3)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @ratings }
     end
   end
 
@@ -46,7 +47,7 @@ class RatingsController < ApplicationController
         :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
         :order => 'posts.original_id' 
     else
-      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)
+      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 20)
     end
     @post = Post.find(params[:rating][:post_id])
     
@@ -67,7 +68,7 @@ class RatingsController < ApplicationController
         :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
         :order => 'posts.original_id' 
     else
-      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 10)
+      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 20)
     end
     @rating = Rating.find(params[:id])
     @post = @rating.post
