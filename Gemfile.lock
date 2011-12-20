@@ -47,10 +47,10 @@ GEM
     builder (2.1.2)
     columnize (0.3.6)
     daemons (1.1.4)
-    devise (1.5.2)
+    devise (1.4.9)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
-      warden (~> 1.1)
+      warden (~> 1.0.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     eventmachine (0.12.10)
@@ -153,7 +153,7 @@ GEM
       simple_oauth (~> 0.1)
     tzinfo (0.3.31)
     unicode (0.4.0)
-    warden (1.1.0)
+    warden (1.0.6)
       rack (>= 1.0)
     will_paginate (3.0.2)
 
@@ -168,7 +168,7 @@ DEPENDENCIES
   builder (~> 2.1.2)
   bundler
   daemons (= 1.1.4)
-  devise
+  devise (= 1.4.9)
   exception_notification
   fastercsv (= 1.5.4)
   formatize

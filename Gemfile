@@ -16,7 +16,7 @@ gem 'soap4r', '>=1.5.8', :require => 'soap/rpc/driver'
 gem 'starling', "0.10.1"
 gem 'SystemTimer', '1.2.3'
 gem 'formatize'
-gem 'devise'
+gem 'devise', '1.4.9'
 gem "oa-oauth", :require => "omniauth/oauth"
 #gem "omniauth-twitter"
 gem 'twitter', '>=2.0'
