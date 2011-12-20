@@ -1,4 +1,10 @@
 <td class="rating">
+	<% if author_signed_in? and !(controller.action_name == "edit" and post.id == @post.id) %>
+    <span class="post_links"><%= link_to_remote (image_tag("add_comment.gif") + (post.ratings.empty? ? " Classify" : " Change")), { :update => "index", 
+                                     :url => edit_post_url(:id => post, :author_id => current_author.id, :page => params[:page], :q => params[:q]), 
+                                     :method => :get },
+                                     :title => "Classify this post" %></span>
+  <% end %>
   <% unless post.ratings.empty? %>
     <strong><%= pluralize(post.ratings.count, 'Classification') %></strong><br />
     <%= post.rhetoric.html_safe %>

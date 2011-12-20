@@ -3,10 +3,16 @@
 		<div class="edit">
       <%= image_tag "http://api.twitter.com/1/users/profile_image/#{@post.author}", :class => "photo_mini" %>
       <div class="body">
-	      <% remote_form_for :rating, :update => "index", :url => rating_url(:id => @rating, :page => params[:page], :q => params[:q]), :method => :put do |form| %>
-	        <span class="name"><%= link_to "@#{@post.author}", @post.author_with_link %></span><br />
-	        <%= @post.body_with_links.html_safe %><p>
-          <%= render :partial => 'ratings/form', :locals => { :form => form } %>
+	      <span class="name"><%= link_to "@#{@post.author}", @post.author_with_link %></span>
+	      <span class="date"><%= l @post.published_at, :format => :twitter %></span><br />
+	      <%= @post.body_with_links.html_safe %>
+		  </div>
+		  <div class="cito">
+			  <% remote_form_for :rating, :update => "index", :url => rating_url(:id => @rating, :page => params[:page], :q => params[:q]), :method => :put do |form| %>
+				<% unless @post.article_title.blank? %>
+			      <%= @post.article_title_and_journal %><p>
+				<% end %>
+        <%= render :partial => 'ratings/form', :locals => { :form => form } %>
 	      <% end %>
 	    </div>
 	  </div>

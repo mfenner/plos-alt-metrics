@@ -190,6 +190,7 @@ table.index, table.profile {
 
 td.name {
   width: 60%;
+  vertical-align: top;
   padding-bottom: 0.5em;
 }
 
@@ -232,6 +233,12 @@ td.image {
 span.name {
   font-weight: bold;
   font-size: large;
+}
+
+span.date {
+  font-size: smaller;
+  padding-top: 5px;
+  float: right;
 }
 
 span.search {
@@ -337,6 +344,10 @@ div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar {
 
 div.cito {
   font-size: smaller;
+  padding-left: 12px;
+  padding-right: 8px;
+  padding-top: 12px;
+  padding-bottom: 8px;
 }
 
 div.body {
@@ -344,6 +355,11 @@ div.body {
   padding-right: 8px;
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+div.source {
+  padding-top: 4px;
+  font-size: smaller;
 }
 
 span.service {
@@ -378,6 +394,7 @@ div.altmetrics {
 
 div.submit {
   text-align: right;
+  font-size: larger;
   margin-right: 0.5em;
   margin-bottom: -0.5em;
 }
@@ -392,7 +409,9 @@ th.summary, td.summary {
 }
 
 .post_links {
-  font-size: smaller;
+  float: right;
+  padding-right: 1em;
+  font-size: larger;
   color: grey;
 }
 

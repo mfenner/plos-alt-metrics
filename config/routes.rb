@@ -34,6 +34,7 @@ PlosAltMetrics::Application.routes.draw do
   resources :categories
   resources :authentications
   get '/docs(/:action)', :controller => :docs, :format => false
+  
   get 'about', :to => 'index#index', :as => "about"
   
   # Authors are in default path, should therefore be defined after admin resources. 

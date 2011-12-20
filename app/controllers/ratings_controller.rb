@@ -65,12 +65,20 @@ class RatingsController < ApplicationController
   # POST /ratings.xml
   def create
     unless params[:q].blank?
-      @posts = Post.paginate :page => params[:page], 
-        :per_page => 10,
-        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-        :order => 'posts.original_id' 
+      if params[:q] == "I'm feeling lucky"
+        @posts = Post.paginate :page => params[:page], 
+           :per_page => 5,
+           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :include => :ratings,
+           :order => 'RAND(DAYOFYEAR(NOW()))'
+      else
+        @posts = Post.paginate :page => params[:page], 
+          :per_page => 20,
+          :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
+          :order => 'posts.published_at desc'
+      end
     else
-      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
     end
     @post = Post.find(params[:rating][:post_id])
     
@@ -86,12 +94,20 @@ class RatingsController < ApplicationController
   # PUT /ratings/1.xml
   def update
     unless params[:q].blank?
-      @posts = Post.paginate :page => params[:page], 
-        :per_page => 10,
-        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-        :order => 'posts.original_id' 
+      if params[:q] == "I'm feeling lucky"
+        @posts = Post.paginate :page => params[:page], 
+           :per_page => 5,
+           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :include => :ratings,
+           :order => 'RAND(DAYOFYEAR(NOW()))'
+      else
+        @posts = Post.paginate :page => params[:page], 
+          :per_page => 20,
+          :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
+          :order => 'posts.published_at desc'
+      end
     else
-      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
     end
     @rating = Rating.find(params[:id])
     @post = @rating.post

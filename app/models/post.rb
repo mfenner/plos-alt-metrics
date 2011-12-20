@@ -1,14 +1,17 @@
 class Post < ActiveRecord::Base
   has_many :ratings
   
-  scope :random, :order=>'RAND()', :limit=>10
-  
   def body_with_links
     body.gsub(/(http:\/\/[a-zA-Z0-9\/\.\+\-_:?&=]+)/) {|a| "<a href=\"#{a}\" target='_blank'>#{a}</a>"}
   end
   
   def author_with_link
     "http://twitter.com/#{author}"
+  end
+  
+  def article_title_and_journal
+    return "" if article_title.blank?
+    "Title of article: " + article_title + "." + ((journal_title.blank? or journal_title == "0") ? "" : " Published in " + journal_title + ".")
   end
   
   def rhetoric

@@ -43,7 +43,7 @@
       <div class='search'>
         <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do %>
         <span class="search">Search</span>
-          <%= text_field_tag :q, params[:q] %>
+          <%= text_field_tag :q, params[:q].nil? ? "I'm feeling lucky" : params[:q] %>
           <%= observe_field 'q', :frequency => 0.5, :update => 'index', :url => { :controller => controller.controller_name, :action => :index }, :method => :get, :with => "'q=' + encodeURIComponent(value)" %>
         <% end %>
 		  </div>

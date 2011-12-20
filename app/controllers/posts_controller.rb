@@ -3,12 +3,20 @@ class PostsController < ApplicationController
   # GET /posts.xml
   def index
     unless params[:q].blank?
-      @posts = Post.paginate :page => params[:page], 
-        :per_page => 20,
-        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-        :order => 'posts.original_id' 
+      if params[:q] == "I'm feeling lucky"
+         @posts = Post.paginate :page => params[:page], 
+           :per_page => 5,
+           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :include => :ratings,
+           :order => 'RAND(DAYOFYEAR(NOW()))'
+      else
+        @posts = Post.paginate :page => params[:page], 
+          :per_page => 20,
+          :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
+          :order => 'posts.published_at desc'
+      end
     else
-      @posts = Post.where(:content_type => 'tweet').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
     end
 
     respond_to do |format|
@@ -46,23 +54,27 @@ class PostsController < ApplicationController
   # GET /posts/1/edit
   def edit
     unless params[:q].blank?
-      @posts = Post.paginate :page => params[:page], 
-        :per_page => 10,
-        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-        :order => 'posts.original_id' 
+      if params[:q] == "I'm feeling lucky"
+         @posts = Post.paginate :page => params[:page], 
+           :per_page => 5,
+           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :include => :ratings,
+           :order => 'RAND(DAYOFYEAR(NOW()))'
+      else
+        @posts = Post.paginate :page => params[:page], 
+          :per_page => 20,
+          :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
+          :order => 'posts.published_at desc'
+      end
     else
-      @posts = Post.paginate :page => params[:page], :per_page => 20, :conditions => ["posts.content_type = 'tweet'"]
+      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
     end
     
     @post = Post.find(params[:id])
     @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
     
     if @rating.nil?
-      if @post.body.match(/^RT/)
-        @rating = Rating.new(:rhetoric => "agreesWith") 
-      else
-        @rating = Rating.new(:rhetoric => "discusses") 
-      end
+      @rating = Rating.new(:rhetoric => "discusses") 
     end
     
     if request.xhr?
@@ -92,12 +104,20 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
     
     unless params[:q].blank?
-      @posts = Post.paginate :page => params[:page], 
-        :per_page => 10,
-        :conditions => ["posts.content_type = 'tweet' AND CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-        :order => 'posts.original_id' 
+      if params[:q] == "I'm feeling lucky"
+         @posts = Post.paginate :page => params[:page], 
+           :per_page => 5,
+           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :include => :ratings,
+           :order => 'RAND(DAYOFYEAR(NOW()))'
+      else
+        @posts = Post.paginate :page => params[:page], 
+          :per_page => 20,
+          :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
+          :order => 'posts.published_at desc'
+      end
     else
-      @posts = Post.paginate :page => params[:page], :per_page => 10, :conditions => ["posts.content_type = 'tweet'"]
+      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
     end
     
     @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
