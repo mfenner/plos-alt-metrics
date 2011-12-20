@@ -2,11 +2,11 @@
 # four configuration values can also be set straight in your models.
 
 # Patch Omniauth to include custom strategy for Mendeley
-module OmniAuth
-  module Strategies
-    autoload :OauthMendeley, 'lib/oauth_mendeley'
-  end
-end
+#module OmniAuth
+#  module Strategies
+#    autoload :OauthMendeley, 'lib/oauth_mendeley'
+#  end
+#end
 
 Devise.setup do |config|
   # ==> Mailer Configuration

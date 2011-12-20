@@ -52,8 +52,6 @@ SimpleNavigation::Configuration.run do |navigation|
     primary.dom_class = 'navigation'
     primary.item :posts, 'Tweets', posts_path
     primary.item :ratings, 'Ratings', ratings_path
-    # primary.item :articles, 'Articles', articles_path, :highlights_on => :subpath 
-    primary.item :authors, 'Users', authors_path, :highlights_on => :subpath
     primary.item :about, 'About', about_path
 
     # Add an item which has a sub navigation (same params, but with block)
@@ -65,10 +63,9 @@ SimpleNavigation::Configuration.run do |navigation|
     # You can also specify a condition-proc that needs to be fullfilled to display an item.
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
+    primary.item :authors, 'Users', Proc.new { authors_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath 
     primary.item :sign_in, 'Sign in with Twitter', Proc.new { author_omniauth_authorize_path(:twitter) }, :if => Proc.new { !author_signed_in? }, :class => 'login'
-    primary.item :signed_in, current_author.nil? ? "" : "Signed in as #{current_author.display_name}", Proc.new { author_path(current_author.username) }, :if => Proc.new { author_signed_in? }, :class => 'login'
-    primary.item :sign_out, 'Sign out', Proc.new { destroy_author_session_path }, :method => :delete, :if => Proc.new { author_signed_in? }, :class => 'login'
-    
+    primary.item :signed_in, current_author.nil? ? "" :  'Sign out', Proc.new { destroy_author_session_path }, :method => :delete, :if => Proc.new { author_signed_in? }, :class => 'login'
 
     # you can also specify a css id or class to attach to this particular level
     # works for all levels of the menu

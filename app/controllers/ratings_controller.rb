@@ -13,11 +13,11 @@ class RatingsController < ApplicationController
     
     # Create pie chart for rhetoric
     rhetoric = Rating.order('rhetoric').group("rhetoric").count
-    @rhetoricchart = Gchart.pie(:data => [rhetoric.map {|a| a[1] }], :size => '400x200', :labels => rhetoric.map {|a| a[0] })
+    @rhetoricchart = Gchart.pie(:data => [rhetoric.map {|a| a[1] }], :size => '330x200', :labels => rhetoric.map {|a| a[0] })
     
     # Create pie chart for posts from author/publisher
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
-    @authorchart = Gchart.pie(:data => [@posts_with_authors.count, @posts_with_ratings.count - @posts_with_authors.count], :size => '400x200', :labels => ["Author/Publisher", nil])
+    @authorchart = Gchart.pie(:data => [@posts_with_authors.count, @posts_with_ratings.count - @posts_with_authors.count], :size => '330x200', :labels => ["Author", nil])
     
     # Create line chart for using methods/data/conclusions
     @posts_with_method = Post.find(:all, :conditions => "ratings.method = 1", :include => :ratings) 
