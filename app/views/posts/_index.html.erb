@@ -1,7 +1,12 @@
 <% unless @posts.empty? %>
 	<table class="index">
 		<tr>
-		  <th class="name" colspan="2"><%= pluralize(@posts.total_entries, 'Tweet') %></th>
+		  <th class="name" colspan="2">
+		    <%= pluralize(@posts.total_entries, 'Tweet') %>
+		    <% if params[:q] == "I'm feeling lucky" %>
+		      left to classify
+		    <% end %>
+			</th>
 		</tr>
     <% @posts.each do |post| %>
 		  <% if controller.action_name == "edit" and post.id == @post.id %>
