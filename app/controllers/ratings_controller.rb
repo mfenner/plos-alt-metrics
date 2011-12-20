@@ -67,7 +67,7 @@ class RatingsController < ApplicationController
     unless params[:q].blank?
       if params[:q] == "I'm feeling lucky"
         @posts = Post.paginate :page => params[:page], 
-           :per_page => 5,
+           :per_page => 4,
            :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
            :include => :ratings,
            :order => 'RAND(DAYOFYEAR(NOW()))'
@@ -96,7 +96,7 @@ class RatingsController < ApplicationController
     unless params[:q].blank?
       if params[:q] == "I'm feeling lucky"
         @posts = Post.paginate :page => params[:page], 
-           :per_page => 5,
+           :per_page => 4,
            :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
            :include => :ratings,
            :order => 'RAND(DAYOFYEAR(NOW()))'
