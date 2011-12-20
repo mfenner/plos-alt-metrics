@@ -379,6 +379,11 @@ div.summary {
   margin-top: 0.25em;
 }
 
+th.summary, td.summary {
+  width: 33%;
+  text-align: center;
+}
+
 .post_links {
   font-size: smaller;
   color: grey;

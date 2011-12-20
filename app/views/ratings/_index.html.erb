@@ -1,7 +1,20 @@
 <h2>Summary</h2>
 <div class="summary">
-  <%= pluralize(@ratings.count, 'Rating') %> for <%= pluralize(@posts.count, 'Post') %>, out of <%= pluralize(@all_posts.count, 'Post') %>.<p>
+  <%= pluralize(@ratings.count, 'rating') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>, out of <%= pluralize(@posts.count, 'tweet') %>.<p>
 </div>
+
+<table class="index">
+	<tr>
+	  <th class="summary">Agreement with Paper</th>
+		<th class="summary">Tweets by Author/Publisher</th>
+		<th class="summary">Uses Methods/Data/Conclusions</th>
+	</tr>
+	<tr>
+		<td class="summary"><%= image_tag(@rhetoricchart) %></td>
+		<td class="summary"><%= image_tag(@authorchart) %></td>
+		<td class="summary"><%= image_tag(@reusechart) %></td>
+	</tr>
+</table>
 
 <h2>Activity</h2>
 <div class="summary">

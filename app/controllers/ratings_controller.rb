@@ -6,16 +6,28 @@ class RatingsController < ApplicationController
   # GET /ratings.xml
   def index
     @ratings = Rating.all
-    @posts = Post.where('ratings_count > 0')
-    @all_posts = Post.where(:content_type => 'tweet')
-    @authors = Author.order('ratings_count desc').limit(3)
+    @posts_with_ratings = Post.where('ratings_count > 0')
+    @posts = Post.where(:content_type => 'tweet')
+    @authors = Author.order('ratings_count desc').limit(5)
+    @authors_with_ratings = Author.all
     
-    @days = Rating.order('created_at asc').group('DATE(created_at)').count
-    data = [0]
-    @days.each do |day|
-      data << day[1]
-    end
-    @sparkline = Gchart.sparkline(:data => data, :size => '120x40', :line_colors => '0077CC')
+    # Create pie chart for rhetoric
+    rhetoric = Rating.order('rhetoric').group("rhetoric").count
+    @rhetoricchart = Gchart.pie(:data => [rhetoric.map {|a| a[1] }], :size => '400x200', :labels => ["agrees with", "disagress with", "discusses"])
+    
+    # Create pie chart for posts from author/publisher
+    @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
+    @authorchart = Gchart.pie(:data => [@posts_with_authors.count, @posts_with_ratings.count - @posts_with_authors.count])
+    
+    # Create line chart for using methods/data/conclusions
+    @posts_with_method = Post.find(:all, :conditions => "ratings.method = 1", :include => :ratings) 
+    @posts_with_data = Post.find(:all, :conditions => "ratings.data = 1", :include => :ratings)
+    @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
+    @reusechart = Gchart.bar(:data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :size => '200x200', :bar_width_and_spacing => "40,5", :max_value => @posts_with_ratings.count)
+    
+    # Calculate rating activity by day
+    days = Rating.order('created_at').group('DATE(created_at)').count
+    @sparkline = Gchart.sparkline(:data => days.map {|a| a[1] }, :size => '200x40', :line_colors => 'ff9900')
 
     respond_to do |format|
       format.html # index.html.erb
