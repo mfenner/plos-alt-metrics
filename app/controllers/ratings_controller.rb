@@ -1,4 +1,7 @@
 class RatingsController < ApplicationController
+  
+  require 'gchart'
+  
   # GET /ratings
   # GET /ratings.xml
   def index
@@ -6,6 +9,13 @@ class RatingsController < ApplicationController
     @posts = Post.where('ratings_count > 0')
     @all_posts = Post.where(:content_type => 'tweet')
     @authors = Author.order('ratings_count desc').limit(3)
+    
+    @days = Rating.order('created_at asc').group('DATE(created_at)').count
+    data = [0]
+    @days.each do |day|
+      data << day[1]
+    end
+    @sparkline = Gchart.sparkline(:data => data, :size => '120x40', :line_colors => '0077CC')
 
     respond_to do |format|
       format.html # index.html.erb

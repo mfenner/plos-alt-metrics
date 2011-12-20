@@ -1,9 +1,12 @@
 <h2>Summary</h2>
-
 <div class="summary">
   <%= pluralize(@ratings.count, 'Rating') %> for <%= pluralize(@posts.count, 'Post') %>, out of <%= pluralize(@all_posts.count, 'Post') %>.<p>
 </div>
 
+<h2>Activity</h2>
+<div class="summary">
+  <%= image_tag(@sparkline) %><p>
+</div>
 
 <h2>Most active users</h2>
 

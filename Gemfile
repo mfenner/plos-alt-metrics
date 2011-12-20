@@ -26,6 +26,7 @@ gem "addressable"
 gem "bibtex-ruby", "~> 2.0.1"
 gem "acts_as_list"
 gem "builder", "~> 2.1.2"
+gem "googlecharts", "~> 1.6.8", :require => "gchart"
 
 group :development do
   gem 'ruby-debug'
