@@ -3,7 +3,8 @@ class RatingsController < ApplicationController
   # GET /ratings.xml
   def index
     @ratings = Rating.all
-    @posts = Post.where(:content_type => 'tweet')
+    @posts = Post.where('ratings_count > 0')
+    @all_posts = Post.where(:content_type => 'tweet')
     @authors = Author.order('ratings_count desc').limit(3)
 
     respond_to do |format|

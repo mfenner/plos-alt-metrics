@@ -375,6 +375,10 @@ div.submit {
   margin-bottom: -0.5em;
 }
 
+div.summary {
+  margin-top: 0.25em;
+}
+
 .post_links {
   font-size: smaller;
   color: grey;
