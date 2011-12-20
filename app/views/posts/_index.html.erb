@@ -20,7 +20,7 @@
       	  <td class="name">
 	          <%= image_tag "http://api.twitter.com/1/users/profile_image/#{post.author}", :class => "photo_mini" %>
 	          <div class="body">
-	            <span class="name"><%= link_to "@#{post.author}", post.author_with_link %></span>
+	            <span class="name"><%= link_to "@#{post.author}", post.author_with_link %></span> <span class="original"><%= link_to "Original on Twitter", post.url %></span>
 	            <span class="date"><%= l post.published_at, :format => :twitter %></span><br />
       	     <%= post.body_with_links.html_safe %>
 						<% unless post.article_title.blank? %>

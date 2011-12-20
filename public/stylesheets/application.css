@@ -375,6 +375,10 @@ span.journal {
 
 }
 
+span.original {
+  font-size: smaller;
+}
+
 span.content_type {
   font-style: italic;
 }
