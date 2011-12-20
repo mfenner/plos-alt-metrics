@@ -47,15 +47,15 @@ PlosAltMetrics::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
   
-  config.action_mailer.default_url_options = { :host => 'sciencecard.org' }
+  config.action_mailer.default_url_options = { :host => 'crowdometer.org' }
   config.action_mailer.smtp_settings = { :enable_starttls_auto => false }
   
   # Configure Google Analytics, please add your settings
-  config.middleware.use("Rack::GoogleAnalytics", :web_property_id => 'UA-362856-11')
+  config.middleware.use("Rack::GoogleAnalytics", :web_property_id => 'UA-362856-12')
   
   # Configure ExceptionNotifier
   config.middleware.use("ExceptionNotifier",
-    :email_prefix => "[ScienceCard Error] ",
-    :sender_address => %{"ScienceCard" <info@sciencecard.org>},
+    :email_prefix => "[CrowdoMeter Error] ",
+    :sender_address => %{"CrowdoMeter" <info@crowdometer.org>},
     :exception_recipients => %w{martin.h.fenner@googlemail.com})
 end
