@@ -1,6 +1,6 @@
 <h2>Summary</h2>
 <div class="summary">
-  <%= pluralize(@ratings.count, 'rating') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>, out of <%= pluralize(@posts.count, 'tweet') %>.<p>
+  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>, out of <%= pluralize(@posts.count, 'tweet') %>.<p>
 </div>
 
 <table class="index">
@@ -23,8 +23,19 @@
 
 <h2>Most active users</h2>
 
-<ol>
+<% unless @authors.empty? %>
+  <table class="index">
 	<% @authors.each do |author| %>
-	  <li><%= link_to author.name, author_url(author.username) %> - <%= author.ratings_count %> Ratings</li>
+	  <tr>   
+	    	<td class="index">
+						<%= image_tag "http://api.twitter.com/1/users/profile_image/#{author.username}", :class => "photo_mini" %>
+	      	  <span class="name"><%= author.display_name %></span> <%= link_to "@#{author.username}", "http://twitter.com/#{author.username}" %><br/>
+	          <%= author.description %>
+      	</td> 
+        <td class="rating_count">
+	        <%= pluralize(author.ratings_count, 'Classification') %>
+	      </td>
+	  </tr>  
 	<% end %>
-</ol>
+	</table>
+<% end %>

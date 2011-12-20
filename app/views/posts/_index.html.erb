@@ -17,10 +17,10 @@
 	          <div class="body">
 	            <span class="name"><%= link_to "@#{post.author}", post.author_with_link %></span>
 	            <% if author_signed_in? %>
-	              <span class="post_links"><%= link_to_remote (image_tag("add_comment.gif") + " Rate"), { :update => "index", 
+	              <span class="post_links"><%= link_to_remote (image_tag("add_comment.gif") + " Classify"), { :update => "index", 
                                                    :url => edit_post_url(:id => post, :author_id => current_author.id, :page => params[:page], :q => params[:q]), 
                                                    :method => :get },
-                                                   :title => "Rate this post" %></span>
+                                                   :title => "Classify this post" %></span>
              <% end %><br />
       	     <%= post.body_with_links.html_safe %>
             </div>

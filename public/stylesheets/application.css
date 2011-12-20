@@ -249,6 +249,13 @@ td.count,th.count {
   padding-bottom: 0.5em;
 }
 
+td.rating_count {
+  width: 30%;
+  font-weight: bold;
+  font-size: large;
+  padding-left: 0.5em;
+}
+
 th.count {
   vertical-align: middle;
 }
