@@ -15,7 +15,11 @@
 
 PlosAltMetrics::Application.routes.draw do
   resources :authors
-  resources :ratings
+  resources :ratings do
+    collection do
+      post 'update_spam'
+    end
+  end
 
   devise_for :authors, :controllers => { :omniauth_callbacks => "authors/omniauth_callbacks" } do
     get '/authors/auth/:provider' => 'authors/omniauth_callbacks#passthru'

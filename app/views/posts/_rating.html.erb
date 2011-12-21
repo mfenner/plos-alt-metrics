@@ -6,11 +6,15 @@
                                      :title => "Classify this post" %></span>
   <% end %>
   <% unless post.ratings.empty? %>
-    <strong><%= pluralize(post.ratings.count, 'Classification') %></strong><br />
-    <%= post.rhetoric.html_safe %>
-    <%= post.is_author.html_safe if post.is_author %>
-    <%= post.method.html_safe if post.method %>
-    <%= post.data.html_safe if post.data %>
-    <%= post.conclusions.html_safe if post.conclusions %>
+	  <strong><%= pluralize(post.ratings.count, 'Classification') %></strong><br />
+    <% if post.spam %>
+      Spam
+    <% else %>
+	    <%= post.rhetoric.html_safe %>
+	    <%= post.is_author.html_safe if post.is_author %>
+	    <%= post.method.html_safe if post.method %>
+	    <%= post.data.html_safe if post.data %>
+	    <%= post.conclusions.html_safe if post.conclusions %>
+    <% end %>
   <% end %>
 </td>

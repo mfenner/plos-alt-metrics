@@ -53,4 +53,12 @@ class Post < ActiveRecord::Base
       nil
     end
   end
+  
+  def spam
+    if ratings.any? {|rating| rating.spam }
+      true
+    else
+      false
+    end
+  end
 end

@@ -134,4 +134,8 @@ class RatingsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def update_spam
+    @is_spam = params[:spam].to_i == 1 ? true : false
+  end
 end
