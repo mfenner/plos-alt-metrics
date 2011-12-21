@@ -5,3 +5,4 @@ en:
   time:
       formats:
         twitter: "%B %d"
+        result: "%B %d, %Y"

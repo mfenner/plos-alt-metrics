@@ -23,10 +23,9 @@ class AuthorsController < ApplicationController
     unless params[:q].blank?
       @authors = Author.paginate :page => params[:page], 
         :per_page => 12,
-        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or authors.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]],
-        :order => 'ratings_count'
+        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or authors.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]]
     else
-      @authors = Author.paginate :page => params[:page], :per_page => 12, :order => 'ratings_count'
+      @authors = Author.paginate :page => params[:page], :per_page => 12
     end
     
     respond_to do |format|

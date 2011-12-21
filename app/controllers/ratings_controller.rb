@@ -7,7 +7,11 @@ class RatingsController < ApplicationController
   def index
     @ratings = Rating.all
     @posts_with_ratings = Post.where('ratings_count > 0')
-    @posts = Post.where(:content_type => 'tweet')
+    @posts = Post.where(:content_type => 'tweet').order(:published_at)
+    @posts_with_rts = Post.find(:all, :conditions => "body REGEXP '^RT[[:space:]]'")
+    @unique_author_count = Post.count(:author, :distinct => true)
+    @unique_article_count = Post.count(:article_title, :distinct => true)
+    @unique_journal_count = Post.count(:journal_title, :distinct => true)
     @authors = Author.order('ratings_count desc').limit(5)
     @authors_with_ratings = Author.all
     

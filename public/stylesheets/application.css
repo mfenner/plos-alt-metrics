@@ -414,11 +414,16 @@ div.submit {
 
 div.summary {
   margin-top: 0.25em;
+  margin-bottom: 0.75em;
 }
 
 th.summary, td.summary {
   width: 33%;
   text-align: center;
+}
+
+td.two {
+  width: 50%;
 }
 
 .post_links {

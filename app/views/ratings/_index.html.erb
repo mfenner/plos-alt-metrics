@@ -1,6 +1,30 @@
+<h2>Dataset</h2>
+<div class="summary">
+  All tweets contain a link to a scholarly article. Data collected by <%= link_to "altmetric.com", "http://altmetric.com" %>.
+</div>
+
+<table class="index">
+	<tr>
+		<td class="two">
+			<ul>
+				<li><%= pluralize(@posts.count, 'tweet') %></li>
+				<li><%= pluralize(@posts_with_rts.count, 'retweet') %></li>
+				<li>Posted <%= l @posts.first.published_at, :format => :twitter %> - <%= l @posts.last.published_at, :format => :result %></li>
+			</ul>
+		</td>
+		<td class="two">
+			<ul>
+				<li><%= @unique_author_count %> unique users</li>
+				<li><%= @unique_article_count %> unique articles</li>
+				<li><%= @unique_journal_count %> unique journals</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+
 <h2>Summary</h2>
 <div class="summary">
-  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>, out of <%= pluralize(@posts.count, 'tweet') %>.<p>
+  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>, out of <%= pluralize(@posts.count, 'tweet') %>.
 </div>
 
 <table class="index">
@@ -18,7 +42,7 @@
 <p>
 <h2>Activity</h2>
 <div class="summary">
-  <%= image_tag(@sparkline) %><p>
+  <%= image_tag(@sparkline) %>
 </div>
 
 <h2>Most active users</h2>

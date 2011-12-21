@@ -45,7 +45,7 @@ class Author < ActiveRecord::Base
   validates_presence_of :username
   validates_uniqueness_of :username
   
-  default_scope :order => 'authors.sort_name'
+  default_scope :order => 'authors.ratings_count desc'
   
   scope :limit, lambda { |limit| (limit && limit > 0) ? {:limit => limit} : {} }
   
