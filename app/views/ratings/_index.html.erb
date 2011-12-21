@@ -9,6 +9,7 @@
 			<ul>
 				<li><%= pluralize(@posts.count, 'tweet') %></li>
 				<li><%= pluralize(@posts_with_rts.count, 'retweet') %></li>
+				<li><%= pluralize(@posts_with_title.count, 'tweet') %> quote article title</li>
 				<li>Posted <%= l @posts.first.published_at, :format => :twitter %> - <%= l @posts.last.published_at, :format => :result %></li>
 			</ul>
 		</td>

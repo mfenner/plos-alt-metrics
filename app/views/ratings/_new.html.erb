@@ -10,7 +10,7 @@
 		  <div class="cito">
 				  <% remote_form_for :rating, :update => "index", :url => ratings_url(:page => params[:page], :q => params[:q]) do |form| %>
 			    <% unless @post.article_title.blank? %>
-				    <%= @post.article_title_and_journal %><p>
+				    <%= @post.article_title_and_journal.html_safe %><p>
 			    <% end %>
 		      <%= form.hidden_field :post_id, :value => @post.id %>
 		      <%= form.hidden_field :author_id, :value => current_author.id %>
