@@ -19,17 +19,17 @@ class RatingsController < ApplicationController
     
     # Create pie chart for rhetoric
     rhetoric = Rating.order('rhetoric').group("rhetoric").count
-    @rhetoricchart = Gchart.pie(:data => [rhetoric.map {|a| a[1] }], :size => '330x200', :labels => rhetoric.map {|a| a[0] })
+    @rhetoricchart = Gchart.pie(:data => [rhetoric.map {|a| a[1] }], :size => '310x200', :labels => rhetoric.map {|a| a[0] })
     
     # Create pie chart for posts from author/publisher
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
-    @authorchart = Gchart.pie(:data => [@posts_with_authors.count, @posts_with_ratings.count - @posts_with_authors.count], :size => '330x200', :labels => ["Author", nil])
+    @authorchart = Gchart.pie(:data => [@posts_with_authors.count, @posts_with_ratings.count - @posts_with_authors.count], :size => '310x200', :labels => ["Author", nil])
     
     # Create line chart for using methods/data/conclusions
     @posts_with_method = Post.find(:all, :conditions => "ratings.method = 1", :include => :ratings) 
     @posts_with_data = Post.find(:all, :conditions => "ratings.data = 1", :include => :ratings)
     @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
-    @reusechart = Gchart.bar(:data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :size => '250x200', :bar_colors => 'ff9900', :bar_width_and_spacing => "70,5", :max_value => @posts_with_ratings.count, :axis_with_labels => 'x',
+    @reusechart = Gchart.bar(:data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :size => '230x200', :bar_colors => 'ff9900', :bar_width_and_spacing => "70,5", :max_value => @posts_with_ratings.count, :axis_with_labels => 'x',
                 :axis_labels => ['Methods|Data|Conclusions'])
     
     # Calculate rating activity by day
