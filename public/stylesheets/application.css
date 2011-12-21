@@ -60,6 +60,8 @@ input[type=radio], input[type=checkbox] {
   float: left;
 }
 
+input
+
 input.name {
   font-size: larger;
 }
@@ -152,6 +154,10 @@ div.flash {
 #index, #show {
   background-color: #fff;
   padding: 1em;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
 }
 
 #profile {
@@ -268,7 +274,7 @@ td.count,th.count {
 
 td.rating_count {
   width: 30%;
-  font-weight: 600;
+  font-weight: 600;#navigati
   font-size: large;
   padding-left: 0.5em;
 }
@@ -279,6 +285,10 @@ th.count {
 
 div.edit {
   background-color: #ffffcc;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
 }
 
 .photo {
@@ -401,6 +411,14 @@ img.altmetrics {
   width: 100px;
 }
 
+img {
+  vertical-align: text-bottom;
+}
+
+img.header {
+  vertical-align: -10%;
+}
+
 img.twitter{
   border-bottom: 0;
 }
@@ -431,7 +449,7 @@ td.two {
   width: 50%;
 }
 
-.post_links {
+span.post_links {
   float: right;
   padding-right: 1em;
   font-size: larger;

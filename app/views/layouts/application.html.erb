@@ -39,11 +39,11 @@
 	</head>
 <body>
   <header>
-	  <h1><%= APP_CONFIG['application'] %></h1>
+	  <h1><%= image_tag("meter.png", :class => "header") %> <%= APP_CONFIG['application'] %></h1>
     <% if ["posts"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
       <div class='search'>
         <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do %>
-        <span class="search">Search</span>
+        <span class="search"><%= image_tag("search.png") %></span>
           <%= text_field_tag :q, params[:q].nil? ? "I'm feeling lucky" : params[:q] %>
           <%= observe_field 'q', :frequency => 0.5, :update => 'index', :url => { :controller => controller.controller_name, :action => :index }, :method => :get, :with => "'q=' + encodeURIComponent(value)" %>
         <% end %>
