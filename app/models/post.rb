@@ -24,7 +24,7 @@ class Post < ActiveRecord::Base
   
   def is_author
     if ratings.any? {|rating| rating.is_author }
-      "Written by an author or the publisher of the cited paper.<br />"
+      "Written by an author or publisher of the cited paper.<br />"
     else
       nil
     end

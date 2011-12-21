@@ -23,7 +23,8 @@ class RatingsController < ApplicationController
     @posts_with_method = Post.find(:all, :conditions => "ratings.method = 1", :include => :ratings) 
     @posts_with_data = Post.find(:all, :conditions => "ratings.data = 1", :include => :ratings)
     @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
-    @reusechart = Gchart.bar(:data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :size => '200x200', :bar_colors => 'ff9900', :bar_width_and_spacing => "60,5", :max_value => @posts_with_ratings.count)
+    @reusechart = Gchart.bar(:data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :size => '250x200', :bar_colors => 'ff9900', :bar_width_and_spacing => "70,5", :max_value => @posts_with_ratings.count, :axis_with_labels => 'x',
+                :axis_labels => ['Methods|Data|Conclusions'])
     
     # Calculate rating activity by day
     days = Rating.order('created_at').group('DATE(created_at)').count

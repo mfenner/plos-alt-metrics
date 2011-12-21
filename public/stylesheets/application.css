@@ -49,7 +49,12 @@ input[type=submit], input[type=button], button {
 
 input[type=submit]:active, input[type=button]:active, button:active {
   background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.2)), to(transparent)); }
-  
+
+input[type=radio], input[type=checkbox] {
+  margin-right: 8px;
+  float: left;
+}
+
 input.name {
   font-size: larger;
 }
@@ -380,6 +385,10 @@ span.original {
 }
 
 span.content_type {
+  font-style: italic;
+}
+
+span.bold {
   font-style: italic;
 }
 
