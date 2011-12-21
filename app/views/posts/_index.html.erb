@@ -35,9 +35,7 @@
 		<% unless params[:q] == "I'm feeling lucky" %>
 	    <tr>
 		    <td class="pagination" colspan="2">
-			    <div class="pagination">
-				    <%= will_paginate @posts, :params => { :controller => :posts, :authenticity_token => nil } %>
-				  </div>
+				  <%= will_paginate @posts, :params => { :controller => :posts, :authenticity_token => nil } %>
 			  </td>
 			</tr>
 		<% end %>

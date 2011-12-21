@@ -221,10 +221,9 @@ td.rating {
 }
 
 div.pagination {
+  margin-left: auto; 
+  margin-right: auto;
   padding-bottom: 0.5em;
-}
-td.pagination {
-  text-align: center;
 }
 
 td.index {
