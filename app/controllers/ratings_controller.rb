@@ -14,7 +14,7 @@ class RatingsController < ApplicationController
     @unique_author_count = Post.count(:author, :distinct => true)
     @unique_article_count = Post.count(:article_title, :distinct => true)
     @unique_journal_count = Post.count(:journal_title, :distinct => true)
-    @authors = Author.order('ratings_count desc').limit(5)
+    @authors = Author.order('ratings_count desc').limit(10)
     @authors_with_ratings = Author.all
     
     # Create pie chart for rhetoric

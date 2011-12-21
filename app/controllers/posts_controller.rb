@@ -79,6 +79,8 @@ class PostsController < ApplicationController
     
     if request.xhr?
       render :partial => "index" 
+    else
+      redirect_to posts_url
     end
   end
 
