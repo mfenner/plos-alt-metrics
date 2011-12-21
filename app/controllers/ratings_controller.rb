@@ -82,10 +82,10 @@ class RatingsController < ApplicationController
         @posts = Post.paginate :page => params[:page], 
           :per_page => 20,
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-          :order => 'posts.published_at desc'
+          :order => 'RAND(DAYOFYEAR(NOW()))'
       end
     else
-      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 20)
     end
     @post = Post.find(params[:rating][:post_id])
     
@@ -111,10 +111,10 @@ class RatingsController < ApplicationController
         @posts = Post.paginate :page => params[:page], 
           :per_page => 20,
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-          :order => 'posts.published_at desc'
+          :order => 'RAND(DAYOFYEAR(NOW()))'
       end
     else
-      @posts = Post.where(:content_type => 'tweet').order('posts.published_at desc').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 20)
     end
     @rating = Rating.find(params[:id])
     @post = @rating.post
