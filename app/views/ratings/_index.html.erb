@@ -24,7 +24,7 @@
 
 <h2>Summary</h2>
 <div class="summary">
-  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>.
+  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>. <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
 </div>
 
 <table class="index">

@@ -9,6 +9,7 @@ class RatingsController < ApplicationController
     @posts_with_ratings = Post.where('ratings_count > 0')
     @posts = Post.where(:content_type => 'tweet').order(:published_at)
     @posts_with_rts = Post.find(:all, :conditions => "body REGEXP '^RT[[:space:]]'")
+    @posts_with_spam = Post.find(:all, :conditions => "ratings.spam = 1", :include => :ratings)
     @unique_author_count = Post.count(:author, :distinct => true)
     @unique_article_count = Post.count(:article_title, :distinct => true)
     @unique_journal_count = Post.count(:journal_title, :distinct => true)
