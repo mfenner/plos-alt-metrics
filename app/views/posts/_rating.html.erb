@@ -1,6 +1,6 @@
 <td class="rating">
 	<% if author_signed_in? and !(controller.action_name == "edit" and post.id == @post.id) %>
-    <span class="post_links"><%= link_to_remote (image_tag((post.ratings.empty? ? "classify.png" : "change.png")) + (post.ratings.empty? ? " Classify" : " Change")), { :update => "index", 
+    <span class="post_links"><%= link_to_remote (image_tag((post.authors.any? {|author| author == current_author } ? "change.png" : "classify.png")) + (post.authors.any? {|author| author == current_author } ? " Change" : " Classify")), { :update => "index", 
                                      :url => edit_post_url(:id => post, :author_id => current_author.id, :page => params[:page], :q => params[:q]), 
                                      :method => :get },
                                      :title => "Classify this post" %></span>

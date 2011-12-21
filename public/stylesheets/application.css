@@ -154,6 +154,7 @@ div.flash {
 #index, #show {
   background-color: #fff;
   padding: 1em;
+  padding-bottom: 0.5em;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   -khtml-border-radius: 10px;
@@ -219,6 +220,9 @@ td.rating {
   padding-bottom: 0.5em;
 }
 
+div.pagination {
+  padding-bottom: 0.5em;
+}
 td.pagination {
   text-align: center;
 }

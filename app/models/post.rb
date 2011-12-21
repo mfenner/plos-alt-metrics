@@ -1,5 +1,6 @@
 class Post < ActiveRecord::Base
   has_many :ratings
+  has_many :authors, :through => :ratings
   
   def body_with_links
     body.gsub(/(http:\/\/[a-zA-Z0-9\/\.\+\-_:?&=]+)/) {|a| "<a href=\"#{a}\" target='_blank'>#{a}</a>"}

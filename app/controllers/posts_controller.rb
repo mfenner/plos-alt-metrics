@@ -11,12 +11,12 @@ class PostsController < ApplicationController
            :order => 'RAND(DAYOFYEAR(NOW()))'
       else
         @posts = Post.paginate :page => params[:page], 
-          :per_page => 20,
+          :per_page => 25,
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
           :order => 'RAND(DAYOFYEAR(NOW()))'
       end
     else
-      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
 
     respond_to do |format|
@@ -62,12 +62,12 @@ class PostsController < ApplicationController
            :order => 'RAND(DAYOFYEAR(NOW()))'
       else
         @posts = Post.paginate :page => params[:page], 
-          :per_page => 20,
+          :per_page => 25,
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
           :order => 'RAND(DAYOFYEAR(NOW()))'
       end
     else
-      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
     
     @post = Post.find(params[:id])
@@ -112,12 +112,12 @@ class PostsController < ApplicationController
            :order => 'RAND(DAYOFYEAR(NOW()))'
       else
         @posts = Post.paginate :page => params[:page], 
-          :per_page => 20,
+          :per_page => 25,
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
           :order => 'RAND(DAYOFYEAR(NOW()))'
       end
     else
-      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 20)
+      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
     
     @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
