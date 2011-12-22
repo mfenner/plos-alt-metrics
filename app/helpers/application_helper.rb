@@ -38,6 +38,6 @@ module ApplicationHelper
       formatted_citation << link_to(article.journal.title, journal_path(article.journal.issn_print)) + ". " unless article.journal.blank?
     end
   	formatted_citation << article.book.title + ". " unless article.book.blank?
-    formatted_citation << article.year.to_s + (article.volume ? ":#{article.volume}" : "") + (article.issue ? " (#{article.issue})" : "") + (article.first_page ? ";#{article.first_page}" : "") + (article.last_page ? "-#{article.last_page}": "")
+    formatted_citation << article.year.to_s + (article.volume ? ":#{article.volume}" : "") + (article.issue ? " (#{article.issue})" : "") + (article.first_page ? ";#{article.first_page}" : "") + ((article.last_page and article.last_page > article.first_page) ? "-#{article.last_page}": "")
   end
 end
