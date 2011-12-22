@@ -24,7 +24,7 @@
     # data rows
     unless @author.articles.empty?
       @author.articles.each do |article|
-        csv << [ article.doi, article.title, article.journal.title, article.year ]
+        csv << [ article.doi, article.title.blank? ? "" : article.title, article.journal.title? ? "" : article.journal.title, article.year ]
       end
     end
   end
