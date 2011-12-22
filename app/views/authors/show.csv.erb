@@ -18,9 +18,14 @@
   # limitations under the License.
 -%>
 <%=
- FasterCSV.generate do |csv|
-    csv << ["author doi", "title", "publish date"]
-    csv << [ @author.doi, @author.title, @author.published_on.to_datetime.to_s(:friendly_date) ]
- end
+  FasterCSV.generate do |csv|
+	  # header row 
+    csv << ["doi", "title", "journal", "year"]
+    # data rows
+    unless @author.articles.empty?
+      @author.articles.each do |article|
+        csv << [ article.doi, article.title, article.journal.title, article.year ]
+      end
+    end
+  end
 %>
-<%= @author.retrievals.map(&:to_csv).join %>
