@@ -18,8 +18,9 @@
  */
 
 body, input, textarea, select {
-  font-family: 'Georgia', sans-serif;
-  font-size: medium; 
+  font-family: 'Open Sans', sans-serif;
+  font-size: normal;
+  font-weight: 400;
 }
   
 body {
@@ -31,6 +32,7 @@ body {
 }
 
 input, textarea, select {
+  font-size: large !important;
   padding: 4px;
   border: solid 1px rgba(0, 0, 0, 0.2);
   background-color: rgba(255, 255, 255, 0.9);
@@ -117,7 +119,7 @@ nav {
           border-color: #efecca;;
           color: #002f2f;
           margin-right: 6px;
-          font-weight: bold; }
+          font-weight: 600; }
 
 li.login {
   float: right;
@@ -142,6 +144,11 @@ div.flash {
 #index, #show {
   background-color: #fff;
   padding: 1em;
+  padding-bottom: 0.5em;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
 }
 
 #profile {
@@ -215,7 +222,7 @@ td.edit {
 }
 
 span.name {
-  font-weight: bold;
+  font-weight: 600;
   font-size: large;
 }
 
@@ -241,6 +248,10 @@ th.count {
 div.edit {
 	padding: 8px;
   background-color: #ffffcc;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
 }
 
 .photo {
@@ -313,7 +324,7 @@ div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar {
 
 span.service {
   font-size: larger;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .article {
@@ -332,9 +343,21 @@ img.altmetrics {
   width: 100px;
 }
 
+img.header {
+  vertical-align: 20%;
+}
+
+img.search {
+  vertical-align: -20%;
+}
+
 div.altmetrics {
   text-align: right;
   margin-top: 1em;
+}
+
+div.pagination {
+  padding-bottom: 0.5em;
 }
 
 /* digg_pagination from http://mislav.uniqpath.com/will_paginate/
@@ -354,7 +377,7 @@ div.altmetrics {
     border: 1px solid #dddddd; }
   .pagination .current {
     font-style: normal;
-    font-weight: bold;
+    font-weight: 600;
     background: #046380;
     color: white;
     border: 1px solid #046380; }

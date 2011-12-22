@@ -170,7 +170,7 @@ DEPENDENCIES
   builder (~> 2.1.2)
   bundler
   daemons (= 1.1.4)
-  devise
+  devise (= 1.4.7)
   exception_notification
   fastercsv (= 1.5.4)
   formatize
