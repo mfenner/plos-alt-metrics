@@ -220,12 +220,6 @@ td.rating {
   padding-bottom: 0.5em;
 }
 
-div.pagination {
-  margin-left: auto; 
-  margin-right: auto;
-  padding-bottom: 0.5em;
-}
-
 td.index {
   width: 50%;
   padding-bottom: 0.5em;
@@ -469,6 +463,11 @@ ol {
 .pagination {
   background: white;
   cursor: default;
+  margin-left: auto; 
+  padding-left: 3em;
+  margin-right: auto;
+  padding-right: 3em;
+  padding-bottom: 0.5em;
   /* self-clearing method: */ }
   .pagination a, .pagination span, .pagination em {
     padding: 0.2em 0.5em;
