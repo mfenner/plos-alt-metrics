@@ -37,17 +37,17 @@
 	<tr>
 		<td class="summary">
 			<%= high_chart("rhetoric", @rhetoricchart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Ratings'; }".html_safe %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets'; }".html_safe %>
 			<% end %>
 		</td>
 		<td class="summary">
 			<%= high_chart("author", @authorchart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Ratings'; }".html_safe %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets'; }".html_safe %>
 			<% end %>
 		</td>
 		<td class="summary">
 			<%= high_chart("reuse", @reusechart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Ratings'; }" %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets'; }" %>
 			<% end %>	
 		</td>
 	</tr>
