@@ -19,7 +19,7 @@
 
 body, input, textarea, select {
   font-family: anivers, sans-serif;
-  font-size: normal;
+  font-size: larger;
   font-weight: 400;
 }
   
@@ -107,7 +107,7 @@ nav {
         padding: 0; }
         nav #navigation ul li a {
           float: left;
-          font-size: medium;
+          font-size: larger;
           font-weight: normal;
           margin: 0;
           margin-right: 6px;
