@@ -54,7 +54,7 @@ class RatingsController < ApplicationController
       f.chart({:defaultSeriesType=>"spline", :width => 770, :height => 150, :marginRight => 20 } )
       f.series(:name => "Ratings", :color => "#95ab63", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.to_i * 1000, a[1]] })
       f.options[:xAxis] = { :type => 'datetime', :tickLength => 0, :labels  => { :enabled => true } }
-      f.options[:yAxis] = { :max => @posts_with_ratings.count, :lineWidth => 1, :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
+      f.options[:yAxis] = { :min => 0, :max => @posts_with_ratings.count, :lineWidth => 1, :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
       f.options[:legend] = false
       f.options[:plotOptions] = { :column => { :connectNulls => true } }
