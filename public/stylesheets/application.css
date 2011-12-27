@@ -223,7 +223,7 @@ td.edit {
 
 span.name {
   font-weight: 600;
-  font-size: large;
+  font-size: larger;
 }
 
 span.search {
@@ -280,7 +280,7 @@ td.source_title {
   padding-top: 1em;
   padding-bottom: 1em;
   vertical-align: top;
-  font-size: smaller;
+  font-size: larger;
 }
 
 td.source_count {
