@@ -97,7 +97,7 @@ nav {
         padding: 0; }
         nav #navigation ul li a {
           float: left;
-          font-size: normal;
+          font-size: larger;
           font-weight: normal;
           margin: 0;
           margin-right: 6px;
@@ -198,6 +198,7 @@ table.index, table.profile {
 td.name {
   width: 75%;
   padding-bottom: 1em;
+  font-size: larger;
 }
 
 td.pagination {
@@ -207,6 +208,7 @@ td.pagination {
 td.index {
   width: 50%;
   padding-bottom: 0.5em;
+  font-size: larger;
 }
 
 td.title {
@@ -223,7 +225,6 @@ td.edit {
 
 span.name {
   font-weight: 600;
-  font-size: larger;
 }
 
 span.search {
