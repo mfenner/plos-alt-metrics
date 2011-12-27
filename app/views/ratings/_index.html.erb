@@ -56,7 +56,7 @@
 <h2>Activity</h2>
 <div class="summary">
   <%= high_chart("activity", @activitychart) do |c| %>
-	  <%= "options.tooltip.formatter = function() { return '<strong>' + Highcharts.dateFormat('%B %d, %Y', this.x) + '</strong><br />' + this.y + ' Ratings'; }".html_safe %>
+	  <%= "options.tooltip.formatter = function() { return '<strong>' + Highcharts.dateFormat('%B %d, %Y', this.x + 7 * 3600) + '</strong><br />' + this.y + ' Ratings'; }".html_safe %>
   <% end %>
 </div>
 
