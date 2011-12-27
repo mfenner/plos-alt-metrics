@@ -1,5 +1,4 @@
 <%= form.check_box(:spam) %> Spam. The tweet contains text and/or links unrelated to the linked scholarly article.<p>
-<%= observe_field  "rating_spam", { :url => update_spam_ratings_path, :with => "spam" } %>
 <div id="cito" style="<%= @rating.spam ? 'display: none;' : '' %>">
 	<%= form.radio_button("rhetoric", "agreesWith") %> Agrees with statements, ideas or conclusions presented in the cited paper. Positive sentiment, e.g. "great work!". (<%= link_to "cito:agreesWith", "http://speroni.web.cs.unibo.it/cgi-bin/lode/req.py?req=http:/purl.org/spar/cito#d3e72" %>)<br />
 		<%= form.radio_button("rhetoric", "discusses") %> Discusses statements, ideas or conclusions presented in the cited paper. Neutral or simply mentioning an article. (<%= link_to "cito:discusses", "http://speroni.web.cs.unibo.it/cgi-bin/lode/req.py?req=http:/purl.org/spar/cito#d3e274" %>)<br />
@@ -11,6 +10,6 @@
 </div>
 
 <div class="submit">
-  <%= link_to_remote "Cancel", :update => "index", :url => posts_path(:page => params[:page], :q => params[:q]), :method => :get %>
+  <%= link_to "Cancel", posts_path(:page => params[:page], :q => params[:q]), :remote => true %>
   <%= form.submit("Submit") %>
 </div>

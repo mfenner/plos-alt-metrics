@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 -%>
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -27,6 +28,7 @@
 		<![endif]-->
 		<%= stylesheet_link_tag 'application' %>
 		<%= javascript_include_tag :defaults %>
+		<%= javascript_include_tag "highcharts" %> 
     <%= csrf_meta_tag %>
     <%= yield(:head) %>
     <script>
@@ -45,7 +47,6 @@
         <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do %>
         <span class="search"><%= image_tag("search.png") %></span>
           <%= text_field_tag :q, params[:q].nil? ? "I'm feeling lucky" : params[:q] %>
-          <%= observe_field 'q', :frequency => 0.5, :update => 'index', :url => { :controller => controller.controller_name, :action => :index }, :method => :get, :with => "'q=' + encodeURIComponent(value)" %>
         <% end %>
 		  </div>
     <% end %>

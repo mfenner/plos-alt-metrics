@@ -20,13 +20,16 @@ gem 'devise', '1.4.9'
 gem "oa-oauth", :require => "omniauth/oauth"
 #gem "omniauth-twitter"
 gem 'twitter', '>=2.0'
-gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+#gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
 gem "simple-navigation"
 gem "addressable"
 gem "bibtex-ruby", "~> 2.0.1"
 gem "acts_as_list"
 gem "builder", "~> 2.1.2"
 gem "googlecharts", "~> 1.6.8", :require => "gchart"
+gem 'lazy_high_charts'
+gem 'sass'
+gem "jquery-rails"
 
 group :development do
   gem 'ruby-debug'

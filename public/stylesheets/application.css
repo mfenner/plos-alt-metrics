@@ -119,14 +119,14 @@ nav {
           color: #10222b;
           text-decoration: none; }
           nav #navigation ul li a:hover {
-            background-color: #e2f0d6;; 
+            background-color: #e2f0d6; 
             color: #10222b;
             border: 1px solid;
-            border-color: #e2f0d6;; }
+            border-color: #e2f0d6; }
         nav #navigation ul li a.selected {
-          background-color: #e2f0d6;;
+          background-color: #e2f0d6;
           border: 1px solid;
-          border-color: #e2f0d6;;
+          border-color: #e2f0d6;
           color: #10222b;
           margin-right: 6px;
           font-weight: 600; }
@@ -374,6 +374,10 @@ div.body {
   padding-bottom: 8px;
 }
 
+div.profile {
+  padding: 8px;
+}
+
 div.source {
   padding-top: 4px;
   font-size: smaller;
@@ -420,6 +424,10 @@ img.twitter{
   border-bottom: 0;
 }
 
+h2 img {
+  vertical-align: baseline;
+}
+
 div.altmetrics {
   text-align: right;
   margin-top: 1em;
@@ -429,7 +437,7 @@ div.submit {
   text-align: right;
   font-size: large !important;
   margin-right: 0.5em;
-  margin-bottom: -0.5em;
+  margin-bottom: 0.5em;
 }
 
 div.summary {
@@ -439,7 +447,7 @@ div.summary {
 
 th.summary, td.summary {
   width: 33%;
-  text-align: center;
+  text-align: left;
 }
 
 td.two {

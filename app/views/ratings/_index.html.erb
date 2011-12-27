@@ -35,15 +35,29 @@
 		<th class="summary">Uses Methods/Data/Conclusions</th>
 	</tr>
 	<tr>
-		<td class="summary"><%= image_tag(@rhetoricchart) %></td>
-		<td class="summary"><%= image_tag(@authorchart) %></td>
-		<td class="summary"><%= image_tag(@reusechart) %></td>
+		<td class="summary">
+			<%= high_chart("rhetoric", @rhetoricchart) do |c| %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Ratings'; }".html_safe %>
+			<% end %>
+		</td>
+		<td class="summary">
+			<%= high_chart("author", @authorchart) do |c| %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Ratings'; }".html_safe %>
+			<% end %>
+		</td>
+		<td class="summary">
+			<%= high_chart("reuse", @reusechart) do |c| %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Ratings'; }" %>
+			<% end %>	
+		</td>
 	</tr>
 </table>
 <p>
 <h2>Activity</h2>
 <div class="summary">
-  <%= image_tag(@sparkline) %>
+  <%= high_chart("activity", @activitychart) do |c| %>
+	  <%= "options.tooltip.formatter = function() { return '<strong>' + Highcharts.dateFormat('%B %d, %Y', this.x) + '</strong><br />' + this.y + ' Ratings'; }".html_safe %>
+  <% end %>
 </div>
 
 <h2>Most active users</h2>

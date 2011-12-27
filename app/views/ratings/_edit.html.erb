@@ -8,11 +8,11 @@
 	      <%= @post.body_with_links.html_safe %>
 		  </div>
 		  <div class="cito">
-			  <% remote_form_for :rating, :update => "index", :url => rating_url(:id => @rating, :page => params[:page], :q => params[:q]), :method => :put do |form| %>
-				<% unless @post.article_title.blank? %>
+			  <% form_for(@rating, :url => rating_url(:id => @rating, :page => params[:page], :q => params[:q]), :remote => true) do |form| %>
+				  <% unless @post.article_title.blank? %>
 			      <%= @post.article_title_and_journal.html_safe %><p>
-				<% end %>
-        <%= render :partial => 'ratings/form', :locals => { :form => form } %>
+				  <% end %>
+          <%= render :partial => 'ratings/form', :locals => { :form => form } %>
 	      <% end %>
 	    </div>
 	  </div>

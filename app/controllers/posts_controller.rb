@@ -20,11 +20,8 @@ class PostsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html do 
-        if request.xhr?
-          render :partial => "index" 
-        end
-      end
+      format.html { render }
+      format.js
       format.xml  { render :xml => @posts }
     end
   end
@@ -77,10 +74,9 @@ class PostsController < ApplicationController
       @rating = Rating.new(:rhetoric => "discusses") 
     end
     
-    if request.xhr?
-      render :partial => "index" 
-    else
-      redirect_to posts_url
+    respond_to do |format|
+      format.html
+      format.js { render "posts/index" }
     end
   end
 

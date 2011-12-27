@@ -47,13 +47,8 @@ class AuthorsController < ApplicationController
     @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
     
     respond_to do |format|
-      format.html do 
-        if request.xhr?
-          render :partial => params[:partial] 
-        else
-          
-        end
-      end
+      format.html 
+      format.js { render "show" }
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
         render :xml => @author.articles.to_xml
@@ -81,10 +76,9 @@ class AuthorsController < ApplicationController
   # GET /authors/1/edit
   def edit
     @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
-    if request.xhr?
-      render :partial => params[:partial]
-    else
-      render :show 
+    
+    respond_to do |format|
+      format.js { render "show" }
     end
   end
 
@@ -216,11 +210,9 @@ class AuthorsController < ApplicationController
           Author.update_via_twitter(@author)
         end
         #flash[:notice] = 'Author was successfully updated.'
+        format.js { render "show" }
         format.html do
           if request.xhr? 
-            service_partial = render_to_string(:partial => params[:partial])
-            article_partial = render_to_string(:partial => 'article')
-
             render :update do |page|
               unless @author.image.blank?
                 page.replace 'photo', '<div id="photo"><img alt="' + @author.username + '" class="photo" src="' + @author.image + '" /></div'
@@ -235,7 +227,8 @@ class AuthorsController < ApplicationController
         format.xml  { head :ok }
         format.json { head :ok }
       else
-        format.html { render :partial => params[:partial] if request.xhr? }
+        format.html
+        format.js { render "show" }
         format.xml  { render :xml => @author.errors, :status => :unprocessable_entity }
         format.json { render :json => @author.errors, :status => :unprocessable_entity }
       end

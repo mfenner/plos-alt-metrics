@@ -16,26 +16,50 @@ class RatingsController < ApplicationController
     @unique_journal_count = Post.count(:journal_title, :distinct => true)
     @authors = Author.order('ratings_count desc').limit(10)
     @authors_with_ratings = Author.all
+    colors = ["#95ab63", "#e2f0d6", "#bdd684"]
     
     # Create pie chart for rhetoric
     rhetoric = Rating.order('rhetoric').group("rhetoric").count
-    @rhetoricchart = Gchart.pie(:data => [rhetoric.map {|a| a[1] }], :size => '310x200', :labels => rhetoric.map {|a| a[0] })
+    @rhetoricchart = LazyHighCharts::HighChart.new('pie') do |f|
+      f.chart({ :defaultSeriesType=>"pie", :width => 250, :height  => 300 } )
+      f.series(:name => "Ratings", :data=> rhetoric.each_with_index.map { |a,i| { :name => a[0], :y => a[1], :color => colors[i] } })
+      f.options[:title][:text] = nil
+    end
     
     # Create pie chart for posts from author/publisher
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
-    @authorchart = Gchart.pie(:data => [@posts_with_authors.count, @posts_with_ratings.count - @posts_with_authors.count], :size => '310x200', :labels => ["Author", nil])
+    @authorchart = LazyHighCharts::HighChart.new('pie') do |f|
+      f.chart({:defaultSeriesType=>"pie", :width => 250, :height  => 300 } )
+      f.series(:name => "Ratings", :data=> [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#95ab63" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#e2f0d6" }])
+      f.options[:title][:text] = nil
+    end
     
-    # Create line chart for using methods/data/conclusions
+    # Create bar chart for using methods/data/conclusions
     @posts_with_method = Post.find(:all, :conditions => "ratings.method = 1", :include => :ratings) 
     @posts_with_data = Post.find(:all, :conditions => "ratings.data = 1", :include => :ratings)
     @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
-    @reusechart = Gchart.bar(:data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :size => '230x200', :bar_colors => 'ff9900', :bar_width_and_spacing => "70,5", :max_value => @posts_with_ratings.count, :axis_with_labels => 'x',
-                :axis_labels => ['Methods|Data|Conclusions'])
+    @reusechart = LazyHighCharts::HighChart.new('chart') do |f|
+      f.chart({:defaultSeriesType=>"column", :width => 250, :height  => 275 } )
+      f.series(:name => "Ratings", :color => "#95ab63", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#95ab63", "#bdd684", "#e2f0d6"])
+      f.options[:xAxis] = { :categories => ['Methods', 'Data', 'Conclusions'], :tickLength => 0 }
+      f.options[:yAxis] = { :max => @posts_with_ratings.count, :lineWidth => 1, :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
+      f.options[:title][:text] = nil
+      f.options[:plotOptions] = { :column => { :pointWidth => 70, :borderWidth => 0, :pointPadding => 0.25 } }
+      f.options[:legend] = false
+    end 
     
     # Calculate rating activity by day
     days = Rating.order('created_at').group('DATE(created_at)').count
-    @sparkline = Gchart.sparkline(:data => days.map {|a| a[1] }, :size => '200x40', :line_colors => 'ff9900')
-
+    @activitychart = LazyHighCharts::HighChart.new('chart') do |f|
+      f.chart({:defaultSeriesType=>"spline", :width => 750, :height => 150 } )
+      f.series(:name => "Ratings", :color => "#95ab63", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.to_i * 1000, a[1]] })
+      f.options[:xAxis] = { :type => 'datetime', :tickLength => 0, :labels  => { :enabled => false } }
+      f.options[:yAxis] = { :max => @posts_with_ratings.count, :lineWidth => 1, :gridLineWidth => 0, :title => nil, :labels  => { :enabled => false }}
+      f.options[:title][:text] = nil
+      f.options[:legend] = false
+      f.options[:plotOptions] = { :column => { :connectNulls => true } }
+    end
+      
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -93,7 +117,7 @@ class RatingsController < ApplicationController
     @rating.save
     
     respond_to do |format|
-      format.html { render :partial => 'posts/index' }
+      format.js { render "posts/index" }
     end
   end
 
@@ -121,7 +145,7 @@ class RatingsController < ApplicationController
     @rating.update_attributes(params[:rating])
     
     respond_to do |format|
-      format.html { render :partial => 'posts/index' }
+      format.js { render "posts/index" }
     end
   end
 
