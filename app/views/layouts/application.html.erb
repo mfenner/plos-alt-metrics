@@ -28,17 +28,11 @@
 		<%= stylesheet_link_tag 'application' %>
 		<%= javascript_include_tag :defaults %>
 		<%= javascript_include_tag "highcharts" %> 
-		<script type="text/javascript" src="http://use.typekit.com/kil7puw.js"></script>
-		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+		<%= javascript_include_tag "http://use.typekit.com/kil7puw.js" %>
     <%= csrf_meta_tag %>
+    <%= javascript_tag "try{Typekit.load();}catch(e){}" %>
+    <%= javascript_tag "$(function() {$('#content .inner .flash').delay(2500).slideUp();});" %>
     <%= yield(:head) %>
-    <script>
-		  //<![CDATA[
-		    $(function() {
-		      $('#content .inner .flash').delay(2500).slideUp();
-		    });
-		  //]]>
-		</script>
 	</head>
 <body>
   <header>
