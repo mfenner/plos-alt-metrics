@@ -1,1 +1,12 @@
 $('#index').html("<%= escape_javascript(render "posts/index") %>");
+
+// If spam is checked, hide rest of form
+$(document).ready(function() {
+  $('#rating_spam').click(function() {
+    if($('#rating_spam:checked').length) {
+      $('#cito').hide();
+    } else {
+      $('#cito').show();
+    }
+  });
+});
