@@ -25,7 +25,7 @@
 
 <h2>Summary</h2>
 <div class="summary">
-  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %>. <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
+  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %> (<%= number_to_percentage(@posts_with_ratings.count * 100 / @posts.count, :precision => 0) %> of all tweets, <%= number_with_precision(@ratings.count / @posts_with_ratings.count, :precision => 1) %> ratings per tweet). <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
 </div>
 
 <table class="index">
@@ -37,17 +37,17 @@
 	<tr>
 		<td class="summary">
 			<%= high_chart("rhetoric", @rhetoricchart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets'; }".html_safe %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
 			<% end %>
 		</td>
 		<td class="summary">
 			<%= high_chart("author", @authorchart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets'; }".html_safe %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
 			<% end %>
 		</td>
 		<td class="summary">
 			<%= high_chart("reuse", @reusechart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets'; }" %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
 			<% end %>	
 		</td>
 	</tr>
