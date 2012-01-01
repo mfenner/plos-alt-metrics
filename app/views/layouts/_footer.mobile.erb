@@ -1,0 +1,18 @@
+<div data-role="footer" class="ui-bar">
+	<div data-role="controlgroup" data-type="horizontal">
+		<% if controller.controller_name != "posts" %>
+	    <%= link_to 'Tweets', posts_path, "data-role" => "button", "data-icon" => "home" %>
+	  <% end %>
+	  <% if controller.controller_name != "ratings" %>
+		  <%= link_to 'Results', ratings_path, "data-role" => "button", "data-icon" => "grid" %>
+		<% end %>
+		<% if controller.controller_name != "index" %>
+	    <%= link_to 'About', about_path, "data-role" => "button", "data-icon" => "info" %>
+	  <% end %>
+	  <% unless author_signed_in? %>
+	    <%= link_to 'Sign in', author_omniauth_authorize_path(:twitter), "data-role" => "button", "data-icon" => "gear", "rel" => "external" %>
+	  <% else %>
+	    <%= link_to 'Sign out', destroy_author_session_path, "data-role" => "button", "data-icon" => "gear", "rel" => "external" %>
+	  <% end %>
+	</div>
+</div>

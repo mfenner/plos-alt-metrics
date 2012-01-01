@@ -3,7 +3,11 @@ class Post < ActiveRecord::Base
   has_many :authors, :through => :ratings
   
   def body_with_links
-    body.gsub(/(http:\/\/[a-zA-Z0-9\/\.\+\-_:?&=]+)/) {|a| "<a href=\"#{a}\" target='_blank'>#{a}</a>"}
+    body.gsub(/(http:\/\/[a-zA-Z0-9\/\.\+\-_:?&=]+)/) {|a| "<a href=\"#{a}\">#{a}</a>"}
+  end
+  
+  def body_with_one_link
+    body.sub(/(http:\/\/[a-zA-Z0-9\/\.\+\-_:?&=]+)/) {|a| "<a href=\"#{a}\">#{a}</a>"}
   end
   
   def author_with_link

@@ -17,4 +17,8 @@
 # limitations under the License.
 
 module IndexHelper
+  
+  def page_title
+    "About"
+  end
 end

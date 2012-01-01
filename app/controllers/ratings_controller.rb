@@ -63,7 +63,7 @@ class RatingsController < ApplicationController
       
     respond_to do |format|
       format.html # index.html.erb
-      format.mobile
+      format.mobile # index.mobile.erb
     end
   end
 

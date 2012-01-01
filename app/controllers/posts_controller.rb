@@ -2,10 +2,10 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.xml
   def index
-    unless params[:q].blank?
+    if !params[:q].blank?
       if params[:q] == "I'm feeling lucky"
          @posts = Post.paginate :page => params[:page], 
-           :per_page => 4,
+           :per_page => 5,
            :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
            :include => :ratings,
            :order => 'RAND(DAYOFYEAR(NOW()))'
@@ -15,12 +15,16 @@ class PostsController < ApplicationController
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
           :order => 'RAND(DAYOFYEAR(NOW()))'
       end
+    elsif params[:format] == "mobile"
+      #redirect_to about_path and return unless author_signed_in?
+      @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 5)
     else
       @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
 
     respond_to do |format|
       format.html { render }
+      format.mobile # index.mobile.erb
       format.js
       format.xml  { render :xml => @posts }
     end

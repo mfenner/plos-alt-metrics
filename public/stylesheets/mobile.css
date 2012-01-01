@@ -1,0 +1,36 @@
+.ui-icon-posts {
+  background-image: url("../images/twitterbird.png");
+}
+
+.ui-icon-about {
+  background-image: url("../images/25-box.png"); background-size: 18px 16px;
+}
+
+.ui-icon-login {
+  background-image: url("../images/twitter.png");
+}
+	
+img.photo_mini {
+  float: left;
+  padding-left: 6px;
+  padding-top: 6px;
+  padding-right: 6px;
+  padding-bottom: 1em;
+  width: 48px; }
+  
+.tweet {
+  padding-right: 2.5em;
+  font-weight: normal;
+  white-space: normal;
+  font-size: smaller;
+}
+
+.ui-li-aside {
+  font-weight: normal;
+  font-size: smaller;
+  padding-right: 3em;
+}
+
+span.name {
+  font-weight: bold;
+}
