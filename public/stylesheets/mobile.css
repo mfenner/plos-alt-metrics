@@ -1,15 +1,3 @@
-.ui-icon-posts {
-  background-image: url("../images/twitterbird.png");
-}
-
-.ui-icon-about {
-  background-image: url("../images/25-box.png"); background-size: 18px 16px;
-}
-
-.ui-icon-login {
-  background-image: url("../images/twitter.png");
-}
-	
 img.photo_mini {
   float: left;
   padding-left: 6px;
@@ -19,7 +7,9 @@ img.photo_mini {
   width: 48px; }
   
 .tweet {
+  padding-top: 6px;
   padding-right: 2.5em;
+  padding-bottom: 0;
   font-weight: normal;
   white-space: normal;
   font-size: smaller;

@@ -17,7 +17,7 @@ class PostsController < ApplicationController
       end
     elsif params[:format] == "mobile"
       #redirect_to about_path and return unless author_signed_in?
-      @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 5)
+      @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 10)
     else
       @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
@@ -54,21 +54,23 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
-    unless params[:q].blank?
-      if params[:q] == "I'm feeling lucky"
-         @posts = Post.paginate :page => params[:page], 
-           :per_page => 4,
-           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
-           :include => :ratings,
-           :order => 'RAND(DAYOFYEAR(NOW()))'
+    unless params[:format] == "mobile"   
+      unless params[:q].blank?
+        if params[:q] == "I'm feeling lucky"
+           @posts = Post.paginate :page => params[:page], 
+             :per_page => 4,
+             :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+             :include => :ratings,
+             :order => 'RAND(DAYOFYEAR(NOW()))'
+        else
+          @posts = Post.paginate :page => params[:page], 
+            :per_page => 25,
+            :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
+            :order => 'RAND(DAYOFYEAR(NOW()))'
+        end
       else
-        @posts = Post.paginate :page => params[:page], 
-          :per_page => 25,
-          :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
-          :order => 'RAND(DAYOFYEAR(NOW()))'
+        @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
       end
-    else
-      @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
     
     @post = Post.find(params[:id])
@@ -80,6 +82,7 @@ class PostsController < ApplicationController
     
     respond_to do |format|
       format.html
+      format.mobile # edit.mobile.erb
       format.js { render "posts/index" }
     end
   end

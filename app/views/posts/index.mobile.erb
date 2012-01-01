@@ -6,18 +6,18 @@
 
 <% unless @posts.empty? %>
  
-  <ul data-role="listview" data-theme="c" data-split-icon="plus">
+  <ul data-role="listview" data-theme="c">
     <% @posts.each do |post| %>
 	    <li>
 	      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{post.author}", :class => "photo_mini" %>
       	<div class="tweet">
           <span class="name"><%= "@#{post.author}" %></span>
           <br />
-          <%= post.body_with_one_link.html_safe %>
-        </div>
-						<% if author_signed_in? and 1 == 2 %>
-					    <%= link_to "", edit_post_url(:id => post, :author_id => current_author.id, :page => params[:page], :q => params[:q]), :remote => true, :title => "Classify this post" %>
-					  <% end %>
+          <%= post.body.html_safe %>
+        </div>	
+					<% if author_signed_in? and 1 == 2 %>
+					  <%= link_to "", edit_post_url(:id => post, :author_id => current_author.id) %>
+					<% end %>
      </li>
   <% end %>
   </ul>
