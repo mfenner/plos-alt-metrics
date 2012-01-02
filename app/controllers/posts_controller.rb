@@ -53,12 +53,11 @@ class PostsController < ApplicationController
   end
 
   # GET /posts/1/edit
-  def edit
-    unless params[:format] == "mobile"   
+  def edit  
       unless params[:q].blank?
         if params[:q] == "I'm feeling lucky"
            @posts = Post.paginate :page => params[:page], 
-             :per_page => 4,
+             :per_page => 5,
              :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
              :include => :ratings,
              :order => 'RAND(DAYOFYEAR(NOW()))'
@@ -71,7 +70,6 @@ class PostsController < ApplicationController
       else
         @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
       end
-    end
     
     @post = Post.find(params[:id])
     @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
@@ -111,7 +109,7 @@ class PostsController < ApplicationController
     unless params[:q].blank?
       if params[:q] == "I'm feeling lucky"
          @posts = Post.paginate :page => params[:page], 
-           :per_page => 4,
+           :per_page => 5,
            :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
            :include => :ratings,
            :order => 'RAND(DAYOFYEAR(NOW()))'

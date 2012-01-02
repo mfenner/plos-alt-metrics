@@ -1,26 +1,50 @@
-img.photo_mini {
+.ui-li-thumb {
   float: left;
   padding-left: 6px;
   padding-top: 6px;
-  padding-right: 6px;
+  margin-right: 6px;
   padding-bottom: 1em;
   width: 48px; }
-  
-.tweet {
-  padding-top: 6px;
-  padding-right: 2.5em;
-  padding-bottom: 0;
+
+.ui-link-inherit {
+  padding-top: 3px !important;
+  padding-left: 60px !important;
+  padding-right: 30px !important;
   font-weight: normal;
-  white-space: normal;
-  font-size: smaller;
+  white-space: normal !important;
+}
+
+.ui-li-staticss {
+  padding-top: 3px !important;
+  padding-left: 60px !important;
+  padding-right: 6px !important;
+  font-weight: normal;
+  white-space: normal !important;
+}
+
+.ui-li-heading {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .ui-li-aside {
   font-weight: normal;
-  font-size: smaller;
   padding-right: 3em;
 }
 
-span.name {
+span.ui-btn-text {
+  font-weight: normal;
+}
+
+.ui-controlgroup-label {
   font-weight: bold;
+}
+
+.clear {
+  clear: both;
+}
+
+.article_title {
+  margin-top: 1.5em;
+  font-size: smaller;
 }

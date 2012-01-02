@@ -7,10 +7,10 @@
 	<tr>
 		<td class="two">
 			<ul>
+				<li>Posted <%= l @posts.first.published_at, :format => :twitter %> - <%= l @posts.last.published_at, :format => :result %></li>
 				<li><%= pluralize(@posts.count, 'tweet') %></li>
 				<li><%= pluralize(@posts_with_rts.count, 'retweet') %></li>
 				<li><%= pluralize(@posts_with_title.count, 'tweet') %> quote article title</li>
-				<li>Posted <%= l @posts.first.published_at, :format => :twitter %> - <%= l @posts.last.published_at, :format => :result %></li>
 			</ul>
 		</td>
 		<td class="two">
@@ -25,13 +25,13 @@
 
 <h2>Summary</h2>
 <div class="summary">
-  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %> (<%= number_to_percentage(@posts_with_ratings.count * 100 / @posts.count, :precision => 0) %> of all tweets, <%= number_with_precision(@ratings.count / @posts_with_ratings.count, :precision => 1) %> ratings per tweet). <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
+  <%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %> (<%= number_to_percentage(@posts_with_ratings.count * 100 / @posts.count, :precision => 0) %> of all tweets, <%= number_with_precision(Float(@ratings.count) / @posts_with_ratings.count, :precision => 1) %> ratings per tweet). <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
 </div>
 
 <table class="index">
 	<tr>
 	  <th class="summary">Agreement with Paper</th>
-		<th class="summary">Tweets by Author (or Publisher)</th>
+		<th class="summary">Tweets by Author/Publisher</th>
 		<th class="summary">Uses Methods/Data/Conclusions</th>
 	</tr>
 	<tr>

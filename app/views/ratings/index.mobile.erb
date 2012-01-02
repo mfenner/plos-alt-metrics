@@ -9,27 +9,27 @@
     All tweets contain a link to a scholarly article. Data collected by <%= link_to "altmetric.com", "http://altmetric.com" %>.
 
 		<ul data-role="listview" data-theme="c" data-inset="true">
-			<li><%= pluralize(@posts.count, 'tweet') %></li>
-			<li><%= pluralize(@posts_with_rts.count, 'retweet') %></li>
-			<li><%= pluralize(@posts_with_title.count, 'tweet') %> quote article title</li>
 			<li>Posted <%= l @posts.first.published_at, :format => :twitter %> - <%= l @posts.last.published_at, :format => :result %></li>
-			<li><%= @unique_author_count %> unique users</li>
-			<li><%= @unique_article_count %> unique articles</li>
-			<li><%= @unique_journal_count %> unique journals</li>
+			<li>Tweets <span class="ui-li-count"><%= @posts.count %></span></li>
+			<li>Retweets <span class="ui-li-count"><%= @posts_with_rts.count %></li>
+			<li>Tweets quoting article title<span class="ui-li-count"><%= @posts_with_title.count %></span></li>
+			<li>Unique users <span class="ui-li-count"><%= @unique_author_count %></span></li>
+			<li>Unique articles <span class="ui-li-count"><%= @unique_article_count %></span></li>
+			<li>Unique journals <span class="ui-li-count"><%= @unique_journal_count %></span></li>
 		</ul>
   </div>
 
 	<div data-role="collapsible" data-collapsed="false">
 	  <h2>Summary</h2>
 
-	<%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %> (<%= number_to_percentage(@posts_with_ratings.count * 100 / @posts.count, :precision => 0) %> of all tweets, <%= number_with_precision((@ratings.count / @posts_with_ratings.count), :precision => 1) %> ratings per tweet). <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
+	<%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %> (<%= number_to_percentage(@posts_with_ratings.count * 100 / @posts.count, :precision => 0) %> of all tweets, <%= number_with_precision(Float(@ratings.count) / @posts_with_ratings.count, :precision => 1) %> ratings per tweet). <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
 
 		<h3>Agreement with Paper</h3>
 		<%= high_chart("rhetoric", @rhetoricchart) do |c| %>
 		  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
 		<% end %>
 
-		<h3>Tweets by Author (or Publisher)</h3>
+		<h3>Tweets by Author/Publisher</h3>
 			<%= high_chart("author", @authorchart) do |c| %>
 			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
 		<% end %>

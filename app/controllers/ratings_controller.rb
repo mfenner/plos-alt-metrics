@@ -1,7 +1,5 @@
 class RatingsController < ApplicationController
   
-  require 'gchart'
-  
   # GET /ratings
   # GET /ratings.xml
   def index
@@ -22,7 +20,7 @@ class RatingsController < ApplicationController
     @posts_with_agreement = Post.find(:all, :conditions => "ratings.rhetoric = 'agreesWith'", :include => :ratings)
     @posts_with_disagreement = Post.find(:all, :conditions => "ratings.rhetoric = 'disagreesWith'", :include => :ratings)
     @rhetoricchart = LazyHighCharts::HighChart.new('pie') do |f|
-      f.chart({ :defaultSeriesType=>"pie" } )
+      f.chart({ :defaultSeriesType=>"pie", :marginRight => 50 } )
       f.series(:name => "Tweets", :data=> [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#95ab63" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#bdd684"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#e2f0d6"} ])
       f.options[:title][:text] = nil
     end
@@ -30,7 +28,7 @@ class RatingsController < ApplicationController
     # Create pie chart for posts from author/publisher
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
     @authorchart = LazyHighCharts::HighChart.new('pie') do |f|
-      f.chart({:defaultSeriesType=>"pie", :className => "chart" } )
+      f.chart({:defaultSeriesType=>"pie", :marginRight => 30 } )
       f.series(:name => "Tweets", :data=> [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#95ab63" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#e2f0d6" }])
       f.options[:title][:text] = nil
     end
@@ -81,11 +79,12 @@ class RatingsController < ApplicationController
   # GET /ratings/new
   # GET /ratings/new.xml
   def new
-    @rating = Rating.new
+    @post = Post.find(params[:post_id])
+    @rating = Rating.new(:rhetoric => "discusses") 
 
     respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @rating }
+      format.html
+      format.mobile # new.mobile.erb
     end
   end
 
@@ -97,7 +96,7 @@ class RatingsController < ApplicationController
   # POST /ratings
   # POST /ratings.xml
   def create
-    unless params[:q].blank?
+    if !params[:q].blank?
       if params[:q] == "I'm feeling lucky"
         @posts = Post.paginate :page => params[:page], 
            :per_page => 4,
@@ -110,9 +109,12 @@ class RatingsController < ApplicationController
           :conditions => ["CONCAT(posts.body,posts.author) REGEXP ?", params[:q]],
           :order => 'RAND(DAYOFYEAR(NOW()))'
       end
+    elsif params[:format] == "mobile"
+      @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 10)
     else
       @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
+    
     @post = Post.find(params[:rating][:post_id])
     
     @rating = Rating.new(params[:rating])
@@ -120,6 +122,8 @@ class RatingsController < ApplicationController
     
     respond_to do |format|
       format.js { render "posts/index" }
+      format.html
+      format.mobile { render "posts/index" }
     end
   end
 

@@ -2,26 +2,19 @@
 	<h1>Tweets</h1>
 </div>
 
- <div data-role="content">
-
-<% unless @posts.empty? %>
- 
-  <ul data-role="listview" data-theme="c">
-    <% @posts.each do |post| %>
-	    <li>
-	      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{post.author}", :class => "photo_mini" %>
-      	<div class="tweet">
-          <span class="name"><%= "@#{post.author}" %></span>
-          <br />
-          <%= post.body.html_safe %>
-        </div>	
-					<% if author_signed_in? and 1 == 2 %>
-					  <%= link_to "", edit_post_url(:id => post, :author_id => current_author.id) %>
-					<% end %>
-     </li>
-  <% end %>
-  </ul>
-<% end %>
- </div>
+<div data-role="content">
+	<% unless @posts.empty? %>
+	  <ul data-role="listview" data-theme="c">
+	    <% @posts.each do |post| %>
+		    <li><a href="<%= new_rating_url(:post_id => post) %>">
+		      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{post.author}" %>
+	        <h3><%= "@#{post.author}" %></h3>
+					<%= post.body.html_safe  %>
+	        </a>
+	      </li>
+	    <% end %>
+	  </ul>
+	<% end %>
+</div>
 
 <%= render :partial => 'layouts/footer' %>
