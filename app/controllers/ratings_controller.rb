@@ -116,14 +116,18 @@ class RatingsController < ApplicationController
     end
     
     @post = Post.find(params[:rating][:post_id])
-    
-    @rating = Rating.new(params[:rating])
-    @rating.save
+    @rating = Rating.find_by_post_id_and_author_id(params[:rating][:post_id], params[:rating][:author_id])
+    if @rating.nil?
+      @rating = Rating.new(params[:rating])
+      @rating.save
+    else
+      @rating.update_attributes(params[:rating])
+    end
     
     respond_to do |format|
       format.js { render "posts/index" }
-      format.html
-      format.mobile { render "posts/index" }
+      format.html { render "posts/index"}
+      format.mobile { render "posts/index"}
     end
   end
 

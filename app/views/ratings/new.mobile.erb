@@ -16,7 +16,7 @@
     <% end %>
   </div>
 
-	  <% form_for @rating, :url => ratings_url, :method => :put do |form| %>
+	  <% form_for @rating, :url => ratings_url do |form| %>
      <%= form.hidden_field :post_id, :value => @post.id %>
      <%= form.hidden_field :author_id, :value => current_author.id %>
 
@@ -53,6 +53,7 @@
 	  </fieldset>
 	
 	  <a href="<%= posts_path %>" data-role="button" data-icon="delete" data-inline="true">Cancel</a>
+
 	  <%= form.submit "Submit", "data-icon" => "check", "data-transition" => "pop", "data-inline" => "true", "data-theme" => "b" %>
 	<% end %>
 </div>
