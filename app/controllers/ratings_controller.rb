@@ -80,7 +80,7 @@ class RatingsController < ApplicationController
   # GET /ratings/new.xml
   def new
     @post = Post.find(params[:post_id])
-    @rating = Rating.new(:rhetoric => "discusses") 
+    @rating = Rating.find_or_initialize_by_id(params[:id], :rhetoric => "discusses") 
 
     respond_to do |format|
       format.html
@@ -96,6 +96,19 @@ class RatingsController < ApplicationController
   # POST /ratings
   # POST /ratings.xml
   def create
+    if params[:format] == "mobile"
+      # Workaround because we have to use check_box_tag
+      params[:rating][:spam] = params[:rating][:spam] || 0
+      params[:rating][:is_author] = params[:rating][:is_author] || 0
+      params[:rating][:method] = params[:rating][:method] || 0
+      params[:rating][:data] = params[:rating][:data] || 0
+      params[:rating][:conclusions] = params[:rating][:conclusions] || 0
+    end
+    
+    @post = Post.find(params[:rating][:post_id])
+    @rating = Rating.new(params[:rating])
+    @rating.save
+    
     if !params[:q].blank?
       if params[:q] == "I'm feeling lucky"
         @posts = Post.paginate :page => params[:page], 
@@ -113,15 +126,6 @@ class RatingsController < ApplicationController
       @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 10)
     else
       @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
-    end
-    
-    @post = Post.find(params[:rating][:post_id])
-    @rating = Rating.find_by_post_id_and_author_id(params[:rating][:post_id], params[:rating][:author_id])
-    if @rating.nil?
-      @rating = Rating.new(params[:rating])
-      @rating.save
-    else
-      @rating.update_attributes(params[:rating])
     end
     
     respond_to do |format|

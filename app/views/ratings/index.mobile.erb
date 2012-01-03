@@ -1,5 +1,7 @@
-<div data-role="header">
+<div data-role="header" data-position="fixed">
+	<%= link_to 'Tweets', posts_path, "data-role" => "button", "class" => "ui-btn-left", "data-icon" => "home", "data-transition" => "reverse slide" %>
 	<h1>Results</h1>
+	<%= link_to 'About', about_path, "data-role" => "button", "class" => "ui-btn-right", "data-icon" => "info" %>
 </div>
 
 <div data-role="content">
@@ -61,5 +63,3 @@
 	<% end %>
 	</div>
 </div>
-
-<%= render :partial => 'layouts/footer' %>

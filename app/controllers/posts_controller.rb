@@ -106,6 +106,14 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
     
+    @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
+    if @rating.nil?
+      @rating = Rating.new(params[:rating])
+      @rating.save
+    else
+      @rating.update_attributes(params[:rating])
+    end
+    
     unless params[:q].blank?
       if params[:q] == "I'm feeling lucky"
          @posts = Post.paginate :page => params[:page], 
@@ -121,14 +129,6 @@ class PostsController < ApplicationController
       end
     else
       @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
-    end
-    
-    @rating = Rating.find_by_post_id_and_author_id(params[:id], params[:author_id])
-    if @rating.nil?
-      @rating = Rating.new(params[:rating])
-      @rating.save
-    else
-      @rating.update_attributes(params[:rating])
     end
     
     respond_to do |format|

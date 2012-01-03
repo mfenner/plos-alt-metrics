@@ -1,5 +1,11 @@
-<div data-role="header">
+<div data-role="header" data-position="fixed">
+	<%= link_to 'Results', ratings_path, "data-role" => "button", "class" => "ui-btn-left", "data-icon" => "grid", "data-transition" => "reverse slide" %>
 	<h1>About</h1>
+	<% unless author_signed_in? %>
+    <%= link_to 'Sign in', author_omniauth_authorize_path(:twitter), "data-role" => "button", "class" => "ui-btn-right", "data-icon" => "gear", "rel" => "external" %>
+  <% else %>
+    <%= link_to 'Sign out', destroy_author_session_path, "data-role" => "button", "class" => "ui-btn-right", "data-icon" => "gear", "rel" => "external" %>
+  <% end %>
 </div>
 
 <div data-role="content">
@@ -22,5 +28,3 @@
     <li><a href="http://scio12.wikispaces.com/Program+draft">ScienceOnline2012</a></li>
   </ul>
 </div>
-
-<%= render :partial => 'layouts/footer' %>

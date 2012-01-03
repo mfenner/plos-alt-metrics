@@ -1,23 +1,15 @@
-.ui-li-thumb {
+img.ui-li-thumb {
   float: left;
   padding-left: 6px;
   padding-top: 6px;
-  margin-right: 6px;
+  padding-right: 6px;
   padding-bottom: 1em;
   width: 48px; }
 
-.ui-link-inherit {
-  padding-top: 3px !important;
+.ui-li-has-arrow .ui-btn-inner .ui-btn-text .ui-link-inherit, .new .ui-listview .ui-li-has-thumb, .signed_out {
+  padding-top: 6px !important;
   padding-left: 60px !important;
   padding-right: 30px !important;
-  font-weight: normal;
-  white-space: normal !important;
-}
-
-.ui-li-staticss {
-  padding-top: 3px !important;
-  padding-left: 60px !important;
-  padding-right: 6px !important;
   font-weight: normal;
   white-space: normal !important;
 }
@@ -32,7 +24,7 @@
   padding-right: 3em;
 }
 
-span.ui-btn-text {
+.ui-checkbox-off .ui-btn-inner .ui-btn-text, .ui-radio-off .ui-btn-inner .ui-btn-text {
   font-weight: normal;
 }
 

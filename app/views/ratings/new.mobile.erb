@@ -1,8 +1,8 @@
-<div data-role="header">
+<div data-role="header" data-position="fixed">
 	<h1>Classify Tweet</h1>
 </div>
 
-<div data-role="content" data-theme="c">
+<div data-role="content" data-theme="c" class="new">
 	<ul data-role="listview">
     <li><%= image_tag "http://api.twitter.com/1/users/profile_image/#{@post.author}" %>
     <h3><%= "@#{@post.author}" %></h3>
@@ -23,7 +23,7 @@
 		<fieldset data-role="controlgroup">
 			<legend>Spam</legend>
        <%= form.label :spam, "Spam. The tweet contains text and/or links unrelated to the linked scholarly article." %>
-       <%= form.check_box(:spam) %>
+       <%= check_box_tag "rating[spam]" %>
      </fieldset>
 
 		<fieldset data-role="controlgroup">
@@ -39,21 +39,21 @@
 		<fieldset data-role="controlgroup">	
 			<legend>Tweets by Author/Publisher</legend>  
 			<%= form.label :is_author, "Written by an author or publisher of the cited paper. The tweeter was involved with the article mentioned. Don't include RTs by others." %>
-				<%= form.check_box(:is_author) %>
+				<%= check_box_tag "rating[is_author]" %>
 		</fieldset>
 		
 		<fieldset data-role="controlgroup">
 			<legend>Uses Methods/Data/Conclusions</legend>
 			<%= form.label :method, 'Describes a method detailed in the cited paper. Also description of study subjects, e.g. "A study of 10,000 runners found".' %>
-			<%= form.check_box(:method) %>
+			<%= check_box_tag "rating[method]" %>
 			<%= form.label :data, 'Uses data presented in the cited paper. This should usually be actual numbers, e.g. "smokers die 25 years sooner".' %>
-			<%= form.check_box(:data) %>
+			<%= check_box_tag "rating[data]" %>
 			<%= form.label :conclusions, 'Describes conclusions presented in the cited paper, e.g. "humanity is getting less violent".' %>
-			<%= form.check_box(:conclusions) %>
+			<%= check_box_tag "rating[conclusions]" %>
 	  </fieldset>
 	
-	  <a href="<%= posts_path %>" data-role="button" data-icon="delete" data-inline="true">Cancel</a>
+		<a href="<%= posts_path %>" data-role="button" data-icon="delete" data-inline="true" data-transition="reverse slide">Cancel</a>
 
-	  <%= form.submit "Submit", "data-icon" => "check", "data-transition" => "pop", "data-inline" => "true", "data-theme" => "b" %>
+			  <%= form.submit "Submit", "data-icon" => "check", "data-transition" => "reverse slide", "data-inline" => "true", "data-theme" => "b" %>
 	<% end %>
 </div>
