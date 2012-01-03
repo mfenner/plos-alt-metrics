@@ -1,4 +1,4 @@
-<div data-role="header" data-position="fixed">
+<div data-role="header">
 	<% unless author_signed_in? %>
     <%= link_to 'Sign in', author_omniauth_authorize_path(:twitter), "data-role" => "button", "class" => "ui-btn-left", "data-icon" => "gear", "rel" => "external" %>
   <% else %>
