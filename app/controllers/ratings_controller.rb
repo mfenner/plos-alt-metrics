@@ -113,7 +113,7 @@ class RatingsController < ApplicationController
       if params[:q] == "I'm feeling lucky"
         @posts = Post.paginate :page => params[:page], 
            :per_page => 4,
-           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :conditions => ["posts.ratings_count IS NULL OR posts.id NOT IN (SELECT post_id FROM ratings WHERE author_id = ?)", author_signed_in? ? current_author.id : 0],
            :include => :ratings,
            :order => 'RAND(DAYOFYEAR(NOW()))'
       else
@@ -123,7 +123,7 @@ class RatingsController < ApplicationController
           :order => 'RAND(DAYOFYEAR(NOW()))'
       end
     elsif params[:format] == "mobile"
-      @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 10)
+      @posts = Post.find(:all, :conditions => ["posts.ratings_count IS NULL OR posts.id NOT IN (SELECT post_id FROM ratings WHERE author_id = ?)", author_signed_in? ? current_author.id : 0], :include => :ratings, :order => 'RAND(DAYOFYEAR(NOW()))', :limit => 10)
     else
       @posts = Post.where(:content_type => 'tweet').order('RAND(DAYOFYEAR(NOW()))').paginate(:page => params[:page], :per_page => 25)
     end
@@ -142,7 +142,7 @@ class RatingsController < ApplicationController
       if params[:q] == "I'm feeling lucky"
         @posts = Post.paginate :page => params[:page], 
            :per_page => 4,
-           :conditions => ["posts.ratings_count IS NULL OR ratings.author_id != ?", author_signed_in? ? current_author.id : 0],
+           :conditions => ["posts.ratings_count IS NULL OR posts.id NOT IN (SELECT post_id FROM ratings WHERE author_id = ?)", author_signed_in? ? current_author.id : 0],
            :include => :ratings,
            :order => 'RAND(DAYOFYEAR(NOW()))'
       else
