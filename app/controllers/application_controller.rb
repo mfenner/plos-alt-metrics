@@ -1,7 +1,5 @@
 class ApplicationController < ActionController::Base  
   # Detect mobile browser and switch to mobile format, defined as MIME type. 
-  # Uses mobile_fu gem
-  #has_mobile_fu
   before_filter :prepare_for_mobile
   
   helper :all # include all helpers, all the time
@@ -20,7 +18,7 @@ class ApplicationController < ActionController::Base
   def mobile_device?
     if session[:mobile_param]
       session[:mobile_param] == "1"
-    elsif request.env["SERVER_NAME"] =~ /mobile/
+    elsif request.env["SERVER_NAME"] =~ /^mobile/
       session[:mobile_param] == "1"
     else
       request.user_agent =~ /Mobile|webOS/
