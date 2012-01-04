@@ -13,7 +13,7 @@
 	  <ul data-role="listview" data-theme="c">
 	    <% @posts.each do |post| %>
 	      <% if author_signed_in? %>
-		    <li><a href="<%= new_rating_url(:post_id => post) %>">
+		    <li><a href="<%= new_rating_url(:post_id => post) %>"  class="signed_in">
 		      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{post.author}" %>
 	        <h3><%= "@#{post.author}" %></h3>
 					<%= post.body.html_safe %>
