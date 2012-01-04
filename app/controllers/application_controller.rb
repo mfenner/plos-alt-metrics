@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   def mobile_device?
     if session[:mobile_param]
       session[:mobile_param] == "1"
-    elsif request.subdomain.present? && request.subdomain != "mobile"
+    elsif request.domain =~ /mobile/
       session[:mobile_param] == "1"
     else
       request.user_agent =~ /Mobile|webOS/
