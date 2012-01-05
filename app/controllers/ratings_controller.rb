@@ -25,15 +25,15 @@ class RatingsController < ApplicationController
     #  ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
     @topicchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data => [{ :name => topic_names[0], :y => topics[0].count, :color => "#00441B" }, 
-                                            { :name => topic_names[1], :y => topics[1].count, :color => "#006D2C"}, 
-                                            { :name => topic_names[2], :y => topics[2].count, :color => "#238B45"},
-                                            { :name => topic_names[3], :y => topics[3].count, :color => "#41AB5D"},
+      f.series(:name => "Tweets", :data => [{ :name => topic_names[0], :y => topics[0].count, :color => "#e2f0d6" }, 
+                                            { :name => topic_names[1], :y => topics[1].count, :color => "#E5F5E0"}, 
+                                            { :name => topic_names[2], :y => topics[2].count, :color => "#C7E9C0"},
+                                            { :name => topic_names[3], :y => topics[3].count, :color => "#A1D99B"},
                                             { :name => topic_names[4], :y => topics[4].count, :color => "#74C476"},
-                                            { :name => topic_names[5], :y => topics[5].count, :color => "#A1D99B"},
-                                            { :name => topic_names[6], :y => topics[6].count, :color => "#C7E9C0"},
-                                            { :name => topic_names[7], :y => topics[7].count, :color => "#E5F5E0"},
-                                            { :name => topic_names[8], :y => topics[8].count, :color => "#e2f0d6"} ])
+                                            { :name => topic_names[5], :y => topics[5].count, :color => "#41AB5D"},
+                                            { :name => topic_names[6], :y => topics[6].count, :color => "#238B45"},
+                                            { :name => topic_names[7], :y => topics[7].count, :color => "#006D2C"},
+                                            { :name => topic_names[8], :y => topics[8].count, :color => "#00441B"} ])
       f.options[:title][:text] = nil
     end
     
