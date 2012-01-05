@@ -17,12 +17,12 @@ class RatingsController < ApplicationController
     @authors_with_ratings = Author.all
     
     # Create pie chart for subject area
-    topic_names = ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry & Materials Science", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+    topic_names = ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry & Materials Science", "Earth Sciences", "Social Sciences & Economics", "Computer Science & Math", "Other"]
     topics = []
     topic_names.each_with_index do |item, index|
       topics << Post.joins(:ratings).where(:ratings => { :topic => item })
     end
-    #  ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+    
     @topicchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
       f.series(:name => "Tweets", :data => [{ :name => topic_names[0], :y => topics[0].count, :color => "#F7FCF5" }, 
@@ -32,8 +32,7 @@ class RatingsController < ApplicationController
                                             { :name => topic_names[4], :y => topics[4].count, :color => "#74C476"},
                                             { :name => topic_names[5], :y => topics[5].count, :color => "#41AB5D"},
                                             { :name => topic_names[6], :y => topics[6].count, :color => "#238B45"},
-                                            { :name => topic_names[7], :y => topics[7].count, :color => "#006D2C"},
-                                            { :name => topic_names[8], :y => topics[8].count, :color => "#00441B"} ])
+                                            { :name => topic_names[7], :y => topics[7].count, :color => "#006D2C"}])
       f.options[:title][:text] = nil
     end
     
