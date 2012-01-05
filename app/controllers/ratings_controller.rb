@@ -25,7 +25,7 @@ class RatingsController < ApplicationController
     #  ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
     @topicchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data => [{ :name => topic_names[0], :y => topics[0].count, :color => "#e2f0d6" }, 
+      f.series(:name => "Tweets", :data => [{ :name => topic_names[0], :y => topics[0].count, :color => "#F7FCF5" }, 
                                             { :name => topic_names[1], :y => topics[1].count, :color => "#E5F5E0"}, 
                                             { :name => topic_names[2], :y => topics[2].count, :color => "#C7E9C0"},
                                             { :name => topic_names[3], :y => topics[3].count, :color => "#A1D99B"},
@@ -43,7 +43,7 @@ class RatingsController < ApplicationController
     @posts_with_disagreement = Post.find(:all, :conditions => "ratings.rhetoric = 'disagreesWith'", :include => :ratings)
     @rhetoricchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data => [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#006D2C" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#A1D99B"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#e2f0d6"} ])
+      f.series(:name => "Tweets", :data => [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#006D2C" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#A1D99B"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#F7FCF5"} ])
       f.options[:title][:text] = nil
     end
     
@@ -51,7 +51,7 @@ class RatingsController < ApplicationController
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
     @authorchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({:defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data => [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#006D2C" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#e2f0d6" }])
+      f.series(:name => "Tweets", :data => [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#006D2C" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#F7FCF5" }])
       f.options[:title][:text] = nil
     end
     
@@ -61,7 +61,7 @@ class RatingsController < ApplicationController
     @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
     @reusechart = LazyHighCharts::HighChart.new('chart') do |f|
       f.chart({:defaultSeriesType=>"column", :height => 250, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :color => "#006D2C", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#006D2C", "#A1D99B", "#e2f0d6"])
+      f.series(:name => "Tweets", :color => "#006D2C", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#006D2C", "#A1D99B", "#F7FCF5"])
       f.options[:xAxis] = { :categories => ['Methods', 'Data', 'Conclusions'], :tickLength => 0, :lineColor => "#000000" }
       f.options[:yAxis] = { :max => @posts_with_ratings.count, :lineWidth => 1, :lineColor => "#000000", :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
