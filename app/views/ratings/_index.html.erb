@@ -36,7 +36,7 @@
 	<tr>
 		<td class="summary">
 			<%= high_chart("topic", @topicchart) do |c| %>
-			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_topic.count} * 100).toFixed(0) + '%'; }" %>
 			<% end %>
 		</td>
 		<td class="summary">
