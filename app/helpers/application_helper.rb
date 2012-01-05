@@ -7,6 +7,10 @@ module ApplicationHelper
   def mas_choices(author)
     Author.search_for_mas_authors(author)
   end
+  
+  def topic_choices
+    ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+  end
 
   def xml_date(date)
     date.blank? ? nil : date.strftime("%Y-%m-%d")

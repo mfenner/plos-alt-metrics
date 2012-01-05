@@ -1,5 +1,8 @@
 <%= form.check_box(:spam) %> Spam. The tweet contains text and/or links unrelated to the linked scholarly article.<p>
 <div id="cito" style="<%= @rating.spam ? 'display: none;' : '' %>">
+	<div class="select">
+	  Subject Area: <%= form.select :topic, topic_choices, { :prompt => 'Select' } %>
+	</div>
 	<%= form.radio_button("rhetoric", "agreesWith") %> Agrees with statements, ideas or conclusions presented in the cited paper. Positive sentiment, e.g. "great work!". (<%= link_to "cito:agreesWith", "http://speroni.web.cs.unibo.it/cgi-bin/lode/req.py?req=http:/purl.org/spar/cito#d3e72" %>)<br />
 		<%= form.radio_button("rhetoric", "discusses") %> Discusses statements, ideas or conclusions presented in the cited paper. Neutral or simply mentioning an article. (<%= link_to "cito:discusses", "http://speroni.web.cs.unibo.it/cgi-bin/lode/req.py?req=http:/purl.org/spar/cito#d3e274" %>)<br />
 		<%= form.radio_button("rhetoric", "disagreesWith") %> Disagrees with statements, ideas or conclusions presented in the cited paper. Negative sentiment, e.g. "ridiculous paper". (<%= link_to "cito:disagreesWith", "http://speroni.web.cs.unibo.it/cgi-bin/lode/req.py?req=http:/purl.org/spar/cito#d3e261" %>)<p>

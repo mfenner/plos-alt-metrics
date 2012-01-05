@@ -19,6 +19,14 @@ class Post < ActiveRecord::Base
     "Title of article: " + article_title + "." + ((journal_title.blank? or journal_title == "0") ? "" : " Published in " + journal_title + ".")
   end
   
+  def topic
+    if ratings.maximum('topic')
+      ratings.maximum('topic') + "<br />"
+    else
+      nil
+    end
+  end
+  
   def rhetoric
     agrees_with = ratings.inject(0) {|sum, rating| sum + (rating.rhetoric == "agreesWith" ? 1 : 0) }
     discusses = ratings.inject(0) {|sum, rating| sum + (rating.rhetoric == "discusses" ? 1 : 0) }

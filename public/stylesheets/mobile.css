@@ -6,7 +6,7 @@ img.ui-li-thumb {
   padding-bottom: 1em;
   width: 48px; }
 
-.new .ui-listview .ui-li-has-thumb, .signed_in, .signed_out {
+.signed_in, .signed_out {
   padding-top: 6px !important;
   padding-left: 60px !important;
   padding-right: 30px !important;

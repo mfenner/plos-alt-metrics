@@ -7,6 +7,7 @@
     <% if post.spam %>
       Spam
     <% else %>
+      <%= post.topic.html_safe if post.topic %>
 	    <%= post.rhetoric.html_safe %>
 	    <%= post.is_author.html_safe if post.is_author %>
 	    <%= post.method.html_safe if post.method %>

@@ -25,6 +25,11 @@
 	  <h2>Summary</h2>
 
 	<%= pluralize(@ratings.count, 'classification') %> by <%= pluralize(@authors_with_ratings.count, 'user') %> for <%= pluralize(@posts_with_ratings.count, 'tweet') %> (<%= number_to_percentage(@posts_with_ratings.count * 100 / @posts.count, :precision => 0) %> of all tweets, <%= number_with_precision(Float(@ratings.count) / @posts_with_ratings.count, :precision => 1) %> ratings per tweet). <%= pluralize(@posts_with_spam.count, 'tweet') %> <%= @posts_with_spam.count == 1 ? "was" : "were" %> categorized as spam.
+	
+	  <h3>Subject Area</h3>
+		<%= high_chart("topic", @topicchart) do |c| %>
+			<%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_topic.count} * 100).toFixed(0) + '%'; }" %>
+		<% end %>
 
 		<h3>Agreement with Paper</h3>
 		<%= high_chart("rhetoric", @rhetoricchart) do |c| %>

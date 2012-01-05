@@ -28,7 +28,7 @@ body {
   left: 0;
   background-color: #e2f0d6; }
 
-input, textarea, select {
+input, textarea {
   font-size: large !important;
   padding: 4px;
   border: solid 1px rgba(0, 0, 0, 0.2);
@@ -36,6 +36,23 @@ input, textarea, select {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.1)), color-stop(0.1, transparent), to(transparent));
   border-radius: 2px;
   -moz-border-radius: 2px; }
+  
+div.select {  
+  padding-top: 0;
+  padding-left: 2em;
+  padding-bottom: 0.5em;
+}
+  
+select {
+  font-size: small !important;
+  padding: 4px;
+  border-left: 3em;
+  border: solid 1px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.9);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.1)), color-stop(0.1, transparent), to(transparent));
+  border-radius: 2px;
+  -moz-border-radius: 2px; }
+}
 
 input[type=submit], input[type=button], button {
   background-color: grey;
@@ -387,8 +404,7 @@ div.summary {
   margin-bottom: 0.75em; }
 
 th.summary, td.summary {
-  width: 33%;
-  text-align: left; }
+  width: 50%; }
 
 td.two {
   width: 50%; }

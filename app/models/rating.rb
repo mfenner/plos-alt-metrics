@@ -5,5 +5,5 @@ class Rating < ActiveRecord::Base
   
   validates_uniqueness_of :post_id, :scope => :author_id
   
-  attr_accessible :post_id, :author_id, :rhetoric, :spam, :is_author, :method, :data, :conclusions
+  attr_accessible :post_id, :author_id, :rhetoric, :spam, :is_author, :method, :data, :conclusions, :topic
 end

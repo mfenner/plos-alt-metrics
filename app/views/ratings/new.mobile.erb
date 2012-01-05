@@ -4,9 +4,10 @@
 
 <div data-role="content" data-theme="c" class="new">
 	<ul data-role="listview">
-    <li><%= image_tag "http://api.twitter.com/1/users/profile_image/#{@post.author}" %>
+    <li><a href="<%= @post.article_url %>" rel="external" class="signed_in"><%= image_tag "http://api.twitter.com/1/users/profile_image/#{@post.author}" %>
     <h3><%= "@#{@post.author}" %></h3>
     <%= @post.body.html_safe  %>
+    </a>
     </li>
   </ul>
 
@@ -24,6 +25,10 @@
        <%= form.label :spam, "Spam" %>
        <%= check_box_tag "rating[spam]" %>
      </fieldset>
+
+    <fieldset data-role="controlgroup">
+	    <%= form.select :topic, topic_choices, { :prompt => 'Select Subject Area' } %>
+    </fieldset>
 
 		<fieldset data-role="controlgroup">
 			<%= form.label "rhetoric_agreeswith", 'Agrees with paper' %>

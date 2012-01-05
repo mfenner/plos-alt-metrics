@@ -30,16 +30,26 @@
 
 <table class="index">
 	<tr>
+	  <th class="summary">Subject Area</th>
 	  <th class="summary">Agreement with Paper</th>
-		<th class="summary">Tweets by Author/Publisher</th>
-		<th class="summary">Uses Methods/Data/Conclusions</th>
 	</tr>
 	<tr>
+		<td class="summary">
+			<%= high_chart("topic", @topicchart) do |c| %>
+			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
+			<% end %>
+		</td>
 		<td class="summary">
 			<%= high_chart("rhetoric", @rhetoricchart) do |c| %>
 			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>
 			<% end %>
 		</td>
+	</tr>
+	<tr>
+		<th class="summary">Tweets by Author/Publisher</th>
+		<th class="summary">Uses Methods/Data/Conclusions</th>
+	</tr>
+	<tr>
 		<td class="summary">
 			<%= high_chart("author", @authorchart) do |c| %>
 			  <%= "options.tooltip.formatter = function() { return this.y + ' Tweets: ' + (this.y / #{@posts_with_ratings.count} * 100).toFixed(0) + '%'; }" %>

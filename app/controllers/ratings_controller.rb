@@ -8,6 +8,7 @@ class RatingsController < ApplicationController
     @posts = Post.where(:content_type => 'tweet').order(:published_at)
     @posts_with_rts = Post.find(:all, :conditions => "body REGEXP '^RT[[:space:]]'")
     @posts_with_spam = Post.find(:all, :conditions => "ratings.spam = 1", :include => :ratings)
+    @posts_with_topic = Post.joins(:ratings).where("ratings.topic IS NOT NULL")
     @posts_with_title = Post.find(:all, :conditions => "body REGEXP IF(LENGTH(article_title) < 20, article_title, LEFT(article_title, 20))")
     @unique_author_count = Post.count(:author, :distinct => true)
     @unique_article_count = Post.count(:article_title, :distinct => true)
@@ -15,21 +16,42 @@ class RatingsController < ApplicationController
     @authors = Author.order('ratings_count desc').limit(10)
     @authors_with_ratings = Author.all
     
+    # Create pie chart for subject area
+    topic_names = ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+    topics = []
+    topic_names.each_with_index do |item, index|
+      topics << Post.joins(:ratings).where(:ratings => { :topic => item })
+    end
+    #  ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+    @topicchart = LazyHighCharts::HighChart.new('pie') do |f|
+      f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
+      f.series(:name => "Tweets", :data => [{ :name => topic_names[0], :y => topics[0].count, :color => "#00441B" }, 
+                                            { :name => topic_names[1], :y => topics[1].count, :color => "#006D2C"}, 
+                                            { :name => topic_names[2], :y => topics[2].count, :color => "#238B45"},
+                                            { :name => topic_names[3], :y => topics[3].count, :color => "#41AB5D"},
+                                            { :name => topic_names[4], :y => topics[4].count, :color => "#74C476"},
+                                            { :name => topic_names[5], :y => topics[5].count, :color => "#A1D99B"},
+                                            { :name => topic_names[6], :y => topics[6].count, :color => "#C7E9C0"},
+                                            { :name => topic_names[7], :y => topics[7].count, :color => "#E5F5E0"},
+                                            { :name => topic_names[8], :y => topics[8].count, :color => "#e2f0d6"} ])
+      f.options[:title][:text] = nil
+    end
+    
     # Create pie chart for rhetoric
     rhetoric = Rating.order('rhetoric').group("rhetoric").count
     @posts_with_agreement = Post.find(:all, :conditions => "ratings.rhetoric = 'agreesWith'", :include => :ratings)
     @posts_with_disagreement = Post.find(:all, :conditions => "ratings.rhetoric = 'disagreesWith'", :include => :ratings)
     @rhetoricchart = LazyHighCharts::HighChart.new('pie') do |f|
-      f.chart({ :defaultSeriesType=>"pie", :marginRight => 50, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data=> [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#95ab63" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#bdd684"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#e2f0d6"} ])
+      f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
+      f.series(:name => "Tweets", :data => [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#006D2C" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#A1D99B"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#e2f0d6"} ])
       f.options[:title][:text] = nil
     end
     
     # Create pie chart for posts from author/publisher
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
     @authorchart = LazyHighCharts::HighChart.new('pie') do |f|
-      f.chart({:defaultSeriesType=>"pie", :marginRight => 30, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data=> [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#95ab63" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#e2f0d6" }])
+      f.chart({:defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
+      f.series(:name => "Tweets", :data => [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#006D2C" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#e2f0d6" }])
       f.options[:title][:text] = nil
     end
     
@@ -39,7 +61,7 @@ class RatingsController < ApplicationController
     @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
     @reusechart = LazyHighCharts::HighChart.new('chart') do |f|
       f.chart({:defaultSeriesType=>"column", :height => 250, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :color => "#95ab63", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#95ab63", "#bdd684", "#e2f0d6"])
+      f.series(:name => "Tweets", :color => "#006D2C", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#006D2C", "#A1D99B", "#e2f0d6"])
       f.options[:xAxis] = { :categories => ['Methods', 'Data', 'Conclusions'], :tickLength => 0, :lineColor => "#000000" }
       f.options[:yAxis] = { :max => @posts_with_ratings.count, :lineWidth => 1, :lineColor => "#000000", :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
@@ -51,7 +73,7 @@ class RatingsController < ApplicationController
     days = Rating.order('created_at').group('DATE(created_at)').count
     @activitychart = LazyHighCharts::HighChart.new('chart') do |f|
       f.chart({:defaultSeriesType=>"spline", :height => 150, :marginRight => 30, :backgroundColor => nil } )
-      f.series(:name => "Ratings", :color => "#95ab63", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.utc.to_i * 1000, a[1]] })
+      f.series(:name => "Ratings", :color => "#006D2C", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.utc.to_i * 1000, a[1]] })
       f.options[:xAxis] = { :type => 'datetime', :tickLength => 0, :lineColor => "#000000", :labels  => { :enabled => true } }
       f.options[:yAxis] = { :min => 0, :max => @posts_with_ratings.count, :lineWidth => 1, :lineColor => "#000000", :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
