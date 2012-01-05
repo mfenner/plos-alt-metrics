@@ -17,7 +17,7 @@ class RatingsController < ApplicationController
     @authors_with_ratings = Author.all
     
     # Create pie chart for subject area
-    topic_names = ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+    topic_names = ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry & Materials Science", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
     topics = []
     topic_names.each_with_index do |item, index|
       topics << Post.joins(:ratings).where(:ratings => { :topic => item })

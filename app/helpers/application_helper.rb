@@ -9,7 +9,7 @@ module ApplicationHelper
   end
   
   def topic_choices
-    ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
+    ["Medicine & Health", "Life Sciences", "Physics & Astronomy", "Chemistry & Materials Science", "Earth Sciences", "Social Sciences", "Computer Science & Math", "Economics", "Other"]
   end
 
   def xml_date(date)
