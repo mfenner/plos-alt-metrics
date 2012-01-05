@@ -43,7 +43,7 @@ class RatingsController < ApplicationController
     @posts_with_disagreement = Post.find(:all, :conditions => "ratings.rhetoric = 'disagreesWith'", :include => :ratings)
     @rhetoricchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({ :defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data => [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#006D2C" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#A1D99B"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#F7FCF5"} ])
+      f.series(:name => "Tweets", :data => [{ :name => "agrees with", :y => @posts_with_agreement.count, :color => "#41AB5D" }, { :name => "disagrees with", :y => @posts_with_disagreement.count, :color => "#A1D99B"}, { :name => "discusses", :y => @posts_with_ratings.count - (@posts_with_agreement.count + @posts_with_disagreement.count), :color => "#F7FCF5"} ])
       f.options[:title][:text] = nil
     end
     
@@ -51,7 +51,7 @@ class RatingsController < ApplicationController
     @posts_with_authors = Post.find(:all, :conditions => "ratings.is_author = 1", :include => :ratings) 
     @authorchart = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({:defaultSeriesType=>"pie", :marginLeft => 70, :marginRight => 70, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :data => [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#006D2C" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#F7FCF5" }])
+      f.series(:name => "Tweets", :data => [{ :name => "Author/Publisher", :y => @posts_with_authors.count, :color => "#41AB5D" }, { :name => "Other", :y => @posts_with_ratings.count - @posts_with_authors.count, :color => "#F7FCF5" }])
       f.options[:title][:text] = nil
     end
     
@@ -61,7 +61,7 @@ class RatingsController < ApplicationController
     @posts_with_conclusions = Post.find(:all, :conditions => "ratings.conclusions = 1", :include => :ratings)
     @reusechart = LazyHighCharts::HighChart.new('chart') do |f|
       f.chart({:defaultSeriesType=>"column", :height => 250, :backgroundColor => nil } )
-      f.series(:name => "Tweets", :color => "#006D2C", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#006D2C", "#A1D99B", "#F7FCF5"])
+      f.series(:name => "Tweets", :color => "#41AB5D", :data => [@posts_with_method.count, @posts_with_data.count, @posts_with_conclusions.count], :colors => ["#41AB5D", "#A1D99B", "#F7FCF5"])
       f.options[:xAxis] = { :categories => ['Methods', 'Data', 'Conclusions'], :tickLength => 0, :lineColor => "#000000" }
       f.options[:yAxis] = { :max => @posts_with_ratings.count, :lineWidth => 1, :lineColor => "#000000", :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
@@ -73,7 +73,7 @@ class RatingsController < ApplicationController
     days = Rating.order('created_at').group('DATE(created_at)').count
     @activitychart = LazyHighCharts::HighChart.new('chart') do |f|
       f.chart({:defaultSeriesType=>"spline", :height => 150, :marginRight => 30, :backgroundColor => nil } )
-      f.series(:name => "Ratings", :color => "#006D2C", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.utc.to_i * 1000, a[1]] })
+      f.series(:name => "Ratings", :color => "#41AB5D", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.utc.to_i * 1000, a[1]] })
       f.options[:xAxis] = { :type => 'datetime', :tickLength => 0, :lineColor => "#000000", :labels  => { :enabled => true } }
       f.options[:yAxis] = { :min => 0, :max => @posts_with_ratings.count, :lineWidth => 1, :lineColor => "#000000", :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
