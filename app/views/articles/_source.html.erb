@@ -20,7 +20,7 @@
 		      <% if source.prefix.blank? or @article.doi.match(/^#{source.prefix}/) %>
 	      <td class="source_count">
 			    <% if @article.citations_by_source(source) and @article.citations_by_source(source)[:public_url] and @article.citations_by_source(source)[:total] > 0 %>
-            <%= link_to h(@article.citations_by_source(source)[:total]), @article.citations_by_source(source)[:public_url]  %>
+            <%= link_to h(@article.citations_by_source(source)[:total]), @article.citations_by_source(source)[:public_url] %>
            <% else %>
              <%= @article.citations_by_source(source) ? @article.citations_by_source(source)[:total] : 0 %>
            <% end %>

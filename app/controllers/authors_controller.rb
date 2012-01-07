@@ -20,14 +20,14 @@ class AuthorsController < ApplicationController
   # GET /authors
   # GET /authors.xml
   def index
-    unless params[:q].blank?
+    if !params[:q].blank?
       @authors = Author.paginate :page => params[:page], 
         :per_page => 12,
         :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or authors.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]],
         :order => 'authors.sort_name, authors.username' 
     else
       if author_signed_in?
-        @authors = current_author.friends.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
+        @authors = Author.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
       else
         @authors = []
       end
@@ -39,6 +39,8 @@ class AuthorsController < ApplicationController
           render :partial => "index" 
         end
       end
+      format.mobile
+      format.js
       format.xml  { render :xml => @authors }
       format.json { render :json => @authors, :callback => params[:callback] }
       format.csv  { render :csv => @authors }
@@ -59,6 +61,8 @@ class AuthorsController < ApplicationController
           
         end
       end
+      format.js { render :show }
+      format.mobile
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
         render :xml => @author.articles.to_xml
@@ -86,10 +90,10 @@ class AuthorsController < ApplicationController
   # GET /authors/1/edit
   def edit
     @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
-    if request.xhr?
-      render :partial => params[:partial]
-    else
-      render :show 
+    
+    respond_to do |format|
+      format.html { render :show }
+      format.js { render :show }
     end
   end
 
@@ -220,26 +224,12 @@ class AuthorsController < ApplicationController
         elsif params[:service] == "twitter"
           Author.update_via_twitter(@author)
         end
-        #flash[:notice] = 'Author was successfully updated.'
-        format.html do
-          if request.xhr? 
-            service_partial = render_to_string(:partial => params[:partial])
-            article_partial = render_to_string(:partial => 'article')
-
-            render :update do |page|
-              unless @author.image.blank?
-                page.replace 'photo', '<div id="photo"><img alt="' + @author.username + '" class="photo" src="' + @author.image + '" /></div'
-              else
-                page.replace 'photo', '<div id="photo"></div'
-              end
-              page.replace params[:partial], service_partial
-              page.replace 'article', article_partial
-            end
-          end
-        end
+        format.html { render :show }
+        format.js { render :show }
         format.xml  { head :ok }
         format.json { head :ok }
-      else
+      else  
+        format.js { render :show }
         format.html { render :partial => params[:partial] if request.xhr? }
         format.xml  { render :xml => @author.errors, :status => :unprocessable_entity }
         format.json { render :json => @author.errors, :status => :unprocessable_entity }

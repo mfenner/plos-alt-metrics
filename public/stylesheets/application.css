@@ -31,7 +31,7 @@ body {
   background-color: #efecca;
 }
 
-input, textarea, select {
+input, textarea {
   font-size: large !important;
   padding: 4px;
   border: solid 1px rgba(0, 0, 0, 0.2);
@@ -39,6 +39,10 @@ input, textarea, select {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.1)), color-stop(0.1, transparent), to(transparent));
   border-radius: 2px;
   -moz-border-radius: 2px; }
+  
+select {
+  font-size: small !important;
+}
 
 input[type=submit], input[type=button], button {
   background-color: #046380;

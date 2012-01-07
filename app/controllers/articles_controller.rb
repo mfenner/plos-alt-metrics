@@ -28,7 +28,13 @@ class ArticlesController < ApplicationController
     # query=(doi fragment)
     # order=doi|published_on (whitelist, default to doi)
     # source=source_type
-    unless params[:q].blank?
+    if !params[:username].blank?
+      @author = Author.find_by_username!(params[:username])
+      @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => [:authors, :retrievals], 
+        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or articles.title REGEXP ? or articles.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]],
+        :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
+      render :partial => "authors/article" and return
+    elsif !params[:q].blank?
       @articles = Article.paginate :page => params[:page], 
         :per_page => 10,
         :include => :authors,
@@ -54,6 +60,9 @@ class ArticlesController < ApplicationController
         if request.xhr?
           render :partial => "index" 
         end
+      end
+      format.mobile do 
+        render :index if request.xhr?
       end
       format.xml  { render :xml => @articles }
       format.json { render :json => @articles, :callback => params[:callback] }
@@ -81,6 +90,7 @@ class ArticlesController < ApplicationController
     
     respond_to do |format|
       format.html # show.html.erb
+      format.mobile # show.mobile.erb
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
         render :xml => @article.to_xml(format_options)

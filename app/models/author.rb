@@ -133,6 +133,10 @@ class Author < ActiveRecord::Base
   def display_name
   	(self.native_name.blank? ? "" : self.native_name + " (") + (self.name.blank? ? self.mas : self.name) +  (self.native_name.blank? ? "" : ")")
 	end
+	
+	def has_profile
+	  !mas.blank? or !authorclaim.blank? or !mendeley.blank? or !googlescholar.blank?
+	end
   
   def self.fetch_properties(author, options={})
     # Fetch author information, return nil if no response 

@@ -1,0 +1,5 @@
+<% if params[:partial] == "twitter" %>
+  $('#twitter').html("<%= escape_javascript(render "twitter") %>");
+<% else %>
+  $('#profile').html("<%= escape_javascript(render "profile") %>");
+<% end %>

@@ -1,9 +1,9 @@
 <% if params[:partial] == "twitter" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
   <div class="edit">
-		<%= remote_form_for :author, :update => "twitter", :url => author_url(:id => @author.username, :partial => "twitter", :service => "twitter"), :before => "Element.show('spinner');", :method => :put do |f| %>
+		<%= form_for :author, :url => author_path(@author.username, :partial => "twitter", :service => "twitter"), :html => { :method => :put, :remote => true } do |f| %>
 		  <h3>Name</h3>
 		  <%= f.text_field :name, :class => :name %><p>
-			<%= link_to_remote "Cancel", :update => "twitter", :url => author_path(@author.username, :partial => "twitter"), :method => :get %>
+			<%= link_to "Cancel", author_path(@author.username, :partial => "twitter"), :remote => true %>
 		  <%= f.submit("Submit") %>
 		  <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
 		<% end %>
@@ -12,10 +12,7 @@
 	<h2>
 		<%= h(@author.display_name) %>
 		<% if current_author == @author or current_author.try(:admin?) %>
-			<%= link_to_remote image_tag("edit.gif"), { :update => "twitter", 
-				                                       :url => edit_author_path(@author.username, :partial => "twitter"),
-				                                       :method => :get },
-				                                       :title => "Edit Name" %>
+			<%= link_to image_tag("edit.gif"), edit_author_path(@author.username, :partial => "twitter"), :remote => true, :title => "Edit Name" %>
 		<% end %>
 	</h2>
 	<% unless @author.location.blank? %>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title>
+	    <%= "(#{Rails.env}) " unless Rails.env.production? %>
+	    <%= APP_CONFIG['application'] %>
+	  </title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	  <%= stylesheet_link_tag 'http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.css' %>
+	  <%= stylesheet_link_tag 'mobile' %>
+		<%= javascript_include_tag :defaults %>
+	  <%= javascript_include_tag "http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.js" %>
+	  <%= csrf_meta_tag %>
+	</head>
+	<body>
+		<div data-role="page" data-theme="b" id="<%= controller.controller_name %>">
+		  <%= yield %>
+		</div>
+	</body>
+</html>

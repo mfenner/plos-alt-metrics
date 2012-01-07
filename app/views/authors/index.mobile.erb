@@ -1,0 +1,27 @@
+<div data-role="header">
+	<% unless author_signed_in? %>
+    <%= link_to 'Sign in', author_omniauth_authorize_path(:twitter), "data-role" => "button", "data-icon" => "gear", "rel" => "external" %>
+  <% else %>
+    <%= link_to 'Your Page', author_path(current_author.username), "data-role" => "button", "data-icon" => "gear" %>
+  <% end %>
+	<h1>Authors</h1>
+	<%= link_to 'Articles', articles_path, "data-role" => "button", "data-icon" => "grid" %>
+</div>
+
+<div data-role="content">
+	<% unless @authors.empty? %>
+	  <%= form_tag authors_path, :method => :get, :remote => false, :class => "ui-listview-filter ui-bar-c", "data-ajax" => "true", "data-transition" => "none", :role => "search" do %>
+    <input name="q" value="<%= params[:q] %>" placeholder="Filter authors..." data-type="search" class="ui-input-text ui-body-c"/>
+  <% end %>
+	  <ul data-role="listview" data-theme="c">
+	    <% @authors.each do |author| %>
+		    <li><a href="<%= author_path(author.username) %>" class="signed_in">
+		      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{author.username}" %>
+	        <h3><%= "#{author.display_name}" %></h3>
+	        <%= "@#{author.username}" %>
+	        </a>
+	      </li>
+	    <% end %>
+	  </ul>
+	<% end %>
+</div>

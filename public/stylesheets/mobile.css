@@ -1,0 +1,59 @@
+.signed_in img.ui-li-thumb {
+  float: left;
+  padding-left: 6px;
+  padding-top: 6px;
+  padding-right: 6px;
+  padding-bottom: 1em;
+  width: 48px; }
+
+.signed_in, .signed_out {
+  padding-top: 6px !important;
+  padding-left: 60px !important;
+  padding-right: 30px !important;
+  font-weight: normal;
+  white-space: normal !important;
+}
+
+.inset {
+  padding-top: 6px !important;
+  padding-left: 6px !important;
+  font-weight: normal;
+}
+
+.normal {
+  font-weight: normal;
+  white-space: normal !important;
+}
+
+.show {
+  padding-bottom: 0.75em;
+}
+
+a.inset {
+  padding-left: 60px !important;
+  padding-bottom: 0 !important;
+}
+
+.ui-li-heading {
+  margin-top: 0;
+  margin-bottom: 0;
+  white-space: normal !important;
+}
+
+.ui-li-aside {
+  font-weight: normal;
+  padding-right: 3em;
+}
+
+.ui-checkbox-off .ui-btn-inner .ui-btn-text, .ui-radio-off .ui-btn-inner .ui-btn-text {
+  font-weight: normal;
+}
+
+.ui-controlgroup-label {
+  font-weight: bold;
+}
+
+
+.clear {
+  clear: both;
+}
