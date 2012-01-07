@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     if session[:mobile_param]
       session[:mobile_param] == "1"
     elsif request.env["SERVER_NAME"] =~ /^mobile/
-      session[:mobile_param] == "1"
+      true
     else
       request.user_agent =~ /Mobile|webOS/
     end
