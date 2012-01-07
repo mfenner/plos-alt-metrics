@@ -21,7 +21,7 @@
 }
 
 .normal {
-  font-weight: normal;
+  font-weight: normal !important;
   white-space: normal !important;
 }
 
@@ -30,8 +30,8 @@
 }
 
 img.source {
-  height: 16px;
-  width: 16px;
+  height: 16px !important;
+  width: 16px !important;
 }
 
 a.inset {

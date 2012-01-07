@@ -2,7 +2,7 @@
 	<% unless author_signed_in? %>
     <%= link_to 'Sign in', author_omniauth_authorize_path(:twitter), "data-role" => "button", "data-icon" => "gear", "rel" => "external" %>
   <% else %>
-    <%= link_to 'Your Page', author_path(current_author.username), "data-role" => "button", "data-icon" => "gear" %>
+    <%= link_to 'Your Card', author_path(current_author.username), "data-role" => "button", "data-icon" => "gear" %>
   <% end %>
 	<h1>Authors</h1>
 	<%= link_to 'Articles', articles_path, "data-role" => "button", "data-icon" => "grid" %>
@@ -23,5 +23,14 @@
 	      </li>
 	    <% end %>
 	  </ul>
+	<% else %>
+	  <h2>Welcome to ScienceCard</h2>
+		<div class="show">ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other article-level metrics for these publications.<p></div>
+			
+	<ul data-role="listview" data-theme="c">
+		<li class="normal">To create your own ScienceCard, simply sign in with your Twitter account.</li>
+		<li class="normal">Then optionally link your ScienceCard to your Microsoft Academic Search and/or AuthorClaim profile on the ScienceCard profile page.</li>
+		<li class="normal">ScienceCard automatically lists the available ScienceCards of the people you follow on Twitter.</li>
+	</ol>
 	<% end %>
 </div>
