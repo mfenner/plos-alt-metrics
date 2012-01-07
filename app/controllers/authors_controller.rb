@@ -27,7 +27,7 @@ class AuthorsController < ApplicationController
         :order => 'authors.sort_name, authors.username' 
     else
       if author_signed_in?
-        @authors = Author.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
+        @authors = current_author.friends.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
       else
         @authors = []
       end
