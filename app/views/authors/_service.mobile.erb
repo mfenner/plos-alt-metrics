@@ -1,12 +1,12 @@
 <% if @author.has_profile %>
   <div data-role="collapsible-set">
 	<div data-role="collapsible">
-	<h3>Author Identifiers</h3>
+		<h3>Author Identifiers</h3>
 	<ul data-role="listview" data-theme="c" data-inset="true">
 	  <% unless @author.mas.blank? %>
 	    <li class="inset"><a href="<%= "http://academic.research.microsoft.com/Author/#{@author.mas}" %>" class="inset">
 	      <%= image_tag "mas.png" %>
-	      <h3>Microsoft Academic Search</h3>
+	      <h3>MS Academic Search</h3>
 	      <%= @author.mas %>
 	      </a>
 	    </li>

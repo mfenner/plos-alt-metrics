@@ -8,7 +8,7 @@
   
   <div data-role="collapsible">
 	<h3 class="show">Articles</h3>
-  <ul data-role="listview" data-theme="c" data-filter="true" data-filter-placeholder="Filter articles..." data-inset="true">
+  <ul data-role="listview" data-theme="c" data-filter="true" data-filter-placeholder="Filter articles...">
     <% @articles.each do |article| %>
 	    <li><a href="<%= article_path(article.short_doi) %>" class="normal">
         <h3><%= article.title %></h3>
