@@ -5,14 +5,14 @@
 	    <% if source.prefix.blank? or @article.doi.match(/^#{source.prefix}/) %>
 	      <% if @article.citations_by_source(source) and @article.citations_by_source(source)[:public_url] and @article.citations_by_source(source)[:total] > 0 %>
 	        <li><a href="<%= @article.citations_by_source(source)[:public_url] %>" class="signed_in">
-		      <%= image_tag source.class.to_s.downcase + "_sm.gif", :class => "ui-li-icon" %>
+		      <%= image_tag source.class.to_s.downcase + "_sm.gif", :class => "ui-li-icon source" %>
 	        <%= source.name %>
 	        <span class="ui-li-count"><%= @article.citations_by_source(source)[:total] %></span>
 	        </a>
 	        </li>
 	      <% else %>
 	        <li>
-		      <%= image_tag source.class.to_s.downcase + "_sm.gif", :class => "ui-li-icon" %>
+		      <%= image_tag source.class.to_s.downcase + "_sm.gif", :class => "ui-li-icon source" %>
 		      <%= source.name %>
 		      <span class="ui-li-count"><%= @article.citations_by_source(source) ? @article.citations_by_source(source)[:total] : 0 %></span>
 		      </li>

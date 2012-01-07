@@ -29,6 +29,11 @@
   padding-bottom: 0.75em;
 }
 
+img.source {
+  height: 16px;
+  width: 16px;
+}
+
 a.inset {
   padding-left: 60px !important;
   padding-bottom: 0 !important;
