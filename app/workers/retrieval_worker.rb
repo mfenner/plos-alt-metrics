@@ -16,13 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class RetrievalWorker < Workling::Base
-  def retrieval(options)
-    Rails.logger.info "RetrievalWorker: #{options.inspect}"
-    article = Article.find(options[:article_id])
-    Retriever.new(:lazy => true, :only_source => options[:source],
-                  :verbose => options[:verbose]).update(article)
-    Rails.logger.info "RetrievalWorker done."
-    Rails.logger.flush
-  end
-end
+#class RetrievalWorker < Workling::Base
+#  def retrieval(options)
+#    Rails.logger.info "RetrievalWorker: #{options.inspect}"
+#    article = Article.find(options[:article_id])
+#    Retriever.new(:lazy => true, :only_source => options[:source],
+#                  :verbose => options[:verbose]).update(article)
+#    Rails.logger.info "RetrievalWorker done."
+#    Rails.logger.flush
+#  end
+#end
