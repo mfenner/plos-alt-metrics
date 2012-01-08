@@ -12,7 +12,7 @@ gem 'therubyracer'
 gem 'will_paginate', '>=3.0'
 gem 'bundler'
 gem "rake", "0.9.2.2"
-gem 'daemons', "1.1.4"
+gem 'daemons'
 gem 'fastercsv', "1.5.4"
 gem 'haml', "3.1.3"
 gem 'i18n', ">=0.5.0"
