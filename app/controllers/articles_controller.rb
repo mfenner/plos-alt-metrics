@@ -80,12 +80,12 @@ class ArticlesController < ApplicationController
       redirect_to(@article) and return  # why not just keep going with show?
     end
 
-    load_article(eager_includes)
+    load_article #load_article(eager_includes)
     format_options = params.slice :citations, :history, :source
 
     if params[:refresh] == "soon" or @article.stale?
-      uid = RetrievalWorker.async_retrieval(:article_id => @article.id)
-      logger.info "Queuing article #{@article.id} for retrieval as #{uid}"
+      #uid = RetrievalWorker.async_retrieval(:article_id => @article.id)
+      #logger.info "Queuing article #{@article.id} for retrieval as #{uid}"
     end
     
     respond_to do |format|

@@ -27,7 +27,7 @@ class Author < ActiveRecord::Base
   has_many :members
   has_many :groups, :through => :members
   has_many :friendships
-  has_many :friends, :through => :friendships
+  has_many :friends, :through => :friendships, :order => 'sort_name, username'
   
   # Check that no duplicate position is created
   has_many :affiliations, :through => :positions do

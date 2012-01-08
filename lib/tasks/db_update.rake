@@ -20,7 +20,7 @@ require 'doi'
 require 'log4j_style_logger'
 
 namespace :db do
-  RAILS_DEFAULT_LOGGER = ActiveSupport::BufferedLogger.new "#{Rails.root.to_s}/log/#{Rails.env}_db_update_rake.log"
+  Rails.logger = ActiveSupport::BufferedLogger.new "#{Rails.root.to_s}/log/#{Rails.env}_db_update_rake.log"
   
   task :update => :"db:update:stale"
   namespace :update do
