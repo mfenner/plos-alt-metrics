@@ -21,7 +21,6 @@ module PlosAltMetrics
     
     # Enable the asset pipeline
     config.assets.enabled = true
-    config.assets.compile = true
 
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
