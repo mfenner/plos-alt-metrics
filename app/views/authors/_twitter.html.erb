@@ -2,10 +2,12 @@
   <div class="edit">
 		<%= form_for :author, :url => author_path(@author.username, :partial => "twitter", :service => "twitter"), :html => { :method => :put, :remote => true } do |f| %>
 		  <h3>Name</h3>
-		  <%= f.text_field :name, :class => :name %><p>
-			<%= link_to "Cancel", author_path(@author.username, :partial => "twitter"), :remote => true %>
-		  <%= f.submit("Submit") %>
-		  <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
+		  <%= f.text_field :name, :class => :name %>
+		  <div class="submit">
+			  <%= link_to "Cancel", author_path(@author.username, :partial => "twitter"), :remote => true %>
+		    <%= f.submit("Submit", :class => "btn primary") %>
+		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
+		  </div>
 		<% end %>
 	</div>
 <% else %>

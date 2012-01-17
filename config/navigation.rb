@@ -7,7 +7,7 @@ SimpleNavigation::Configuration.run do |navigation|
   # navigation.renderer = Your::Custom::Renderer
 
   # Specify the class that will be applied to active navigation items. Defaults to 'selected'
-  # navigation.selected_class = 'your_selected_class'
+  navigation.selected_class = 'active'
 
   # Specify the class that will be applied to the current leaf of
   # active navigation items. Defaults to 'simple-navigation-active-leaf'
@@ -65,11 +65,7 @@ SimpleNavigation::Configuration.run do |navigation|
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
     primary.item :sources, 'Sources', Proc.new { sources_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath 
-    primary.item :categories, 'Categories', Proc.new { categories_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath 
-    primary.item :sign_in, 'Sign in with Twitter', Proc.new { author_omniauth_authorize_path(:twitter) }, :if => Proc.new { !author_signed_in? }, :class => 'login'
-    primary.item :signed_in, current_author.nil? ? "" : "Your Card", Proc.new { author_path(current_author.username) }, :if => Proc.new { author_signed_in? }, :class => 'login'
-    primary.item :sign_out, 'Sign out', Proc.new { destroy_author_session_path }, :method => :delete, :if => Proc.new { author_signed_in? }, :class => 'login'
-    
+    primary.item :categories, 'Categories', Proc.new { categories_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath     
 
     # you can also specify a css id or class to attach to this particular level
     # works for all levels of the menu

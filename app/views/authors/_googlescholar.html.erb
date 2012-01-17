@@ -2,10 +2,11 @@
   <div class="edit">
 	  <%= form_for :author, :url => author_path(@author.username, :partial => "service", :service => "googlescholar"), :html => { :method => :put, :remote => true } do |f| %>
     <h3>Google Scholar</h3>
-		    <%= f.text_field :googlescholar %>
-		  <p>
-			  <%= link_to "Cancel", author_path(@author.username, :partial => "service"), :remote => true %>
-		    <%= f.submit("Submit") %>
+		<%= f.text_field :googlescholar %>
+		<div class="submit">
+			<%= link_to "Cancel", author_path(@author.username, :partial => "service"), :remote => true %>
+		  <%= f.submit("Submit", :class => "btn primary") %>
+		</div>
 		<% end %>
 	</div>
 <% else %>

@@ -10,6 +10,7 @@ gem "jquery-rails"
 gem 'therubyracer'
 
 gem 'will_paginate', '>=3.0'
+gem 'bootstrap-will_paginate'
 gem 'bundler'
 gem "rake", "0.9.2.2"
 gem 'daemons'

@@ -1,24 +1,19 @@
-<table>
-	<% active_categories.each do |category| %>
-	<tr>
-	    <td class="source_title" colspan="<%= category.sources.active.count %>">
-		    <h2><%= h(category.name) %></h2>
-		    <%= h(category.author_description) %>
-	    </td>
-	</tr>
-	<tr>
-	    <% category.sources.active.each do |source| %>
-	      <td class="source">
-			    <%= image_tag source.class.to_s.downcase + ".gif" %>
-		    </td>
-		  <% end %>
-	</tr>
-	<tr>
-		    <% category.sources.active.each do |source| %>
-	      <td class="source_count">
-			    <%= @author.citations_count(source) %>
-		    </td>
-	    <% end %>
-	</tr>	
-  <% end %>
-</table>
+<% active_categories.each do |category| %>
+	<h3><%= h(category.name) %> <small><%= h(category.author_description) %></small></h3>
+	
+	<div class="row">
+	  <% category.sources.active.each do |source| %>
+	    <div class="span4">
+			  <%= image_tag source.class.to_s.downcase + ".gif" %>
+			</div>
+		<% end %>
+	</div>
+	
+	<div class="row">
+	  <% category.sources.active.each do |source| %>
+	    <div class="span4">
+			  <legend><%= @author.citations_count(source) %></legend>
+		  </div>
+		<% end %>
+	</div>
+<% end %>

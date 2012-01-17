@@ -1,29 +1,16 @@
-<%#
-  # $HeadURL$
-  # $Id$
-  #
-  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
-  # http://www.plos.org/
-  #
-  # Licensed under the Apache License, Version 2.0 (the "License");
-  # you may not use this file except in compliance with the License.
-  # You may obtain a copy of the License at
-  #
-  #     http://www.apache.org/licenses/LICENSE-2.0
-  #
-  # Unless required by applicable law or agreed to in writing, software
-  # distributed under the License is distributed on an "AS IS" BASIS,
-  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  # See the License for the specific language governing permissions and
-  # limitations under the License.
--%>
-	<div itemscope itemtype="http://schema.org/ScholarlyArticle">
-    <h2><span itemprop="name"><%= @article.title %></span></h2>
-		 	<%= formatted_citation(@article).html_safe %>
-		  <% if @article.content_type != "journal_article" %>
-        <span class="content_type"><%= @article.content_type.sub!(/_/, ' ') ? @article.content_type.capitalize : @article.content_type.capitalize %></span>
-      <% end %>
-		  <br/><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %><p>
+<div class="content">
+    <div class="row">
+	    <div class="span12">
+
+		<div itemscope itemtype="http://schema.org/ScholarlyArticle">
+	    <p><span itemprop="name"><strong><%= @article.title %></strong></span>
+			</br><%= formatted_citation(@article).html_safe %>
+			  <% if @article.content_type != "journal_article" %>
+	        <em><%= @article.content_type.sub!(/_/, ' ') ? @article.content_type.capitalize : @article.content_type.capitalize %></em>
+	      <% end %>
+			  <br/><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %></p>
+     </div>
+   </div>
 	</div>
 
 	<div id="source">
@@ -38,3 +25,4 @@
     <%= link_to 'Delete', article_path(@article.short_doi), :confirm => 'Are you sure?', :method => :delete %>
     <br/>
   <% end %>
+</div>

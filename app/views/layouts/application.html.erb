@@ -24,7 +24,16 @@
 		<!--[if lt IE 9]>
 		  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
-		<%= stylesheet_link_tag :application %>
+		<%= stylesheet_link_tag "http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css" %>
+		<style type="text/css">
+		      body { padding-top: 60px; }
+		      legend { margin:10px; text-align:center; font-size:x-large; width:100% }
+					.photo { width: 150px; padding-right: 0.5em; margin-top: 0; }
+					.photo_mini { width: 48px; float: left; padding-right: 1em; padding-bottom: 0.5em; }
+					div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar { padding-top: 0.5em; clear: both; }
+					div.edit { padding: 8px; background-color: #ffffcc; }
+					div.submit { padding-top: 8px; }
+		    </style>
 		<%= javascript_include_tag :application %>
     <%= javascript_include_tag "http://use.typekit.com/wjd2nml.js" %>
     <%= csrf_meta_tag %>
@@ -32,24 +41,30 @@
     <%= yield(:head) %>
 	</head>
 <body>
-  <header>
-	  <h1><%= image_tag("card.png", :class => "header") %> <%= APP_CONFIG['application'] %></h1>
-    <% if ["articles", "authors", "groups", "journals"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
-      <div class='search'>
-        <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "inline") do %>
-        <span class="search"><%= image_tag("search.png", :class => "search") %></span>
-          <%= text_field_tag :q, params[:q] %>
-        <% end %>
-		  </div>
-    <% end %>
-    <nav>
-	    <div id="navigation">
-		    <%= render_navigation %>
-		  </div>
-    </nav>	
-		<div style="clear:both;"></div>
-  </header>
-	<div id="content">
+
+  <div class="topbar">
+	  <div class="topbar-inner">
+			<div class="container">
+			  <h3><a href="#"><%= APP_CONFIG['application'] %></a></h3>
+			  <%= render_navigation %>
+			  <% if ["articles", "authors", "groups", "journals"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
+		      <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get") do %>
+		        <%= search_field_tag :q, params[:q], :placeholder => "Search" %>
+		      <% end %>
+		    <% end %>
+				<ul class="nav secondary-nav">
+          <% if author_signed_in? %>
+            <li><%= link_to 'Your Card', author_path(current_author.username) %></li>
+   	        <li><%= link_to 'Sign out', destroy_author_session_path, :method => :delete %></li>
+          <% else %>
+            <li><%= link_to 'Sign in with Twitter', author_omniauth_authorize_path(:twitter) %></li>
+          <% end %>
+        </ul>		 
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
 	  <% [ :error, :notice, :warning, :message ].each do |name| %>
 	    <% if flash[name] %>
 	      <div class="flash">
@@ -58,9 +73,9 @@
 		  <% end %>
 	  <% end %>
 	  <%= yield %>
-		<div class="altmetrics">
+		<footer>
       an <%= link_to image_tag("altmetrics.png"), "http://www.altmetrics.org" %> project.
-		</div>
+		</footer>
   </div>
 </body>
 </html>

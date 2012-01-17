@@ -23,29 +23,31 @@
 
 	<div class="article">
 		<table>
-			<th class="name">
+		  <thead>
+			<th>
 				<h2><%= pluralize(@author.articles.count, 'Article') %></h2>
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
-		      <th class="count">
+		      <th>
 				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.article_description + ": " + source.name %>
 			    </th>
 			  <% end %>
 	    <% end %>
+			</thead>
 	    <% @articles.each do |article| %>
 	      <tr>
-	      	<td class="name">	
+	      	<td>	
 	      	  <span itemprop="name" class="name"><%= link_to article.title, article_path(article.short_doi) %></span><br/>
 	          <%= formatted_citation(article).html_safe %>
-	          <% if article.content_type != "journal_article" %>
+	          <% if !article.content_type.blank? and article.content_type != "journal_article" %>
 	            <span class="content_type"><%= article.content_type.sub!(/_/, ' ') ? article.content_type.capitalize : article.content_type.capitalize %></span>
 	          <% end %>
 	          <br/><%= link_to "http://doi.org/" + article.short_doi, "http://doi.org/" + article.short_doi, :itemprop => "url" %>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
-				        <td class="count">
+				        <td><b>
 					        <% citation = article.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
 	                 <% if citation[:public_url] %>
@@ -54,7 +56,7 @@
 	                   <%= h(citation[:total]) %>
 	                 <% end %>
 	               <% end %>
-					    </td>
+					    </b></td>
 				    <% end %>
 	   	  <% end %>
 		  </tr>
