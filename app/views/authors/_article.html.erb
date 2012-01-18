@@ -22,7 +22,7 @@
 	<p>
 
 	<div class="article">
-		<table>
+		<table class="zebra-striped">
 		  <thead>
 			<th>
 				<h2><%= pluralize(@author.articles.count, 'Article') %></h2>
@@ -35,6 +35,7 @@
 			  <% end %>
 	    <% end %>
 			</thead>
+			<tbody>
 	    <% @articles.each do |article| %>
 	      <tr>
 	      	<td>	
@@ -61,15 +62,9 @@
 	   	  <% end %>
 		  </tr>
 	    <% end %>
-			<tr>
-		    <td class="pagination">
-			    <div class="pagination">
-				    <%= will_paginate @articles %>
-				  </div>
-			  </td>
-			  <td class="count"></td>
-			</tr>
+		</tbody>
 		</table>
+		<%= will_paginate @articles %>
 	</div>
 <% else %>
   <% unless @author.mas.blank? %>
