@@ -9,7 +9,7 @@
     <% end %>
 		  <div class="submit">
 		    <%= link_to "Cancel", author_path(@author.username, :partial => "service"), :remote => true %>
-		    <%= f.submit("Submit", :class => "btn primary", :data-loading-text => "loading...") %>
+		    <%= f.submit("Submit", :class => "btn primary" %>
 		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
 		  </div>
 		<% end %>
