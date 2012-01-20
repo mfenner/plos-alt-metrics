@@ -14,13 +14,6 @@
 -%>
 
 <% unless @journal.articles.empty? %>
-	<% unless active_categories.empty? %>
-	  <div id="source">
-	    <%= render :partial => 'source'%>
-	  </div>
-	<% end %>
-	<p>
-
 	<div class="article">
 		<table class="zebra-striped">
 			<thead>

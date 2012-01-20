@@ -3,11 +3,18 @@
     <h2><%= @journal.title %> <small>ISSN <%= @journal.issn_print %></small></h2>
   </div>
 
-<% unless @journal.articles.empty? %>
-  <div id="article">
-	  <%= render :partial => 'article'%>
-  </div>
-<% else %>
-  <h3>No articles found</h3>
-<% end %>
+	<ul class="tabs" data-tabs="tabs" >
+		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
+		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#article">Articles</a></li>
+	</ul>	
+	
+	<div class="tab-content">		
+		<div class="tab-pane <%= params[:page].blank? ? 'active' : '' %>" id="source">
+		  <%= render :partial => 'source'%>
+		</div>
+
+		<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="article">
+		  <%= render :partial => 'article'%>
+		</div>
+	</div>
 </div>
