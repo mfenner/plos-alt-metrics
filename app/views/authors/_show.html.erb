@@ -13,8 +13,8 @@
 	
 	<ul class="tabs" data-tabs="tabs" >
 		<li><a href="#service">Author Identifiers</a></li>
-		<li class="active"><a href="#source">Metrics</a></li>
-		<li><a href="#article">Articles</a></li>
+		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
+		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#article">Articles</a></li>
 	</ul>	
 	
 	<div class="tab-content">
@@ -22,11 +22,11 @@
 			<%= render :partial => 'service' %>
 		</div>
 		
-		<div class="tab-pane active" id="source">
+		<div class="tab-pane <%= params[:page].blank? ? 'active' : '' %>" id="source">
 		  <%= render :partial => 'source'%>
 		</div>
 
-		<div class="tab-pane" id="article">
+		<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="article">
 		  <%= render :partial => 'article'%>
 		</div>
 	</div>

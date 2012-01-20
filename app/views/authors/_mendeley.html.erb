@@ -1,5 +1,5 @@
 <% if params[:service] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
-  <div class="span8 edit">
+  <div class="span12 edit">
 	  <%= form_for :author, :url => author_path(@author.username, :partial => "service", :service => "mendeley"), :html => { :method => :put, :remote => true } do |f| %>
     <h3>Mendeley</h3>
 		<%= f.text_field :mendeley, :class => "span3" %>

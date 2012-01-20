@@ -1,5 +1,5 @@
 <% if params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) %>
-  <div class="span8 edit">
+  <div class="span12 edit">
 	  <%= form_for :author, :url => author_path(@author.username, :partial => "service", :service => "mas"), :html => { :method => :put, :remote => true } do |f| %>
 	  <h3>Microsoft Academic Search</h3>
     <% if mas_choices(@author).nil? or mas_choices(@author).empty? %>
@@ -9,7 +9,7 @@
     <% end %>
 		  <div class="submit">
 		    <%= link_to "Cancel", author_path(@author.username, :partial => "service"), :remote => true %>
-		    <%= f.submit("Submit", :class => "btn primary") %>
+		    <%= f.submit("Submit", :class => "btn primary", :data-loading-text => "loading...") %>
 		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
 		  </div>
 		<% end %>

@@ -41,12 +41,18 @@
 			      <% end %>
 			    <% end %>
 					<ul class="nav secondary-nav">
-	          <% if author_signed_in? %>
-	            <li><%= link_to 'Your Card', author_path(current_author.username) %></li>
-	   	        <li><%= link_to 'Sign out', destroy_author_session_path, :method => :delete %></li>
-	          <% else %>
-	            <li><%= link_to 'Sign in with Twitter', author_omniauth_authorize_path(:twitter) %></li>
-	          <% end %>
+						<li class="dropdown" data-dropdown="dropdown" >
+						  <a href="#" class="dropdown-toggle"><%= image_tag "user.png" %></a>
+					    <ul class="dropdown-menu">
+					      <% if author_signed_in? %>
+			            <li><%= link_to 'Your Card', author_path(current_author.username) %></li>
+			            <li class="divider"></li>
+			   	        <li><%= link_to 'Sign out', destroy_author_session_path, :method => :delete %></li>
+			          <% else %>
+			            <li><%= link_to 'Sign in with Twitter', author_omniauth_authorize_path(:twitter) %></li>
+			          <% end %>
+					    </ul>
+					  </li>
 	        </ul>		 
 				</div>
 			</div>
