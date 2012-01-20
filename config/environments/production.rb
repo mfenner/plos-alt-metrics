@@ -26,9 +26,6 @@ PlosAltMetrics::Application.configure do
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
-  
-  # Compress JavaScripts and CSS
-  config.assets.compress = true
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = false
@@ -48,6 +45,9 @@ PlosAltMetrics::Application.configure do
 
   # Enable threaded mode
   # config.threadsafe!
+  
+  # Compress JavaScripts and CSS
+  config.assets.compress = true
   
   # Compress both stylesheets and JavaScripts
   config.assets.js_compressor  = :uglifier
