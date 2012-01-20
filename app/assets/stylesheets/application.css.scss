@@ -1,0 +1,11 @@
+@import "bootstrap";
+
+body { padding-top: 60px; }
+legend { margin:10px; text-align:center; font-size: x-large; width:100% }
+h4 { line-height: normal; }
+.photo { width: 150px; padding-right: 0.5em; padding-bottom: 2em; margin-top: 0; }
+.photo_mini { width: 48px; float: left; padding-right: 1em; padding-bottom: 0.5em; }
+div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar { padding-top: 0.5em; clear: both; }
+div.edit { padding: 8px; background-color: #ffffcc; }
+div.submit { padding-top: 8px; }
+table td { border-top: 0; }

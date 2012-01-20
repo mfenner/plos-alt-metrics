@@ -39,6 +39,8 @@ GEM
       latex-decode (>= 0.0.6)
       multi_json (~> 1.0)
     bluecloth (2.2.0)
+    bootstrap-sass (1.4.4)
+      sass-rails (~> 3.1)
     bootstrap-will_paginate (0.0.3)
       will_paginate
     builder (3.0.0)
@@ -199,6 +201,7 @@ DEPENDENCIES
   acts_as_list
   addressable
   bibtex-ruby (~> 2.0.1)
+  bootstrap-sass (~> 1.4.4)
   bootstrap-will_paginate
   builder
   bundler

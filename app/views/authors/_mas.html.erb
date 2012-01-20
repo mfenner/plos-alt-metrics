@@ -1,5 +1,5 @@
 <% if params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) %>
-  <div class="edit">
+  <div class="span8 edit">
 	  <%= form_for :author, :url => author_path(@author.username, :partial => "service", :service => "mas"), :html => { :method => :put, :remote => true } do |f| %>
 	  <h3>Microsoft Academic Search</h3>
     <% if mas_choices(@author).nil? or mas_choices(@author).empty? %>
@@ -15,6 +15,7 @@
 		<% end %>
 	</div>
 <% else %>
+  <div class="span4">
 	  <%= image_tag "mas.png", :class => "photo_mini", :title => "Microsoft Academic Search" %><br/>
 		<span class="name"><%= @author.mas.blank? ? "not set" : link_to(@author.mas, "http://academic.research.microsoft.com/Author/" + @author.mas) %></span>
 		<% if current_author == @author or current_author.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_author_path(@author.username, :partial => "service", :service => "mas"),
@@ -22,4 +23,5 @@
 		                                       :method => :get,
 		                                       :title => "Edit Microsoft Academic Search" %>
 		<% end %>
+	</div>
 <% end %>

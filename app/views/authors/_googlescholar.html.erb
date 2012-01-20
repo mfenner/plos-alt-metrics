@@ -1,5 +1,5 @@
 <% if params[:service] == "googlescholar" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
-  <div class="edit">
+<div class="span8 edit">
 	  <%= form_for :author, :url => author_path(@author.username, :partial => "service", :service => "googlescholar"), :html => { :method => :put, :remote => true } do |f| %>
     <h3>Google Scholar</h3>
 		<%= f.text_field :googlescholar %>
@@ -10,6 +10,7 @@
 		<% end %>
 	</div>
 <% else %>
+  <div class="span4">
 	  <%= image_tag "googlescholar.png", :class => "photo_mini", :title => "Google Scholar" %><br/>
 		<span class="name"><%= @author.googlescholar.blank? ? "not set" : link_to(@author.googlescholar, "http://scholar.google.com/citations?user=" + @author.googlescholar) %></span>
 		<% if current_author == @author or current_author.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_author_path(@author.username, :partial => "service", :service => "googlescholar"),
@@ -17,4 +18,5 @@
 																					 :method => :get,
 		                                       :title => "Edit Google Scholar" %>
 		<% end %>
+	</div>
 <% end %>

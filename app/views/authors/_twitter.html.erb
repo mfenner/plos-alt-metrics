@@ -17,6 +17,7 @@
 			<%= link_to image_tag("edit.gif"), edit_author_path(@author.username, :partial => "twitter"), :remote => true, :title => "Edit Name" %>
 		<% end %>
 	</h2>
+  <h4><%= link_to "@#{@author.username}", "http://twitter.com/" + @author.username %></h4>
 	<% unless @author.location.blank? %>
 		<%= @author.location %>
 	<% end %>

@@ -1,35 +1,25 @@
-<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas", "authorclaim", "scopus","googlescholar"].include?(params[:service]) %>
-	<div class="service">
-	  <%= image_tag "twitter.png", :class => "photo_mini", :title => "Twitter" %><br/>
-	  <span class="name"><%= link_to "@#{@author.username}", "http://twitter.com/" + @author.username %></span>
-	</div>
-<% end %>
+<div class="row">
+		<% if !@author.mas.blank? or current_author == @author or current_author.try(:admin?) %>
+		  <% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
+			  <%= render :partial => 'mas' %>
+			<% end %>
+		<% end %>
+	
+		<% if !@author.authorclaim.blank? or current_author == @author or current_author.try(:admin?) %>
+			<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas", "scopus", "googlescholar"].include?(params[:service]) %>
+			  <%= render :partial => 'authorclaim' %>
+			<% end %>
+		<% end %>
 
-<% if !@author.mas.blank? or current_author == @author or current_author.try(:admin?) %>
-  <% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
-	  <div id="mas">
-	    <%= render :partial => 'mas' %>
-	  </div>
-	<% end %>
-<% end %>
-<% if !@author.authorclaim.blank? or current_author == @author or current_author.try(:admin?) %>
-	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mendeley", "mas", "scopus", "googlescholar"].include?(params[:service]) %>
-	  <div id="authorclaim">
-	    <%= render :partial => 'authorclaim' %>
-	  </div>
-	<% end %>
-<% end %>
-<% if !@author.mendeley.blank? or current_author == @author or current_author.try(:admin?) %>
-	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mas", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
-	  <div id="mendeley">
-	    <%= render :partial => 'mendeley' %>
-	  </div>
-	<% end %>
-<% end %>
-<% if !@author.googlescholar.blank? or current_author == @author or current_author.try(:admin?) %>
-	<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mas", "authorclaim", "scopus", "mendeley"].include?(params[:service]) %>
-	  <div id="googlescholar">
-	    <%= render :partial => 'googlescholar' %>
-	  </div>
-	<% end %>
-<% end %>
+		<% if !@author.mendeley.blank? or current_author == @author or current_author.try(:admin?) %>
+			<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mas", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
+			  <%= render :partial => 'mendeley' %>
+			<% end %>
+		<% end %>
+
+		<% if !@author.googlescholar.blank? or current_author == @author or current_author.try(:admin?) %>
+			<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) and ["mas", "authorclaim", "scopus", "mendeley"].include?(params[:service]) %>
+			  <%= render :partial => 'googlescholar' %>
+			<% end %>
+		<% end %>
+</div>

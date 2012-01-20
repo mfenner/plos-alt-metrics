@@ -1,5 +1,9 @@
 <% if params[:partial] == "twitter" %>
   $('#twitter').html("<%= escape_javascript(render "twitter") %>");
 <% else %>
-  $('#profile').html("<%= escape_javascript(render "profile") %>");
+  $('#service').html("<%= escape_javascript(render "service") %>");
 <% end %>
+
+$(function () {
+  $('.tabs').tabs()
+})
