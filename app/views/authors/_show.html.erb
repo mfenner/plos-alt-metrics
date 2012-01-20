@@ -12,22 +12,26 @@
 	</div>
 	
 	<ul class="tabs" data-tabs="tabs" >
-		<li><a href="#service">Author Identifiers</a></li>
+		<li class="<%= @author.has_profile ? '' : 'active' %>"><a href="#service">Author Identifiers</a></li>
+		<% if @author.has_profile %>
 		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
 		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#article">Articles</a></li>
+		<% end %>
 	</ul>	
 	
 	<div class="tab-content">
-		<div class="tab-pane" id="service">
+		<div class="tab-pane <%= @author.has_profile ? '' : 'active' %>" id="service">
 			<%= render :partial => 'service' %>
 		</div>
 		
-		<div class="tab-pane <%= params[:page].blank? ? 'active' : '' %>" id="source">
-		  <%= render :partial => 'source'%>
-		</div>
+		<% if @author.has_profile %>
+			<div class="tab-pane <%= params[:page].blank? ? 'active' : '' %>" id="source">
+			  <%= render :partial => 'source'%>
+			</div>
 
-		<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="article">
-		  <%= render :partial => 'article'%>
-		</div>
+			<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="article">
+			  <%= render :partial => 'article'%>
+			</div>
+		<% end %>
 	</div>
 </div>
