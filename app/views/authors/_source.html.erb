@@ -1,19 +1,32 @@
-<% active_categories.each do |category| %>
-	<h3><%= h(category.name) %> <small><%= h(category.author_description) %></small></h3>
+<% if @author.citations_count > 0 %>
+	<% active_categories.each do |category| %>
+	  <% unless @author.get_cites_by_category(category.name).blank? %>
+			<h3><%= h(category.name) %> <small><%= h(category.author_description) %></small></h3>
 	
-	<div class="row">
-	  <% category.sources.active.each do |source| %>
-	    <div class="span4 source">
-			  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
+			<div class="row">
+			  <% category.sources.active.each do |source| %>
+			    <% if @author.citations_count(source) > 0 %>
+				    <div class="span4 source">
+						  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
+						</div>
+					<% end %>
+				<% end %>
+			</div>
+	
+			<div class="row">
+			  <% category.sources.active.each do |source| %>
+			    <% if @author.citations_count(source) > 0 %>
+				    <div class="span4">
+						  <legend><%= @author.citations_count(source) %></legend>
+					  </div>
+				  <% end %>
+				<% end %>
 			</div>
 		<% end %>
-	</div>
-	
-	<div class="row">
-	  <% category.sources.active.each do |source| %>
-	    <div class="span4">
-			  <legend><%= @author.citations_count(source) %></legend>
-		  </div>
-		<% end %>
-	</div>
+	<% end %>
+<% else %>
+  <div class="alert-message warning fade in" data-alert="alert" >
+    <a class="close" href="#">&times;</a>
+    <p>No metrics found.</p>
+  </div>
 <% end %>

@@ -4,7 +4,7 @@
 	 
 		<div class="row">       
 			<% category.sources.active.each do |source| %>
-			  <% if @article.citations_by_source(source)[:total] > 0 and (source.prefix.blank? or @article.doi.match(/^#{source.prefix}/)) %>
+			  <% if @article.citations_by_source(source)[:total] > 0 %>
 			    <div class="span4 source">
 					  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
 					</div>
@@ -14,7 +14,7 @@
   
 	  <div class="row">
 			<% category.sources.active.each do |source| %>
-			  <% if @article.citations_by_source(source)[:total] > 0 and (source.prefix.blank? or @article.doi.match(/^#{source.prefix}/)) %>
+			  <% if @article.citations_by_source(source)[:total] > 0 %>
 			    <div class="span4">
 						<legend><% if @article.citations_by_source(source) and @article.citations_by_source(source)[:public_url] and @article.citations_by_source(source)[:total] > 0 %>
 	            <%= link_to h(@article.citations_by_source(source)[:total]), @article.citations_by_source(source)[:public_url] %>

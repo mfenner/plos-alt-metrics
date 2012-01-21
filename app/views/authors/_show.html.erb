@@ -6,8 +6,11 @@
 		    <%= image_tag @author.image, :class => "photo" %>
 		  <% end %>
 		</div>
-		<div class="span7" id="twitter">
+		<div class="span8" id="twitter">
 		  <%= render :partial => 'twitter' %>
+		</div>
+		<div class="span4 offset1">
+			<p><%= link_to "JSON", author_path(@author.username, :format => :json) %> | <%= link_to "XML", author_path(@author.username, :format => :xml) %> | <%= link_to "BibTeX", author_path(@author.username, :format => :bib) %> | <%= link_to "RIS", author_path(@author.username, :format => :ris) %> | <%= link_to "CSV", author_path(@author.username, :format => :csv) %></p>
 		</div>
 	</div>
 	

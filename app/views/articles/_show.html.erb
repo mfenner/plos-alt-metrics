@@ -20,9 +20,6 @@
   <% if current_author.try(:admin?) %>
     <p>
     Refresh: <%= link_to 'now', article_path(@article.short_doi, :refresh => "now") %> |
-    <%= link_to 'soon', article_path(@article.short_doi, :refresh => "soon") %><br/>
-    <%= link_to 'Edit', edit_article_path(@article.short_doi) %> |
-    <%= link_to 'Delete', article_path(@article.short_doi), :confirm => 'Are you sure?', :method => :delete %>
-    <br/>
+    <%= link_to 'soon', article_path(@article.short_doi, :refresh => "soon") %>
   <% end %>
 </div>
