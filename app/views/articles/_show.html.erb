@@ -3,13 +3,21 @@
     <h2><%= @article.title %></h2>
   </div>
 
-		<div itemscope itemtype="http://schema.org/ScholarlyArticle">
-	    <p><%= formatted_citation(@article).html_safe %>
-			  <% if @article.content_type != "journal_article" %>
-	        <em><%= @article.content_type.sub!(/_/, ' ') ? @article.content_type.capitalize : @article.content_type.capitalize %></em>
-	      <% end %>
-			  <br/><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %></p>
-     </div>
+	<div class="row">
+	  <div class="span11">
+			<div itemscope itemtype="http://schema.org/ScholarlyArticle">
+		    <p><%= formatted_citation(@article).html_safe %>
+				  <% if @article.content_type != "journal_article" %>
+		        <em><%= @article.content_type.sub!(/_/, ' ') ? @article.content_type.capitalize : @article.content_type.capitalize %></em>
+		      <% end %>
+				  <br/><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %></p>
+	     </div>
+	   </div>
+
+		 <div class="span4 offset1">
+			 <p><%= link_to "JSON", article_path(@article.short_doi, :format => :json) %> | <%= link_to "XML", article_path(@article.short_doi, :format => :xml) %> | <%= link_to "BibTeX", article_path(@article.short_doi, :format => :bib) %> | <%= link_to "RIS", article_path(@article.short_doi, :format => :ris) %> | <%= link_to "CSV", article_path(@article.short_doi, :format => :csv) %></p>
+		 </div>
+	</div>
 
   <% if @article.citations_count > 0 %>
 	<div id="source">
