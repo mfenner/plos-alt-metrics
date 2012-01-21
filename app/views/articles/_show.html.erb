@@ -11,9 +11,11 @@
 			  <br/><%= link_to "http://doi.org/" + @article.short_doi, "http://doi.org/" + @article.short_doi, :itemprop => "url" %></p>
      </div>
 
+  <% if @article.citations_count > 0 %>
 	<div id="source">
     <%= render :partial => 'source'%>
   </div>
+  <% end %>
 
   <% if current_author.try(:admin?) %>
     <p>

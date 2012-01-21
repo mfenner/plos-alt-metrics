@@ -41,7 +41,7 @@
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
-				        <td><b>
+				        <td>
 					        <% citation = article.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
 	                 <% if citation[:public_url] %>
@@ -50,7 +50,7 @@
 	                   <%= h(citation[:total]) %>
 	                 <% end %>
 	               <% end %>
-					    </b></td>
+					    </td>
 				    <% end %>
 	   	  <% end %>
 		  </tr>

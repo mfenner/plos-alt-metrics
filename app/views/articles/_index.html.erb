@@ -24,7 +24,7 @@
       	</td>
 	      	<% article.citations_by_category.each do |citations| %>  
             <% citations[:sources].each do |citation| %>
-    	        <td><b>
+    	        <td>
 							  <% if citation and citation[:total] > 0 %>
                  <% if citation[:public_url] %>
                    <%= link_to h(citation[:total]), citation[:public_url]  %>
@@ -32,7 +32,7 @@
                    <%= h(citation[:total]) %>
                  <% end %>
                <% end %>
-				    </b></td>
+				    </td>
          <% end %>
    	  <% end %>
 	  </tr>
