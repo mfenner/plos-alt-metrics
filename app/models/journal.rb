@@ -32,11 +32,30 @@ class Journal < ActiveRecord::Base
     self.articles.count
   end
   
-  def citations_count(source, options={})
+  def citations_count(source=nil, options={})
     citations = []
-    self.articles.each do |article|
-      citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
-      citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+    articles.each do |article|
+      unless source.nil?
+        citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+      else
+        citations << article.retrievals.sum(:citations_count)
+        citations << article.retrievals.sum(:other_citations_count)
+      end
+    end
+    citations = citations.sum
+  end
+  
+  def get_cites_by_category(categoryname)
+    citations = []
+    categoryname = categoryname.downcase
+    articles.each do |article|
+      citations << article.retrievals.map do |ret|
+        if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
+          #Cast this to an array to get around a ruby 'singularize' bug
+          { :name => ret.source.name.downcase, :citations => ret.citations.to_a }
+        end
+      end.compact
     end
     citations = citations.sum
   end

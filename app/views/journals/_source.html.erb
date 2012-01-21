@@ -1,23 +1,32 @@
-<% active_categories.each do |category| %>
-  <h3><%= h(category.name) %> <small><%= h(category.group_description) %></small></h3>
+<% if @journal.citations_count > 0 %>
+	<% active_categories.each do |category| %>
+	  <% unless @journal.get_cites_by_category(category.name).empty? %>
+	  	<h3><%= h(category.name) %> <small><%= h(category.group_description) %></small></h3>
 
-  <div class="row">
-    <% category.sources.reusable.each do |source| %>
-      <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
-      <div class="span4 source">
-			  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
+		  <div class="row">
+		    <% category.sources.reusable.each do |source| %>
+		      <% if @journal.citations_count(source) > 0 %>
+		      <div class="span4 source">
+					  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
+					</div>
+			    <% end %>
+			  <% end %>
 			</div>
-	    <% end %>
-	  <% end %>
-	</div>
 	
-	<div class="row">
-    <% category.sources.reusable.each do |source| %>
-      <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
-      <div class="span4">
-        <legend><%= @journal.citations_count(source) %></legend>
-      </div>
-    <% end %>
-   <% end %>
-	</div>		
+			<div class="row">
+		    <% category.sources.reusable.each do |source| %>
+		      <% if @journal.citations_count(source) > 0 %>
+		      <div class="span4">
+		        <legend><%= @journal.citations_count(source) %></legend>
+		      </div>
+		    <% end %>
+		   <% end %>
+			</div>
+		<% end %>	
+	<% end %>
+<% else %>
+  <div class="alert-message warning fade in" data-alert="alert" >
+    <a class="close" href="#">&times;</a>
+    <p>No metrics found.</p>
+  </div>
 <% end %>

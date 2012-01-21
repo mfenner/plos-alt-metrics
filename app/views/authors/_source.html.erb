@@ -1,6 +1,6 @@
 <% if @author.citations_count > 0 %>
 	<% active_categories.each do |category| %>
-	  <% unless @author.get_cites_by_category(category.name).blank? %>
+	  <% unless @author.get_cites_by_category(category.name).empty? %>
 			<h3><%= h(category.name) %> <small><%= h(category.author_description) %></small></h3>
 	
 			<div class="row">

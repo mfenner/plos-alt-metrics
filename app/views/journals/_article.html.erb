@@ -64,7 +64,8 @@
 		<%= will_paginate @articles %>
 	</div>
 <% else %>
-  <% unless @journal.mas.blank? %>
-    <h3>No articles found</h3>
-  <% end %>
+  <div class="alert-message warning fade in" data-alert="alert" >
+    <a class="close" href="#">&times;</a>
+    <p>No articles found.</p>
+  </div>
 <% end %>

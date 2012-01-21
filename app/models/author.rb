@@ -289,7 +289,7 @@ class Author < ActiveRecord::Base
   
   def citations_count(source=nil, options={})
     citations = []
-    self.articles.each do |article|
+    articles.each do |article|
       unless source.nil?
         citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
         citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
