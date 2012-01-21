@@ -3,6 +3,12 @@
     <h2><%= @journal.title %> <small>ISSN <%= @journal.issn_print %></small></h2>
   </div>
 
+  <div class="row">
+		<div class="span4 offset12">
+			<p><%= link_to "JSON", journal_path(@journal.issn_print, :format => :json) %> | <%= link_to "XML", journal_path(@journal.issn_print, :format => :xml) %> | <%= link_to "BibTeX", journal_path(@journal.issn_print, :format => :bib) %> | <%= link_to "RIS", journal_path(@journal.issn_print, :format => :ris) %> | <%= link_to "CSV", journal_path(@journal.issn_print, :format => :csv) %></p>
+		</div>
+	</div>
+
 	<ul class="tabs" data-tabs="tabs" >
 		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
 		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#article">Articles</a></li>
