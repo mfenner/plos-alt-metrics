@@ -8,7 +8,7 @@
 	  <li>
 	    <% unless source.is_a? String %>
 	      <%# Link to an existing source -%>
-	      <h3><%= link_to h(source.name), source_path(source) %> <small> Category <%=source.category.name %>, updated every <%= SecondsToDuration::convert(source.staleness).inspect %>. <span class="label notice"><%= source.active ? "<strong>Active</strong>".html_safe : "<strong>Inactive</strong>".html_safe %></span></small></h3>
+	      <h3><%= link_to h(source.name), source_path(source) %> <small> Category <%=source.category.name %>, updated every <%= SecondsToDuration::convert(source.staleness).inspect %>. <span class="label notice"><%= source.active ? "<strong>Active</strong>".html_safe : "<strong>Inactive</strong>".html_safe %></span> <%= source.disable_until.blank? ? "" : '<span class="label warning">Disabled</span>'.html_safe %></small></h3>
 	    <% else %>
 	      <%# Link to create a new source for an unconfigured one -%>
 	      <h3><%= link_to h(source), new_source_path(:class => source) %></h3>

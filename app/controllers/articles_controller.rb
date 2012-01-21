@@ -74,13 +74,12 @@ class ArticlesController < ApplicationController
   # GET /articles/1
   # GET /articles/1.xml
   def show
+    load_article #load_article(eager_includes)
+    
     if params[:refresh] == "now"
-      load_article
-      Retriever.new(:lazy => false, :only_source => false).update(@article)      
-      redirect_to(@article) and return  # why not just keep going with show?
+      Retriever.new(:lazy => false, :only_source => false).delay.update(@article)      
     end
 
-    load_article #load_article(eager_includes)
     format_options = params.slice :citations, :history, :source
 
     if params[:refresh] == "soon" or @article.stale?
@@ -91,6 +90,7 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.mobile # show.mobile.erb
+      format.js { render :show }
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
         render :xml => @article.to_xml(format_options)

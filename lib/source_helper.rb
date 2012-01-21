@@ -17,6 +17,7 @@
 # limitations under the License.
 
 require 'rubygems'
+require 'system_timer'
 require "open-uri"
 
 class SourceHelper

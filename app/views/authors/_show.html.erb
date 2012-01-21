@@ -13,6 +13,13 @@
 		</div>
 	</div>
 	
+	<% if current_author.try(:admin?) %>
+    <div id="admin">
+	    Refresh: <%= link_to 'now', author_path(@author.username, :refresh => "now"), :remote => true %> |
+	    <%= link_to 'soon', author_path(@author.username, :refresh => "soon"), :remote => true %>
+    </div>
+  <% end %>
+	
 	<ul class="tabs" data-tabs="tabs" >
 		<li class="<%= @author.has_profile ? '' : 'active' %>"><a href="#service">Author Identifiers</a></li>
 		<% if @author.has_profile %>

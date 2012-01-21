@@ -20,14 +20,15 @@
 	</div>
 
   <% if @article.citations_count > 0 %>
-	<div id="source">
-    <%= render :partial => 'source'%>
-  </div>
+		<div id="source">
+	    <%= render :partial => 'source'%>
+	  </div>
   <% end %>
 
   <% if current_author.try(:admin?) %>
-    <p>
-    Refresh: <%= link_to 'now', article_path(@article.short_doi, :refresh => "now") %> |
-    <%= link_to 'soon', article_path(@article.short_doi, :refresh => "soon") %>
+    <div id="admin">
+	    Refresh: <%= link_to 'now', article_path(@article.short_doi, :refresh => "now"), :remote => true %> |
+	    <%= link_to 'soon', article_path(@article.short_doi, :refresh => "soon"), :remote => true %>
+    </div>
   <% end %>
 </div>

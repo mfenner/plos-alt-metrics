@@ -51,6 +51,11 @@ class AuthorsController < ApplicationController
   # GET /authors/1.xml
   def show
     load_author
+    
+    if params[:refresh] == "now"
+      Retriever.new(:lazy => false, :only_source => false).delay.update_articles_by_author(@author)   
+    end
+    
     @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
     
     respond_to do |format|
