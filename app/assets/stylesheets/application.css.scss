@@ -1,11 +1,12 @@
 @import "bootstrap";
 
 body { padding-top: 60px; }
-legend { margin:10px; text-align:center; font-size: x-large; width:100% }
+legend { padding:5px; text-align:center; font-size: large; width: 202px; margin-bottom: 20px; background: rgba(0, 0, 0, 0.2); }
 h4 { line-height: normal; }
 .photo { width: 150px; padding-right: 0.5em; padding-bottom: 2em; margin-top: 0; }
 .photo_mini { width: 48px; float: left; padding-right: 1em; padding-bottom: 0.5em; }
 div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar { padding-top: 0.5em; clear: both; }
 div.edit { padding: 8px; background-color: #ffffcc; }
 div.submit { padding-top: 8px; }
+img.source { border: solid 1px rgba(0, 0, 0, 0.2); border-bottom: 0; }
 table td { border-top: 0; }

@@ -4,9 +4,9 @@
   <div class="row">
     <% category.sources.reusable.each do |source| %>
       <% if source.prefix.blank? or (@journal.title and @journal.title.match(/^PLoS/)) %>
-      <div class="span4">
-		    <%= image_tag source.class.to_s.downcase + ".gif" %>
-	    </div>
+      <div class="span4 source">
+			  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
+			</div>
 	    <% end %>
 	  <% end %>
 	</div>

@@ -4,9 +4,9 @@
 	<div class="row">       
 		<% category.sources.active.each do |source| %>
 		  <% if source.prefix.blank? or @article.doi.match(/^#{source.prefix}/) %>
-		    <div class="span4">
-		      <%= image_tag source.class.to_s.downcase + ".gif" %>
-		    </div>
+		    <div class="span4 source">
+				  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
+				</div>
 		  <% end %>
 		<% end %>
 	</div>
