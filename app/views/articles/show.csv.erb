@@ -20,7 +20,7 @@
 <%=
  FasterCSV.generate do |csv|
     csv << ["article doi", "title", "publish date"]
-    csv << [ @article.doi, @article.title, @article.published_on.to_datetime.blank? ? "" : @article.published_on.to_datetime.to_s(:friendly_date) ]
+    csv << [ @article.doi, @article.title, @article.published_on.blank? ? "" : @article.published_on.to_datetime.to_s(:friendly_date) ]
  end
 %>
 <%= @article.retrievals.map(&:to_csv).join %>

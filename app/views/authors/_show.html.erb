@@ -1,10 +1,10 @@
 <div class="content">
 	<div class="row">
-	  <div class="span3" id="photo">
-			<% unless @author.image.blank? %>
+		<% unless @author.image.blank? %>
+	    <div class="span3" id="photo">
 		    <%= image_tag @author.image, :class => "photo" %>
-		  <% end %>
-		</div>
+		  </div>
+	  <% end %>
 		<div class="span8" id="twitter">
 		  <%= render :partial => 'twitter' %>
 		</div>
