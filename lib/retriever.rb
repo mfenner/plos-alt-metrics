@@ -205,9 +205,13 @@ class Retriever
         # Check that DOI is valid
         if article.valid?
           Article.update_via_crossref(article)
-          author.articles << article unless author.articles.include?(article)
+          unless author.articles.include?(article)
+            author.articles << article 
+          end
           # Create shortDOI if it doesn't exist yet
-          article.update_attributes(:short_doi => DOI::shorten(article.doi)) if article.short_doi.blank?
+          if article.short_doi.blank?
+            article.update_attributes(:short_doi => DOI::shorten(article.doi)) 
+          end
           Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
         end
       end
