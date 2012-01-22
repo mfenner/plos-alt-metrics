@@ -7,7 +7,7 @@
 	<ul data-role="listview" data-theme="c" class="show">
 	  <li><a href="<%= "http://doi.org/#{@article.short_doi}" %>" class="normal">
 	    <h3><%= @article.title %></h3>
-	    <%= formatted_citation(@article, :without_links => true) %>
+	    <%= formatted_citation(@article, :without_links => true).html_safe %>
 	    </a>
 	  </li>
 	</ul>

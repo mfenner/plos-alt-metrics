@@ -27,6 +27,8 @@ PlosAltMetrics::Application.configure do
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
 
+  config.serve_static_assets = true
+  
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = true
 
@@ -51,7 +53,6 @@ PlosAltMetrics::Application.configure do
   
   # Compress both stylesheets and JavaScripts
   config.assets.js_compressor  = :uglifier
-  config.assets.css_compressor = :scss
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
