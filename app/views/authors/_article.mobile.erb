@@ -12,7 +12,7 @@
     <% @articles.each do |article| %>
 	    <li><a href="<%= article_path(article.short_doi) %>" class="normal">
         <h3><%= article.title %></h3>
-        <%= formatted_citation(article, :without_links => true) %>
+        <%= formatted_citation(article, :without_links => true).html_safe %>
         </a>
       </li>
     <% end %>
