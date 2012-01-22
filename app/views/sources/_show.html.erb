@@ -1,6 +1,6 @@
 <div class="content">
   <div class="page-header">
-    <h2><%=h @source.name %> <small><%= @source.active ? "active" : "inactive" %></small> <%= link_to image_tag("edit.gif"), edit_source_path(@source) %></h2>
+    <h2><%=h @source.name %> <small><%= @source.active ? "" : "inactive" %></small> <%= link_to image_tag("wrench.png"), edit_source_path(@source) %></h2>
   </div>
 
 <h4>Name</h4>
