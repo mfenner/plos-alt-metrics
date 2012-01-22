@@ -53,7 +53,36 @@
 			          <% end %>
 					    </ul>
 					  </li>
-	        </ul>		 
+	        </ul>	
+					<% if current_author.try(:admin?) %>
+						<ul class="nav secondary-nav">
+							<li class="dropdown" data-dropdown="dropdown" >
+							  <a href="#" class="dropdown-toggle">Administration</a>
+						    <ul class="dropdown-menu">
+					        <li><%= link_to 'Sources', sources_path %></li>
+						      <li><%= link_to 'Categories', categories_path %></li>
+						      <% if controller.controller_name == "authors" and controller.action_name == "show" %>
+									  <li class="divider"></li>
+			   	          <li><%= link_to 'Edit Author', edit_author_path(@author, :partial => "twitter"), :remote => true %></li>
+			              <li><%= link_to "Refresh", author_path(@author.username, :refresh => "now"), :remote => true %></li>
+										<% elsif controller.controller_name == "articles" and controller.action_name == "show" %>
+										  <li class="divider"></li>
+				              <li><%= link_to "Refresh", article_path(@article.short_doi, :refresh => "now"), :remote => true %></li>
+						      <% elsif controller.controller_name == "sources" and controller.action_name == "show" %>
+				            <li class="divider"></li>
+				   	        <li><%= link_to 'Edit Source', edit_source_path(@source) %></li>
+				          <% elsif controller.controller_name == "categories" %>
+			         	    <li class="divider"></li>
+				            <% if controller.action_name == "index" %>
+				              <li><%= link_to 'New Category', new_category_path %></li>
+				            <% elsif controller.action_name == "show" %>
+				              <li><%= link_to 'Edit Category', edit_category_path(@category) %></li>
+				            <% end %>
+				          <% end %>
+						    </ul>
+						  </li>
+		        </ul>
+	        <% end %>	 
 				</div>
 			</div>
 		</div>

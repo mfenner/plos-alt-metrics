@@ -1,10 +1,6 @@
 <div class="content">
 	<div class="page-header">
-    <h2><%= @article.title %>
-    <% if current_author.try(:admin?) %>
-		  <%= link_to image_tag("retweet.png"), article_path(@article.short_doi, :refresh => "now"), :remote => true %>
-	  <% end %>
-	  </h2>
+    <h2><%= @article.title %></h2>
   </div>
 
 	<div class="row">

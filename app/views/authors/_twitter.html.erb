@@ -16,9 +16,6 @@
 		<% if current_author == @author or current_author.try(:admin?) %>
 			<%= link_to image_tag("wrench.png"), edit_author_path(@author.username, :partial => "twitter"), :remote => true, :title => "Edit Name" %>
 		<% end %>
-		<% if current_author.try(:admin?) %>
-		  <%= link_to image_tag("retweet.png"), author_path(@author.username, :refresh => "now"), :remote => true %>
-	  <% end %>
 	</h2>
   <h4><%= link_to "@#{@author.username}", "http://twitter.com/" + @author.username %></h4>
 	<% unless @author.location.blank? %>

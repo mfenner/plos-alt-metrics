@@ -64,9 +64,7 @@ SimpleNavigation::Configuration.run do |navigation|
     # You can also specify a condition-proc that needs to be fullfilled to display an item.
     # Conditions are part of the options. They are evaluated in the context of the views,
     # thus you can use all the methods and vars you have available in the views.
-    primary.item :sources, 'Sources', Proc.new { sources_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath 
-    primary.item :categories, 'Categories', Proc.new { categories_path }, :if => Proc.new { current_author.try(:admin?) }, :highlights_on => :subpath     
-
+    
     # you can also specify a css id or class to attach to this particular level
     # works for all levels of the menu
     # primary.dom_id = 'menu-id'
