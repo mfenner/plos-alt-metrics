@@ -2,7 +2,8 @@
   # $HeadURL$
   # $Id$
   #
-  # Copyright (c) 2011 Martin Fenner
+  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
+  # http://www.plos.org/
   #
   # Licensed under the Apache License, Version 2.0 (the "License");
   # you may not use this file except in compliance with the License.
@@ -16,13 +17,15 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<% bibliography = BibTeX::Bibliography.new %>
-
-<% unless @author.articles.empty? %>
-  <% @author.articles.each do |article| %>
-    <% unless article.to_bib.nil? %>
-      <% bibliography << article.to_bib %>
-    <% end %>
-  <% end %>
-<% end %>
-<%= bibliography %>
+<%=
+  FasterCSV.generate do |csv|
+	  # header row 
+    csv << ["doi", "title", "journal", "year"]
+    # data rows
+    unless @journal.articles.empty?
+      @journal.articles.each do |article|
+        csv << [ article.doi, article.title.blank? ? "" : article.title, article.journal.blank? ? "" : article.journal.title, article.year ]
+      end
+    end
+  end
+%>

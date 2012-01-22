@@ -170,7 +170,7 @@ class Article < ActiveRecord::Base
   def to_xml(options = {})
     options[:indent] ||= 2
     sources = (options.delete(:source) || '').downcase.split(',')
-    xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
+    xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
     xml.instruct! unless options[:skip_instruct]
     xml.tag!("article", :doi => doi, :title => title, :citations_count => citations_count,:pub_med => pub_med,:pub_med_central => pub_med_central, :updated_at => retrieved_at, :published => (published_on.blank? ? nil : published_on.to_time)) do
       if options[:citations] or options[:history]
@@ -262,6 +262,8 @@ class Article < ActiveRecord::Base
       bib_entry.add(:volume => volume) unless volume.blank?
       bib_entry.add(:number => issue) unless issue.blank?
       bib_entry.add(:pages => pages) unless pages.blank?
+    else
+      nil
     end
   end
   
