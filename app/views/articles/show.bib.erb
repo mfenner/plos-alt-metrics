@@ -16,4 +16,8 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<%= BibTeX::Bibliography.new << @article.to_bib %>
+<% bibliography = BibTeX::Bibliography.new %>
+<% unless @article.to_bib.nil? %>
+  <% bibliography << @article.to_bib %>
+<% end %>
+<%= bibliography %>
