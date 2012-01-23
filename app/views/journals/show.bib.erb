@@ -20,7 +20,9 @@
 
 <% unless @journal.articles.empty? %>
   <% @journal.articles.each do |article| %>
-    <% bibliography << article.to_bib %>
+    <% unless article.to_bib.nil? %>
+      <% bibliography << article.to_bib %>
+    <% end %>
   <% end %>
 <% end %>
 <%= bibliography %>
