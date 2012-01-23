@@ -210,7 +210,7 @@ class Retriever
           end
           # Create shortDOI if it doesn't exist yet
           if article.short_doi.blank?
-            article.update_attributes(:short_doi => DOI::shorten(article.doi)) 
+            #article.update_attributes(:short_doi => DOI::shorten(article.doi)) 
           end
           Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
         end

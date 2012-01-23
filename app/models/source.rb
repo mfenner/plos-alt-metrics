@@ -96,18 +96,19 @@ class Source < ActiveRecord::Base
     raise NotImplementedError, 'Children classes should override perform_query'
   end
 
-  def query article, options = {}
+  def query(article, options = {})
     if disable_until and disable_until > Time.now
       Rails.logger.info "#{name} is disabled until #{disable_until}. Skipping."
       return false
     end
 
-    returning perform_query(article, options) do
-      self.disable_until = nil
-      self.disable_delay = Source.new.disable_delay
-    end
+    result = perform_query(article, options)
+    self.disable_until = nil
+    self.disable_delay = Source.new.disable_delay
+    result
+      
   rescue RetrieverTimeout => e
-    Rails.logger.info "Forced Timeout on query.  Not disabling this source."
+    Rails.logger.info "Forced Timeout on query. Not disabling this source."
     raise e
   rescue Exception => e
     Rails.logger.info "#{name} had an error. Disabling for #{SecondsToDuration::convert(disable_delay).inspect}."
