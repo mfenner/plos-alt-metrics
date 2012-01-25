@@ -17,7 +17,7 @@ class CrossRef < Source
 
   def uses_username; true; end
 
-  def perform_query(article, options={})
+  def perform_query(work, options={})
     raise(ArgumentError, "Crossref configuration requires username") \
       if username.blank?
 
@@ -25,7 +25,7 @@ class CrossRef < Source
 
     Rails.logger.info "CrossRef query: #{url}"
 
-    SourceHelper.get_xml(url + Addressable::URI.encode(article.doi) + "&noredirect=true", options) do |document|
+    SourceHelper.get_xml(url + Addressable::URI.encode(work.doi) + "&noredirect=true", options) do |document|
       citation_counts = []
       document.root.namespaces.default_prefix = "crossref_result"
       document.find("//crossref_result:body/crossref_result:query").each do |query_result|

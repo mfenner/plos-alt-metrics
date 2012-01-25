@@ -19,15 +19,15 @@ class MicrosoftAcademicSearch < Source
   
   def uses_partner_id; true; end
 
-  def perform_query(article, options = {})
+  def perform_query(work, options = {})
     
-    return nil if article.mas.blank?
+    return nil if work.mas.blank?
     
     options[:startidx] ||= 1
     options[:endidx] ||= 50
   
     url = "http://academic.research.microsoft.com/json.svc/search?AppId=" + partner_id.to_s
-    publication_id = "&PublicationID=" + article.mas.to_s + "&ResultObjects=Publication"
+    publication_id = "&PublicationID=" + work.mas.to_s + "&ResultObjects=Publication"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
     if options[:with_citations].nil?
@@ -39,7 +39,7 @@ class MicrosoftAcademicSearch < Source
       results = results["Result"][0]
       return nil if results.nil?
 
-      Rails.logger.debug "MAS got #{results.inspect} for #{article.inspect}"
+      Rails.logger.debug "MAS got #{results.inspect} for #{work.inspect}"
 
       citations = results["CitationCount"].to_i
     else
@@ -50,7 +50,7 @@ class MicrosoftAcademicSearch < Source
       results = results["Result"]
       return nil if results.nil?
     
-      Rails.logger.debug "MAS got #{results.inspect} for #{article.inspect}"
+      Rails.logger.debug "MAS got #{results.inspect} for #{work.inspect}"
       if results
         citations = []
         results.each do |result|
@@ -68,8 +68,8 @@ class MicrosoftAcademicSearch < Source
   end
   
   def public_url(retrieval)
-    retrieval.article.mas.to_s && ("http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=" \
-      + retrieval.article.mas.to_s)
+    retrieval.work.mas.to_s && ("http://academic.research.microsoft.com/Detail?entitytype=1&searchtype=5&id=" \
+      + retrieval.work.mas.to_s)
   end
   
 end

@@ -17,14 +17,10 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<div class="border">
-<div class="page">
-  <h1>Editing article <%=h @article.doi %></h1>
-
-  <%= render :partial => "form", :object => @article %>
-
-  <%= link_to 'Show', @article %>
-  <br/>
-  <%= link_to 'Back to list', articles_path %>
-</div>
-</div>
+<%=
+ FasterCSV.generate do |csv|
+    csv << ["work doi", "title", "publish date"]
+    csv << [ @work.doi, @work.title, @work.published_on.blank? ? "" : @work.published_on.to_datetime.to_s(:friendly_date) ]
+ end
+%>
+<%= @work.retrievals.map(&:to_csv).join %>

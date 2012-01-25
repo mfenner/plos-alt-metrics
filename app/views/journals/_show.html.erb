@@ -11,7 +11,7 @@
 
 	<ul class="tabs" data-tabs="tabs" >
 		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
-		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#article">Articles</a></li>
+		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#work">Works</a></li>
 	</ul>	
 	
 	<div class="tab-content">		
@@ -19,8 +19,8 @@
 		  <%= render :partial => 'source'%>
 		</div>
 
-		<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="article">
-		  <%= render :partial => 'article'%>
+		<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="work">
+		  <%= render :partial => 'work'%>
 		</div>
 	</div>
 </div>

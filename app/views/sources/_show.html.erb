@@ -73,14 +73,14 @@
   </p>
 <% end %>  
 
-<h3>Most-cited articles</h3>
+<h3>Most-cited works</h3>
 <% if @samples.empty? %>
-<div>No articles have been cited by this source</div>
+<div>No works have been cited by this source</div>
 <% else %>
 <ul>
   <% @samples.each do |retrieval| %>
-    <% unless retrieval.article.blank? %>
-      <li><%= link_to retrieval.article.doi, article_path(retrieval.article.short_doi) %>:
+    <% unless retrieval.work.blank? %>
+      <li><%= link_to retrieval.work.doi, work_path(retrieval.work.short_doi) %>:
       <%= retrieval.total_citations_count %></li>
     <% end %>
   <% end %>

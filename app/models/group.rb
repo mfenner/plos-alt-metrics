@@ -19,13 +19,13 @@
 class Group < ActiveRecord::Base
   has_many :members
   has_many :authors, :through => :members
-  has_and_belongs_to_many :articles
+  has_and_belongs_to_many :works
 
   validates_presence_of :mendeley
   validates_uniqueness_of :mendeley
   
   def stale?
-    new_record? or group.articles.empty?
+    new_record? or group.works.empty?
   end
 
   def refreshed!
@@ -38,7 +38,7 @@ class Group < ActiveRecord::Base
       :group => { 
         :mendeley => mendeley, 
         :name => name, 
-        :articles_count => articles_count,
+        :works_count => works_count,
         :updated_at => updated_at
       }
     }
@@ -51,31 +51,31 @@ class Group < ActiveRecord::Base
 	    end
     end
     
-    result[:group][:articles] = []
-    self.articles.each do |article|
-      result[:group][:articles] << {:doi => article.doi, 
-        :title => article.title, 
-        :year => article.year,
-        :pub_med => article.pub_med,
-        :pub_med_central => article.pub_med_central,
-        :mas => article.mas,
-        :citations_count => article.citations_count,
-        :published => (article.published_on.blank? ? nil : article.published_on.to_time),
-        :updated_at => article.retrieved_at}
+    result[:group][:works] = []
+    self.works.each do |work|
+      result[:group][:works] << {:doi => work.doi, 
+        :title => work.title, 
+        :year => work.year,
+        :pub_med => work.pub_med,
+        :pub_med_central => work.pub_med_central,
+        :mas => work.mas,
+        :citations_count => work.citations_count,
+        :published => (work.published_on.blank? ? nil : work.published_on.to_time),
+        :updated_at => work.retrieved_at}
     end
     
     result.to_json(options)
   end
   
-  def articles_count
-    self.articles.count
+  def works_count
+    self.works.count
   end
   
   def citations_count(source, options={})
     citations = []
-    self.articles.each do |article|
-      citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
-      citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+    self.works.each do |work|
+      citations << work.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+      citations << work.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
     end
     citations = citations.sum
   end
@@ -105,12 +105,12 @@ class Group < ActiveRecord::Base
   
   def self.update_properties(group, properties, options={})
     # Update group information
-    group.update_attributes(:name => properties["name"], :mendeley => properties["id"], :articles_count => properties["total_documents"])
+    group.update_attributes(:name => properties["name"], :mendeley => properties["id"], :works_count => properties["total_documents"])
     group
   end
   
-  def self.fetch_articles_from_mas(group, options={})
-    # Fetch articles, return nil if no response 
+  def self.fetch_works_from_mas(group, options={})
+    # Fetch works, return nil if no response 
     
     options[:page] ||= 1
     options[:items] ||= 50

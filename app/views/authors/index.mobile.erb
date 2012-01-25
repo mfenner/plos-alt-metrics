@@ -5,7 +5,7 @@
     <%= link_to 'Your Card', author_path(current_author.username), "data-role" => "button", "data-icon" => "gear" %>
   <% end %>
 	<h1>Authors</h1>
-	<%= link_to 'Articles', articles_path, "data-role" => "button", "data-icon" => "grid" %>
+	<%= link_to 'Works', works_path, "data-role" => "button", "data-icon" => "grid" %>
 </div>
 
 <div data-role="content">
@@ -25,7 +25,7 @@
 	  </ul>
 	<% else %>
 	  <h2>Welcome to ScienceCard</h2>
-		<div class="show">ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other article-level metrics for these publications.<p></div>
+		<div class="show">ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other work-level metrics for these publications.<p></div>
 			
 	<ul data-role="listview" data-theme="c">
 		<li class="normal">To create your own ScienceCard, simply sign in with your Twitter account.</li>

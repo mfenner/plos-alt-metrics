@@ -18,8 +18,8 @@
 
 require 'open-uri'
 class NewSource < Source
-  def perform_query(article, options)
-    citations = JSON.parse open("http://mydoicite/#{CGI.escape article.doi}/citations.json")
+  def perform_query(work, options)
+    citations = JSON.parse open("http://mydoicite/#{CGI.escape work.doi}/citations.json")
     citations.each { |citation| citation[:uri] = citation.delete('url') }
   end
 end

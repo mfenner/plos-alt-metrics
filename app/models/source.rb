@@ -18,7 +18,7 @@
 
 class Source < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy
-  has_many :articles, :through => :retrievals
+  has_many :works, :through => :retrievals
   belongs_to :category
   
   validates_presence_of :name
@@ -96,13 +96,13 @@ class Source < ActiveRecord::Base
     raise NotImplementedError, 'Children classes should override perform_query'
   end
 
-  def query(article, options = {})
+  def query(work, options = {})
     if disable_until and disable_until > Time.now
       Rails.logger.info "#{name} is disabled until #{disable_until}. Skipping."
       return false
     end
 
-    result = perform_query(article, options)
+    result = perform_query(work, options)
     self.disable_until = nil
     self.disable_delay = Source.new.disable_delay
     result
@@ -129,11 +129,11 @@ class Source < ActiveRecord::Base
   end
 
   def public_url(retrieval)
-    # When generating a public URL to an article's citations on the source
+    # When generating a public URL to an work's citations on the source
     # site, we'll add the encoded DOI to a base URL provided by the source
     # (or nil if none's provided)
     base = public_url_base
-    base && base + CGI.escape(retrieval.article.doi)
+    base && base + CGI.escape(retrieval.work.doi)
   end
   def public_url_base
     nil
@@ -158,14 +158,14 @@ class Source < ActiveRecord::Base
 
       # there are two ways to create a retrieval row.
       # 1. logic below
-      # 2. When an article gets updated, a retrieval row is either created or updated via
-      #    Retrieval.find_or_create_by_article_id_and_source_id(article.id, source.id) method
+      # 2. When an work gets updated, a retrieval row is either created or updated via
+      #    Retrieval.find_or_create_by_work_id_and_source_id(work.id, source.id) method
       # to keep the two logic consistent, created_at date has been added here
 
       Retrieval.connection.execute "
-        INSERT INTO retrievals (article_id, source_id, created_at)
-          SELECT id, #{id}, now() FROM articles
+        INSERT INTO retrievals (work_id, source_id, created_at)
+          SELECT id, #{id}, now() FROM works
           WHERE id NOT IN
-            (SELECT article_id FROM retrievals WHERE source_id = #{id})"
+            (SELECT work_id FROM retrievals WHERE source_id = #{id})"
     end
 end

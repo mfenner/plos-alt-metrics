@@ -18,10 +18,10 @@
 -%>
 <% bibliography = BibTeX::Bibliography.new %>
 
-<% unless @author.articles.empty? %>
-  <% @author.articles.each do |article| %>
-    <% unless article.to_bib.nil? %>
-      <% bibliography << article.to_bib %>
+<% unless @author.works.empty? %>
+  <% @author.works.each do |work| %>
+    <% unless work.to_bib.nil? %>
+      <% bibliography << work.to_bib %>
     <% end %>
   <% end %>
 <% end %>

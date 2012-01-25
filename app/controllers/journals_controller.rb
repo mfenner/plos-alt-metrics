@@ -49,7 +49,7 @@ class JournalsController < ApplicationController
   # GET /journals/1.xml
   def show
     load_journal
-    @articles = @journal.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @works = @journal.works.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
     
     respond_to do |format|
       format.html do 
@@ -61,7 +61,7 @@ class JournalsController < ApplicationController
       end
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @journal.articles.to_xml
+        render :xml => @journal.works.to_xml
       end
       format.csv  { render :csv => @journal }
       format.json { render :json => @journal.to_json, :callback => params[:callback] }
@@ -84,7 +84,7 @@ class JournalsController < ApplicationController
   
   # GET /journals/1/edit
   def edit
-    @articles = @journal.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @works = @journal.works.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
     if request.xhr?
       render :partial => params[:partial]
     else

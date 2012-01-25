@@ -53,10 +53,10 @@ class AuthorsController < ApplicationController
     load_author
     
     if params[:refresh] == "now"
-      Retriever.new(:lazy => false, :only_source => false).delay.update_articles_by_author(@author)   
+      Retriever.new(:lazy => false, :only_source => false).delay.update_works_by_author(@author)   
     end
     
-    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
+    @works = @author.works.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
     
     respond_to do |format|
       format.html do 
@@ -70,7 +70,7 @@ class AuthorsController < ApplicationController
       format.mobile
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @author.articles.to_xml
+        render :xml => @author.works.to_xml
       end
       format.csv  { render :csv => @author }
       format.json { render :json => @author.to_json, :callback => params[:callback] }
@@ -94,7 +94,7 @@ class AuthorsController < ApplicationController
   
   # GET /authors/1/edit
   def edit
-    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
+    @works = @author.works.paginate :page => params[:page], :per_page => 10, :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
     
     respond_to do |format|
       format.html { render :show }
@@ -129,99 +129,99 @@ class AuthorsController < ApplicationController
   # PUT /authors/1
   # PUT /authors/1.xml
   def update
-    @articles = @author.articles.paginate :page => params[:page], :per_page => 10, :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
+    @works = @author.works.paginate :page => params[:page], :per_page => 10, :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
   
     respond_to do |format|
       if @author.update_attributes(params[:author])
         if params[:service] == "mas"
-          # First remove all mas article claims, e.g. because Microsoft Academic Search ID was changed or set to empty 
+          # First remove all mas work claims, e.g. because Microsoft Academic Search ID was changed or set to empty 
           @author.contributors.where(:service => "mas").each do |contributor|
             contributor.update_attributes(:author_id => nil)
           end
           
-          # Fetch articles from author, return nil if no response
-          results = Author.fetch_articles_from_mas(@author)
+          # Fetch works from author, return nil if no response
+          results = Author.fetch_works_from_mas(@author)
           
           unless results.empty?
             results.each do |result|
-              # Only add articles with DOI and title
+              # Only add works with DOI and title
               unless result["DOI"].nil? or result["Title"].nil?
                 #result["DOI"] = DOI::clean(result["DOI"])
-                article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
-                article.save
+                work = Work.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                work.save
                 # Check that DOI is valid
-                if article.valid?
-                  article.update_attributes(:mas => result["ID"])
+                if work.valid?
+                  work.update_attributes(:mas => result["ID"])
                   result["Author"].each do |author|
-                    contributor = Contributor.find_or_create_by_article_id_and_mas_and_service(:article_id => article.id,
+                    contributor = Contributor.find_or_create_by_work_id_and_mas_and_service(:work_id => work.id,
                                                             :mas => author["ID"],
                                                             :service => "mas",
                                                             :surname => author["LastName"],
                                                             :given_name => author["FirstName"]) 
                     contributor.update_attributes(:author_id => @author.id) if (author["ID"].to_s == @author.mas)
                   end
-                  Article.update_via_crossref(article)
+                  Work.update_via_crossref(work)
                 end
               end
             end
           end
         elsif params[:service] == "authorclaim"
-          # First remove all authorclaim article claims, e.g. because AuthorClaim ID was changed or set to empty
+          # First remove all authorclaim work claims, e.g. because AuthorClaim ID was changed or set to empty
           @author.contributors.where(:service => "authorclaim").each do |contributor|
             contributor.update_attributes(:author_id => nil)
           end
           
-          # Fetch articles from author, return nil if no response
-          results = Author.fetch_articles_from_authorclaim(@author)
+          # Fetch works from author, return nil if no response
+          results = Author.fetch_works_from_authorclaim(@author)
           
           unless results.blank?
-            results[:articles].each do |result|
-              # Only add articles with DOI and title
+            results[:works].each do |result|
+              # Only add works with DOI and title
               unless result["DOI"].nil? or result["Title"].nil?
                 #result["DOI"] = DOI::clean(result["DOI"])
-                article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
-                article.save
+                work = Work.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                work.save
                 # Check that DOI is valid
-                if article.valid?
-                  contributor = Contributor.create(:article_id => article.id,
+                if work.valid?
+                  contributor = Contributor.create(:work_id => work.id,
                                                           :author_id => @author.id,
                                                           :surname => results[:contributor]["surname"],
                                                           :given_name => results[:contributor]["given_name"],
                                                           :service => "authorclaim",
                                                           :authorclaim => @author.authorclaim)
                 end
-                Article.update_via_crossref(article)
+                Work.update_via_crossref(work)
               end
             end
           end
         elsif params[:service] == "scopus"
-          # First remove all scopus article claims, e.g. because Scopus Author ID was changed or set to empty 
+          # First remove all scopus work claims, e.g. because Scopus Author ID was changed or set to empty 
           @author.contributors.where(:service => "scopus").each do |contributor|
             contributor.update_attributes(:author_id => nil)
           end
 
-          # Fetch articles from author, return nil if no response
-          results = Author.fetch_articles_from_scopus(@author)
+          # Fetch works from author, return nil if no response
+          results = Author.fetch_works_from_scopus(@author)
 
           unless results.empty?
             results.each do |result|
-              # Only add articles with DOI and title
+              # Only add works with DOI and title
               unless result["DOI"].nil? or result["Title"].nil?
                 #result["DOI"] = DOI::clean(result["DOI"])
-                article = Article.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
-                article.save
+                work = Work.find_or_create_by_doi(:doi => result["DOI"], :title => result["Title"])
+                work.save
                 # Check that DOI is valid
-                if article.valid?
-                  article.update_attributes(:scopus => result["ID"])
+                if work.valid?
+                  work.update_attributes(:scopus => result["ID"])
                   result["Author"].each do |author|
-                    contributor = Contributor.find_or_create_by_article_id_and_scopus_and_service(:article_id => article.id,
+                    contributor = Contributor.find_or_create_by_work_id_and_scopus_and_service(:work_id => work.id,
                                                             :scopus => author["ID"],
                                                             :service => "scopus",
                                                             :surname => author["LastName"],
                                                             :given_name => author["FirstName"]) 
                     contributor.update_attributes(:author_id => @author.id) if (author["ID"].to_s == @author.mas)
                   end
-                  Article.update_via_crossref(article)
+                  Work.update_via_crossref(work)
                 end
               end
             end

@@ -14,10 +14,10 @@
 	</div>
 	
 	<ul class="tabs" data-tabs="tabs" >
-		<li class="<%= @author.has_profile ? '' : 'active' %>"><a href="#service">Author Identifiers</a></li>
+		<li class="<%= @author.has_profile ? '' : 'active' %>"><a href="#service">Identifiers</a></li>
 		<% if @author.has_profile %>
 		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
-		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#article">Articles</a></li>
+		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#work">Works</a></li>
 		<% end %>
 	</ul>	
 	
@@ -31,8 +31,8 @@
 			  <%= render :partial => 'source'%>
 			</div>
 
-			<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="article">
-			  <%= render :partial => 'article'%>
+			<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="work">
+			  <%= render :partial => 'work'%>
 			</div>
 		<% end %>
 	</div>

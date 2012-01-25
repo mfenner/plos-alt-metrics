@@ -17,21 +17,12 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<% article ||= form %>
-<%= form_for(article.id) do |f| %>
-  <p>
-    <%= f.label :doi, "DOI" %><br />
-    <%= f.text_field :doi %>
-  </p>
-  <p>
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
-  </p>
-  <p>
-    <%= f.label :published_on %><br />
-    <%= date_select 'article', 'published_on', :order => [:month, :day, :year] %>
-  </p>
-  <p>
-    <%= f.submit(article.new_record? ? "Create" : "Update") %>
-  </p>
-<% end %>
+<div class="border">
+<div class="page">
+  <h1>Add a new work</h1>
+
+  <%= render :partial => "form", :object => @work %>
+
+  <%= link_to 'Back to list', works_path %>
+</div>
+</div>

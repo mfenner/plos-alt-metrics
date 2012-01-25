@@ -2,7 +2,8 @@
   # $HeadURL$
   # $Id$
   #
-  # Copyright (c) 2011 Martin Fenner
+  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
+  # http://www.plos.org/
   #
   # Licensed under the Apache License, Version 2.0 (the "License");
   # you may not use this file except in compliance with the License.
@@ -16,7 +17,21 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-Provider: ScienceCard
-Content:text/plain; charset="UTF-8"
-
-<%= @article.to_ris %>
+<% work ||= form %>
+<%= form_for(work.id) do |f| %>
+  <p>
+    <%= f.label :doi, "DOI" %><br />
+    <%= f.text_field :doi %>
+  </p>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :published_on %><br />
+    <%= date_select 'work', 'published_on', :order => [:month, :day, :year] %>
+  </p>
+  <p>
+    <%= f.submit(work.new_record? ? "Create" : "Update") %>
+  </p>
+<% end %>

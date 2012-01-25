@@ -51,7 +51,7 @@ class GroupsController < ApplicationController
   # GET /groups/1.xml
   def show
     load_group
-    @articles = @group.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @works = @group.works.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
     
     respond_to do |format|
       format.html do 
@@ -63,7 +63,7 @@ class GroupsController < ApplicationController
       end
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @group.articles.to_xml
+        render :xml => @group.works.to_xml
       end
       format.csv  { render :csv => @group }
       format.json { render :json => @group.to_json, :callback => params[:callback] }
@@ -84,7 +84,7 @@ class GroupsController < ApplicationController
   
   # GET /groups/1/edit
   def edit
-    @articles = @group.articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, articles.year desc"
+    @works = @group.works.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
     if request.xhr?
       render :partial => params[:partial]
     else

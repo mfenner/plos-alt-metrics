@@ -2,7 +2,8 @@
   # $HeadURL$
   # $Id$
   #
-  # Copyright (c) 2011 Martin Fenner
+  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
+  # http://www.plos.org/
   #
   # Licensed under the Apache License, Version 2.0 (the "License");
   # you may not use this file except in compliance with the License.
@@ -16,8 +17,24 @@
   # See the License for the specific language governing permissions and
   # limitations under the License.
 -%>
-<% bibliography = BibTeX::Bibliography.new %>
-<% unless @article.to_bib.nil? %>
-  <% bibliography << @article.to_bib %>
+
+<div class="border">
+<div class="page">
+<h1>Work Summaries</h1>
+
+<% for record in @result %>
+  <div class="work">
+    <span class="doi">
+    <%=link_to h(record[:work].doi), work_path(record[:work]) %></h3>
+    <span class="details">
+      <ul>
+      <% for groupcount in record[:groupcounts] %>
+        <li><%=groupcount[:name] %>:
+        <%=groupcount[:total] %></li>
+      <% end %>
+      </ul>
+    </span>
+  </div>
 <% end %>
-<%= bibliography %>
+</div>
+</div>

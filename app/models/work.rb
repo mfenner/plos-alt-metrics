@@ -18,7 +18,7 @@
 
 require 'bibtex'
 
-class Article < ActiveRecord::Base
+class Work < ActiveRecord::Base
   
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals 
@@ -44,8 +44,8 @@ class Article < ActiveRecord::Base
       { :include => :retrievals,
         :conditions => "retrievals.citations_count > 0 OR retrievals.other_citations_count > 0" }
     when '0', 0
-      { :conditions => 'EXISTS (SELECT * from retrievals where article_id = `articles`.id GROUP BY article_id HAVING SUM(IFNULL(retrievals.citations_count,0)) + SUM(IFNULL(retrievals.other_citations_count,0)) = 0)' }
-      #articles.id IN (SELECT articles.id FROM articles LEFT OUTER JOIN retrievals ON retrievals.article_id = articles.id GROUP BY articles.id HAVING IFNULL(SUM(retrievals.citations_count) + SUM(retrievals.other_citations_count), 0) = 0)' }
+      { :conditions => 'EXISTS (SELECT * from retrievals where work_id = `works`.id GROUP BY work_id HAVING SUM(IFNULL(retrievals.citations_count,0)) + SUM(IFNULL(retrievals.other_citations_count,0)) = 0)' }
+      #works.id IN (SELECT works.id FROM works LEFT OUTER JOIN retrievals ON retrievals.work_id = works.id GROUP BY works.id HAVING IFNULL(SUM(retrievals.citations_count) + SUM(retrievals.other_citations_count), 0) = 0)' }
     else
       {}
     end
@@ -62,21 +62,21 @@ class Article < ActiveRecord::Base
   }
 
   scope :stale_and_published,
-    :conditions => ["articles.id IN (
-	SELECT DISTINCT article_id
+    :conditions => ["works.id IN (
+	SELECT DISTINCT work_id
 	FROM retrievals 
 	JOIN sources ON retrievals.source_id = sources.id 
-	WHERE retrievals.article_id = articles.id 
+	WHERE retrievals.work_id = works.id 
 	AND retrievals.retrieved_at < TIMESTAMPADD(SECOND, - sources.staleness, UTC_TIMESTAMP())
 	AND sources.active = 1
 	AND (
 		sources.disable_until IS NULL 
 		OR sources.disable_until < UTC_TIMESTAMP()))
-	AND articles.published_on < ?", Date.today],
+	AND works.published_on < ?", Date.today],
     :order => "retrievals.retrieved_at",
     :include => :retrievals
 
-  default_scope :order => "IF(articles.published_on IS NULL, articles.year, articles.published_on) desc"
+  default_scope :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
 
   def to_param
     DOI.to_uri(doi)
@@ -172,7 +172,7 @@ class Article < ActiveRecord::Base
     sources = (options.delete(:source) || '').downcase.split(',')
     xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])
     xml.instruct! unless options[:skip_instruct]
-    xml.tag!("article", :doi => doi, :title => title, :citations_count => citations_count,:pub_med => pub_med,:pub_med_central => pub_med_central, :updated_at => retrieved_at, :published => (published_on.blank? ? nil : published_on.to_time)) do
+    xml.tag!("work", :doi => doi, :title => title, :citations_count => citations_count,:pub_med => pub_med,:pub_med_central => pub_med_central, :updated_at => retrieved_at, :published => (published_on.blank? ? nil : published_on.to_time)) do
       if options[:citations] or options[:history]
         retrieval_options = options.merge!(:dasherize => false, 
                                            :skip_instruct => true)
@@ -195,7 +195,7 @@ class Article < ActiveRecord::Base
 
   def to_json(options={})
     result = { 
-      :article => { 
+      :work => { 
         :doi => doi, 
         :shortdoi => "10/" + short_doi,
         :title => title, 
@@ -211,7 +211,7 @@ class Article < ActiveRecord::Base
     }
     sources = (options.delete(:source) || '').downcase.split(',')
     if options[:citations] or options[:history]
-      result[:article][:source] = retrievals.map do |r|
+      result[:work][:source] = retrievals.map do |r|
         r.to_included_json(options) \
           if (sources.empty? or sources.include?(r.source.class.to_s.downcase))
              #If the result set is empty, lets not return any information about the source at all
@@ -225,9 +225,9 @@ class Article < ActiveRecord::Base
   def to_bib
     # Define BibTeX citation
     case content_type
-    when "journal_article"
+    when "journal_work"
       bib_entry = BibTeX::Entry.new({
-         :type => "article",
+         :type => "work",
          :title => title,
          :author => contributors_with_names,
          :doi => doi,
@@ -274,7 +274,7 @@ class Article < ActiveRecord::Base
   def to_ris (options={})
     # Define RIS citation
     case content_type
-    when "journal_article"
+    when "journal_work"
       ris = ["TY  - JOUR",
              "T1  - #{title}",
              "DO  - #{doi}",
@@ -335,20 +335,20 @@ class Article < ActiveRecord::Base
   end
   
   def self.fetch_from_mendeley(uuid, options={})
-    # Fetch article information, return nil if no response 
+    # Fetch work information, return nil if no response 
     url = "http://api.mendeley.com/oapi/documents/details/#{uuid}?consumer_key=#{APP_CONFIG['mendeley_key']}"
     Rails.logger.info "Mendeley query: #{url}"
     
     result = SourceHelper.get_json(url, options)
   end
   
-  def self.update_groups(article, options={})
+  def self.update_groups(work, options={})
     options[:groups] ||= []
     
     # Fetch group information from Mendeley if not provided, requires Mendeley uuid
     if options[:groups].empty?
-      return nil if article.mendeley.blank?
-      options[:groups] = self.fetch_from_mendeley(article.mendeley)["groups"] 
+      return nil if work.mendeley.blank?
+      options[:groups] = self.fetch_from_mendeley(work.mendeley)["groups"] 
     end
     return nil if options[:groups].blank?
     
@@ -361,34 +361,34 @@ class Article < ActiveRecord::Base
       # If there was an error, e.g. group is private
       next if group.nil?
       
-      article.groups << group unless article.groups.include?(group)
-      Rails.logger.debug "Groups updated for article #{article.doi})"
+      work.groups << group unless work.groups.include?(group)
+      Rails.logger.debug "Groups updated for work #{work.doi})"
     end
     
-    article
+    work
   end
   
-  def self.update_via_crossref(article, options={})
-    # Update article information via CrossRef
+  def self.update_via_crossref(work, options={})
+    # Update work information via CrossRef
     
     # First make sure you have correct DOI
-    doi = DOI::clean(article.doi)
+    doi = DOI::clean(work.doi)
     
-    # Delete article if cleaned DOI exists already
-    if article.doi != doi
-      other_article = Article.find_by_doi(doi)
-      article.destroy unless other_article.blank?
+    # Delete work if cleaned DOI exists already
+    if work.doi != doi
+      other_work = Work.find_by_doi(doi)
+      work.destroy unless other_work.blank?
       return nil
     end
     
-    # Only use articles that have short DOI
-    short_doi = article.short_doi.blank? ? DOI::shorten(doi) : article.short_doi
+    # Only use works that have short DOI
+    short_doi = work.short_doi.blank? ? DOI::shorten(doi) : work.short_doi
     if short_doi.blank?
-      article.destroy
+      work.destroy
       return nil
     end
     
-    # Fetch article information from CrossRef
+    # Fetch work information from CrossRef
     url = "http://www.crossref.org/openurl/?pid=#{APP_CONFIG['crossref_key']}&id=doi:"
 
     Rails.logger.info "CrossRef query: #{doi}"
@@ -396,12 +396,12 @@ class Article < ActiveRecord::Base
     SourceHelper.get_xml(url + Addressable::URI.encode(doi) + "&noredirect=true", options) do |document|
       document.root.namespaces.default_prefix = "crossref_result"
       document.find("//crossref_result:body/crossref_result:query").each do |query_result|
-        # Delete article if DOI not found at CrossRef
+        # Delete work if DOI not found at CrossRef
         if query_result.attributes.get_attribute("status").value != "resolved"
-          article.destroy
+          work.destroy
         else
           result = {}
-          %w[doi article_title year volume issue first_page last_page journal_title volume_title].each do |a|
+          %w[doi work_title year volume issue first_page last_page journal_title volume_title].each do |a|
             first = query_result.find_first("crossref_result:#{a}")
             if first
               content = first.content
@@ -418,7 +418,7 @@ class Article < ActiveRecord::Base
           result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
         
           #contributors_element = query_result.find_first("crossref_result:contributors")
-          #extract_contributors(contributors_element, article) if contributors_element
+          #extract_contributors(contributors_element, work) if contributors_element
         
           unless issn_print.blank? and issn_electronic.blank?
             # Remove dashes for consistency
@@ -457,9 +457,9 @@ class Article < ActiveRecord::Base
             book_id = nil
           end
         
-          article.update_attributes(:doi => doi,
+          work.update_attributes(:doi => doi,
                                   :short_doi => short_doi,
-                                  :title => result[:article_title],
+                                  :title => result[:work_title],
                                   :year => result[:year], 
                                   :volume => result[:volume],
                                   :issue => result[:issue],
@@ -474,9 +474,9 @@ class Article < ActiveRecord::Base
   end
   
   protected
-    def self.extract_contributors(contributors_element, article)
+    def self.extract_contributors(contributors_element, work)
       # Remove contributors if they exist, then create them from scratch
-      article.contributors.delete_all
+      work.contributors.delete_all
       contributors = []
       contributors_element.find("crossref_result:contributor").each do |c|
         surname = c.find_first("crossref_result:surname")
@@ -488,13 +488,13 @@ class Article < ActiveRecord::Base
         position = nil
         position = 1 if c.attributes['sequence'] == 'first'
         role = c.attributes['contributor_role']
-        article.contributors << Contributor.new(:surname => surname,
+        work.contributors << Contributor.new(:surname => surname,
                                                 :given_name => given_name,
                                                 :position => position,
                                                 :role => role,
                                                 :service => "crossref")
       end
-      article.contributors
+      work.contributors
     end
 
   private
@@ -502,7 +502,7 @@ class Article < ActiveRecord::Base
       # Create an empty retrieval record for each active source to avoid a
       # problem with joined tables breaking the UI on the front end
       Source.active.each do |source|
-        Retrieval.find_or_create_by_article_id_and_source_id(id, source.id)
+        Retrieval.find_or_create_by_work_id_and_source_id(id, source.id)
       end
     end
 end

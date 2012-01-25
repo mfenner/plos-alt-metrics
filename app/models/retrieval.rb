@@ -18,7 +18,7 @@
 
 class Retrieval < ActiveRecord::Base
   belongs_to :source
-  belongs_to :article
+  belongs_to :work
   has_many :citations, :dependent => :destroy
   has_many :histories, :dependent => :destroy
 

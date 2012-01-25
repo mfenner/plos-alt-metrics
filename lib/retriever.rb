@@ -27,15 +27,15 @@ class Retriever
     @raise_on_error = options[:raise_on_error]    
   end
 
-  def update(article)
-    Rails.logger.info "Updating article #{article.inspect}..."
-    if lazy and article.published_on and article.published_on >= Date.today
-      Rails.logger.info "Skipping: article not published yet"
+  def update(work)
+    Rails.logger.info "Updating work #{work.inspect}..."
+    if lazy and work.published_on and work.published_on >= Date.today
+      Rails.logger.info "Skipping: work not published yet"
       return
     end
     
     # Update metadata via CrossRef
-    Article.update_via_crossref(article)
+    Work.update_via_crossref(work)
 
     # undoing revision 5150.  This way, we will always get the most current list of active sources.
     sources = Source.active
@@ -55,23 +55,23 @@ class Retriever
     sources.each do |source|
       # Check if source only works for specific DOI prefix
       if source.uses_prefix
-        next unless article.doi.match(/^#{source.prefix}/)
+        next unless work.doi.match(/^#{source.prefix}/)
       end
 
-      retrieval = Retrieval.find_or_create_by_article_id_and_source_id(article.id, source.id)
+      retrieval = Retrieval.find_or_create_by_work_id_and_source_id(work.id, source.id)
       Rails.logger.debug "Retrieval is#{" (new)" if retrieval.new_record?} #{retrieval.inspect} (lazy=#{lazy.inspect}, stale?=#{retrieval.stale?.inspect})"
 
       retrieval.try_to_exclusively do
         if (not lazy) or retrieval.stale?
           Rails.logger.info "Refreshing source: #{source.inspect}"
           #If one fails, make note, but then keep going.
-          result = update_one(retrieval, source, article)
+          result = update_one(retrieval, source, work)
         
           if result
             sources_count = sources_count + 1
             Rails.logger.info "result=#{result}, sources_count incremented: #{sources_count}"
           else
-            Rails.logger.error "result=#{result}, error refreshing article #{article.inspect}"
+            Rails.logger.error "result=#{result}, error refreshing work #{work.inspect}"
           end
         else
           sources_count = sources_count + 1
@@ -80,23 +80,23 @@ class Retriever
       end
     end
     # If we are updating only one source
-    #     do NOT update the article as refreshed
+    #     do NOT update the work as refreshed
     # If all the sources do not update successfully
-    #     do NOT update the article as refreshed
+    #     do NOT update the work as refreshed
     if sources_count == sources.size and not only_source
-      article.refreshed!.save!
-      Rails.logger.info "Refreshed article #{article.doi}"
+      work.refreshed!.save!
+      Rails.logger.info "Refreshed work #{work.doi}"
     else
-      Rails.logger.info "Not refreshing article #{article.doi} (count: #{sources_count}, only src: #{only_source})"
+      Rails.logger.info "Not refreshing work #{work.doi} (count: #{sources_count}, only src: #{only_source})"
     end
   end
 
-  def update_one(retrieval, source, article)
-    Rails.logger.info "Asking #{source.name} about #{article.doi}; last updated #{retrieval.retrieved_at}"
+  def update_one(retrieval, source, work)
+    Rails.logger.info "Asking #{source.name} about #{work.doi}; last updated #{retrieval.retrieved_at}"
     
     success = true
     begin
-      raw_citations = source.query(article, { :retrieval => retrieval, 
+      raw_citations = source.query(work, { :retrieval => retrieval, 
         :timeout => source.timeout })
 
       if raw_citations == false
@@ -190,29 +190,29 @@ class Retriever
     result
   end
   
-  def update_articles_by_author(author)
+  def update_works_by_author(author)
     Rails.logger.info "Updating author #{author.inspect}..."
     
-    # Fetch articles from author, return nil if no response
-    results = Author.fetch_articles_from_mas(author)
+    # Fetch works from author, return nil if no response
+    results = Author.fetch_works_from_mas(author)
     return nil if results.nil?
     
     results.each do |result|
-      # Only add articles with DOI and title
+      # Only add works with DOI and title
       unless result["DOI"].nil? or result["Title"].nil?
         result["DOI"] = DOI::clean(result["DOI"])
-        article = Article.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
+        work = Work.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
-        if article.valid?
-          Article.update_via_crossref(article)
-          unless author.articles.include?(article)
-            author.articles << article 
+        if work.valid?
+          Work.update_via_crossref(work)
+          unless author.works.include?(work)
+            author.works << work 
           end
           # Create shortDOI if it doesn't exist yet
-          if article.short_doi.blank?
-            #article.update_attributes(:short_doi => DOI::shorten(article.doi)) 
+          if work.short_doi.blank?
+            #work.update_attributes(:short_doi => DOI::shorten(work.doi)) 
           end
-          Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+          Rails.logger.debug "Work is#{" (new)" if work.new_record?} #{work.inspect} (lazy=#{lazy.inspect}, stale?=#{work.stale?.inspect})"
         end
       end
     end  
@@ -221,26 +221,26 @@ class Retriever
     Rails.logger.info "Refreshed author #{author.mas}"
   end
   
-  def update_articles_by_group(group)
+  def update_works_by_group(group)
     Rails.logger.info "Updating group #{group.inspect}..."
     
-    # Fetch articles from group, return nil if no response
-    results = Group.fetch_articles_from_mas(group)
+    # Fetch works from group, return nil if no response
+    results = Group.fetch_works_from_mas(group)
     return nil if results.nil?
     
     results = results["documents"]
     
     results.each do |result|
-      # Only add journal articles
-      unless result["uuid"].nil? or result["title"].nil? or result["type"] != "Journal Article"
-        metadata = Article.fetch_from_mendeley(result["uuid"])
+      # Only add journal works
+      unless result["uuid"].nil? or result["title"].nil? or result["type"] != "Journal Work"
+        metadata = Work.fetch_from_mendeley(result["uuid"])
         unless metadata["identifiers"]["doi"].nil?
-          article = Article.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
+          work = Work.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
           # Check that DOI is valid
-          if article.valid?
-            Article.update_via_crossref(article)
-            group.articles << article unless group.articles.include?(article)
-            Rails.logger.debug "Article is#{" (new)" if article.new_record?} #{article.inspect} (lazy=#{lazy.inspect}, stale?=#{article.stale?.inspect})"
+          if work.valid?
+            Work.update_via_crossref(work)
+            group.works << work unless group.works.include?(work)
+            Rails.logger.debug "Work is#{" (new)" if work.new_record?} #{work.inspect} (lazy=#{lazy.inspect}, stale?=#{work.stale?.inspect})"
           end
         end
       end
@@ -279,7 +279,7 @@ class Retriever
     Rails.logger.info "Refreshed group #{group.mendeley}"
   end
 
-  def self.update_articles(articles, adjective=nil, timeout_period=50.minutes)
+  def self.update_works(works, adjective=nil, timeout_period=50.minutes)
     require 'timeout'
     begin
 
@@ -293,27 +293,27 @@ class Retriever
       
       Timeout::timeout timeout_period.to_i, RetrieverTimeout do
         lazy = ENV.fetch("LAZY", "1") == "1"
-        Rails.logger.debug ["Updating", articles.size.to_s,
+        Rails.logger.debug ["Updating", works.size.to_s,
               lazy ? "stale" : nil, adjective,
-              articles.size == 1 ? "article" : "articles"].compact.join(" ")
+              works.size == 1 ? "work" : "works"].compact.join(" ")
         retriever = self.new(:lazy => lazy,
           :only_source => ENV["SOURCE"],
           :raise_on_error => ENV["RAISE_ON_ERROR"])
 
-        articles.each do |article|
-          old_count = article.citations_count || 0
-          retriever.update(article)
-          new_count = article.citations_count || 0
-          Rails.logger.debug "DOI: #{article.doi} count now #{new_count} (#{new_count - old_count})"
+        works.each do |work|
+          old_count = work.citations_count || 0
+          retriever.update(work)
+          new_count = work.citations_count || 0
+          Rails.logger.debug "DOI: #{work.doi} count now #{new_count} (#{new_count - old_count})"
         end
       end
     rescue RetrieverTimeout => e
-      Rails.logger.error "Timeout exceeded on article update" + e.backtrace.join("\n")
+      Rails.logger.error "Timeout exceeded on work update" + e.backtrace.join("\n")
       raise e
     end
   end
   
-  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes, include_articles=true)
+  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes, include_works=true)
     require 'timeout'
     begin
 
@@ -335,10 +335,10 @@ class Retriever
 
         authors.each do |author|
           retriever.update_author(author)
-          if include_articles
-            old_count = author.articles_count || 0
-            retriever.update_articles_by_author(author)
-            new_count = author.articles_count || 0
+          if include_works
+            old_count = author.works_count || 0
+            retriever.update_works_by_author(author)
+            new_count = author.works_count || 0
             Rails.logger.debug "MAS: #{author.mas} count now #{new_count} (#{new_count - old_count})"
           end
         end
@@ -349,7 +349,7 @@ class Retriever
     end
   end
   
-  def self.update_groups(groups, adjective=nil, timeout_period=50.minutes, include_articles=true)
+  def self.update_groups(groups, adjective=nil, timeout_period=50.minutes, include_works=true)
     require 'timeout'
     begin
 
@@ -371,10 +371,10 @@ class Retriever
 
         groups.each do |group|
           retriever.update_group(group)
-          if include_articles
-            old_count = group.articles_count || 0
-            retriever.update_articles_by_group(group)
-            new_count = group.articles_count || 0
+          if include_works
+            old_count = group.works_count || 0
+            retriever.update_works_by_group(group)
+            new_count = group.works_count || 0
             Rails.logger.debug "Mendeley: #{group.mendeley} count now #{new_count} (#{new_count - old_count})"
           end
         end

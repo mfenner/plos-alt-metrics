@@ -21,30 +21,30 @@ class Plos < Source
   def uses_partner_id; true; end#
   def uses_prefix; true; end
 
-  def perform_query(article, options = {})
+  def perform_query(work, options = {})
     raise(ArgumentError, "PLoS configuration requires DOI prefix") \
       if prefix.blank?
   
-    url = "http://alm.plos.org/articles/info:doi/" + CGI.escape(article.doi) + ".json?source=counter&citations=1"
+    url = "http://alm.plos.org/works/info:doi/" + CGI.escape(work.doi) + ".json?source=counter&citations=1"
     api_key= "&api_key=" + partner_id.to_s
     Rails.logger.info "PLoS query: #{url + api_key}"
     results = SourceHelper.get_json(url + api_key, options)
     
     return [] if results.blank? 
 
-    results = results["article"]["source"][0]
+    results = results["work"]["source"][0]
     results = results["citations"][0]
     views = results["citation"]["views"]
     # Iterate over views array for combined count of views by month and type
     views_count = views.inject(0) { |sum, month| sum + month["html_views"].to_i + month["pdf_views"].to_i + month["xml_views"].to_i }
 
-    Rails.logger.debug "PLoS got #{views.inspect} for #{article.inspect}"
+    Rails.logger.debug "PLoS got #{views.inspect} for #{work.inspect}"
 
     views_count
   end
   
   def public_url(retrieval)
-    case retrieval.article.doi.to_s
+    case retrieval.work.doi.to_s
       when /journal.pone/
         host = "http://www.plosone.org"
       when /journal.pbio/
@@ -62,7 +62,7 @@ class Plos < Source
       else
         host = nil
     end
-    retrieval.article.doi.to_s && (host.nil? ? "http://dx.doi.org/" + retrieval.article.doi.to_s : host + "/article/metrics/info%3Adoi%2F" + retrieval.article.doi.to_s)
+    retrieval.work.doi.to_s && (host.nil? ? "http://dx.doi.org/" + retrieval.work.doi.to_s : host + "/work/metrics/info%3Adoi%2F" + retrieval.work.doi.to_s)
   end
   
 end

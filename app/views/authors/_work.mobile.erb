@@ -1,0 +1,25 @@
+<% unless @author.works.empty? %>
+  <% unless active_categories.empty? %>
+    <div data-role="collapsible" data-collapsed="false">
+	    <h3>Metrics</h3>
+      <%= render :partial => 'source'%>
+    </div>
+  <% end %>
+  
+  <div data-role="collapsible">
+	<h3 class="show">Works</h3>
+  <ul data-role="listview" data-theme="c" data-filter="true" data-filter-placeholder="Filter works...">
+    <% @works.each do |work| %>
+	    <li><a href="<%= work_path(work.id) %>" class="normal">
+        <h3><%= work.title %></h3>
+        <%= formatted_citation(work, :without_links => true).html_safe %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+  </div>
+<% end %>
+
+<% if @author.has_profile and !@author.works.empty? %>
+	</div>
+<% end %>

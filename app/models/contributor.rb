@@ -13,11 +13,11 @@
 # limitations under the License.
 
 class Contributor < ActiveRecord::Base
-  belongs_to :article
+  belongs_to :work
   belongs_to :author
-  acts_as_list :scope => :article
+  acts_as_list :scope => :work
   
-  attr_accessible :article_id, :author_id, :service, :mas, :authorclaim, :surname, :given_name, :role
+  attr_accessible :work_id, :author_id, :service, :mas, :authorclaim, :surname, :given_name, :role
   
   def name
     return surname if given_name.blank?

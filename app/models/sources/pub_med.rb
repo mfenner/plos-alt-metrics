@@ -18,33 +18,33 @@
 
 class PubMed < Source
 
-  ToolID = 'ArticleLevelMetrics'
+  ToolID = 'WorkLevelMetrics'
 
-  def perform_query(article, options={})
+  def perform_query(work, options={})
 
     # First, we need to have the PubMed and PubMedCentral IDs for this
-    # article. Get 'em if we don't have 'em, and proceed only if we do.
-    article.pub_med ||= get_pub_med_from_doi(article.doi, options)
-    return [] unless article.pub_med
-    article.pub_med_central ||= get_pub_med_central_from_pub_med(\
-      article.pub_med, options)
-    return [] unless article.pub_med_central
+    # work. Get 'em if we don't have 'em, and proceed only if we do.
+    work.pub_med ||= get_pub_med_from_doi(work.doi, options)
+    return [] unless work.pub_med
+    work.pub_med_central ||= get_pub_med_central_from_pub_med(\
+      work.pub_med, options)
+    return [] unless work.pub_med_central
 
-    if(article.pub_med_changed? || article.pub_med_central_changed?)
-      article.save!
+    if(work.pub_med_changed? || work.pub_med_central_changed?)
+      work.save!
     end
 
     # OK, we've got the IDs. Get the citations using the PubMed ID.
     url = "http://www.pubmedcentral.nih.gov/utils/entrez2pmcciting.cgi?view=xml&id="
     citations = []
-    query_url = url + article.pub_med
+    query_url = url + work.pub_med
     
     SourceHelper.get_xml(query_url, options.merge(:remove_doctype => 1)) do |document|
       document.find("//PubMedToPMCcitingformSET/REFORM/PMCID").each do |cite|
         pmc = cite.first.content
         if pmc
           citation = {
-            :uri => "http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=" + pmc
+            :uri => "http://www.pubmedcentral.nih.gov/workrender.fcgi?artid=" + pmc
           }
           citations << citation
         end
@@ -56,7 +56,7 @@ class PubMed < Source
   def get_pub_med_from_doi(doi, options={})
     params = {
       'term' => doi,
-      'field' => 'aid', # just search the article ID field
+      'field' => 'aid', # just search the work ID field
       'db' => 'pubmed',
       'tool' => PubMed::ToolID, 
       'usehistory' => 'n',
@@ -87,7 +87,7 @@ class PubMed < Source
   end
 
   def public_url(retrieval)
-    pub_med_id = retrieval.article.pub_med 
+    pub_med_id = retrieval.work.pub_med 
     pub_med_id && ("http://www.ncbi.nlm.nih.gov/sites/entrez?db=pubmed&cmd=link&LinkName=pubmed_pmc_refs&from_uid=" + pub_med_id)
   end
 end

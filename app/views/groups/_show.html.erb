@@ -16,10 +16,10 @@
 
 <%= render :partial => 'service' %>
 
-<% unless @group.articles.empty? %>
-  <div id="article">
-	  <%= render :partial => 'article'%>
+<% unless @group.works.empty? %>
+  <div id="work">
+	  <%= render :partial => 'work'%>
   </div>
 <% else %>
-  <h3>No articles found</h3>
+  <h3>No works found</h3>
 <% end %>

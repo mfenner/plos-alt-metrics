@@ -1,10 +1,10 @@
 xml.instruct! :xml, :version=>"1.0" 
 xml.rss(:version=>"1.0") do
   xml.channel do
-    xml.title("ScienceCard for #{@author.name}")
-    xml.link("http://sciencecard.org/#{@author.username}")
+    xml.title("ScienceCard Works")
+    xml.link("http://sciencecard.org")
     xml.dc :language, "en"
-    @author.works.each do |work|
+    @works.each do |work|
       xml.item do
         xml.rdf :about, "http://dx.doi.org/#{work.doi}"
         xml.title work.title

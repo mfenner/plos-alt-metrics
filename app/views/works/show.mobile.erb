@@ -1,13 +1,13 @@
 <div data-role="header">
 	<a href="#" data-icon="arrow-l" data-rel="back">Back</a>
-	<h1><%= @article.short_doi %></h1>
+	<h1><%= @work.short_doi %></h1>
 </div>
 
 <div data-role="content">
 	<ul data-role="listview" data-theme="c" class="show">
-	  <li><a href="<%= "http://doi.org/#{@article.short_doi}" %>" class="normal">
-	    <h3><%= @article.title %></h3>
-	    <%= formatted_citation(@article, :without_links => true).html_safe %>
+	  <li><a href="<%= "http://doi.org/#{@work.short_doi}" %>" class="normal">
+	    <h3><%= @work.title %></h3>
+	    <%= formatted_citation(@work, :without_links => true).html_safe %>
 	    </a>
 	  </li>
 	</ul>

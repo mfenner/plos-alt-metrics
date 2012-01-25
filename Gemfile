@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.1.3'
 
-gem 'mysql2', '< 0.3.7'
+gem 'mysql2'
 gem 'rack'
 # Rails 3.1 - Asset Pipeline
 gem 'json'
@@ -15,7 +15,7 @@ gem 'bundler'
 gem "rake", "0.9.2.2"
 gem 'daemons'
 gem 'fastercsv', "1.5.4"
-gem 'haml', "3.1.3"
+#gem 'haml', "3.1.3"
 gem 'i18n', ">=0.5.0"
 gem 'libxml-ruby', '2.2.2', :require => 'xml'
 gem 'rdiscount', "1.6.8"

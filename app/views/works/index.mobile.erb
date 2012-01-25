@@ -1,0 +1,20 @@
+<div data-role="header">
+	<%= link_to 'Authors', authors_path, "data-role" => "button", "data-icon" => "home", "data-transition" => "reverse slide" %>
+	<h1>Works</h1>
+	<%= link_to 'About', about_path, "data-role" => "button", "data-icon" => "info" %>
+</div>
+
+<div data-role="content">
+	<%= form_tag works_path, :method => :get, :remote => false, :class => "ui-listview-filter ui-bar-c", "data-ajax" => "true", "data-transition" => "none", :role => "search" do %>
+    <input name="q" value="<%= params[:q] %>" placeholder="Filter works..." data-type="search" class="ui-input-text ui-body-c"/>
+  <% end %>
+	<ul data-role="listview" data-theme="c">
+    <% @works.each do |work| %>
+	    <li><a href="<%= work_path(work.short_doi) %>" class="normal">
+        <h3><%= work.title %></h3>
+        <%= formatted_citation(work, :without_links => true).html_safe %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>

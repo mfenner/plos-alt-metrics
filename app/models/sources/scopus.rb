@@ -19,10 +19,10 @@ class Scopus < Source
   
   def uses_partner_id; true; end
 
-  def perform_query(article, options = {})
+  def perform_query(work, options = {})
   
     url = "http://api.elsevier.com/content/search/index:SCOPUS?query="
-    publication_id = "doi(" + article.doi.to_s + ")"
+    publication_id = "doi(" + work.doi.to_s + ")"
     options[:extraheaders] = { "Accept"  => "application/json", "X-ELS-APIKey" => partner_id, "X-ELS-ResourceVersion" => "XOCS" }
     Rails.logger.info "Scopus query: #{url}"
 
@@ -35,20 +35,20 @@ class Scopus < Source
     # Workaround if Scopus returns more than one result for a given DOI (which it shouldn't)
     results = results[0] if results.is_a? Array
 
-    Rails.logger.debug "Scopus got #{results.inspect} for #{article.inspect}"
+    Rails.logger.debug "Scopus got #{results.inspect} for #{work.inspect}"
     
     # Workaround as Scopus ID required to link to Scopus page. Trim "SCOPUS_ID:"
-    article.update_attributes(:scopus => results["dc:identifier"][10..-1])
+    work.update_attributes(:scopus => results["dc:identifier"][10..-1])
     
     # Use prism:coverDate as a proxy for the publication date if no publication date yet
-    article.update_attributes(:published_on => results["prism:coverDate"]) if article.published_on.blank?
+    work.update_attributes(:published_on => results["prism:coverDate"]) if work.published_on.blank?
 
     citations = results["citedby-count"].to_i
   end
   
   def public_url(retrieval)
-    retrieval.article.scopus.to_s && ("http://www.scopus.com/inward/citedby.url?partnerID=HzOxMe3b&scp=" \
-      + retrieval.article.scopus.to_s)
+    retrieval.work.scopus.to_s && ("http://www.scopus.com/inward/citedby.url?partnerID=HzOxMe3b&scp=" \
+      + retrieval.work.scopus.to_s)
   end
   
 end

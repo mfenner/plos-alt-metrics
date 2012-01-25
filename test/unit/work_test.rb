@@ -18,88 +18,88 @@
 
 require 'test_helper'
 
-class ArticleTest < ActiveSupport::TestCase
+class WorkTest < ActiveSupport::TestCase
   def setup
-    @article = Article.new :doi => "10.0/dummy"
+    @work = Work.new :doi => "10.0/dummy"
   end
 
   def test_should_save
-    assert @article.save
-    assert @article.errors.empty?
+    assert @work.save
+    assert @work.errors.empty?
   end
 
   def test_should_require_doi
-    @article.doi = nil
-    assert !@article.save, "article should not be saved without a DOI"
+    @work.doi = nil
+    assert !@work.save, "work should not be saved without a DOI"
   end
 
   def test_should_require_doi_uniqueness
-    assert @article.save
-    @article2 = Article.new :doi => "10.0/dummy"
-    assert !@article2.save, "article requires unique DOI"
+    assert @work.save
+    @work2 = Work.new :doi => "10.0/dummy"
+    assert !@work2.save, "work requires unique DOI"
   end
 
-  def test_should_find_stale_articles
-    assert_equal [articles(:uncited_with_no_retrievals), articles(:stale), articles(:not_stale)],
-      Article.stale_and_published
+  def test_should_find_stale_works
+    assert_equal [works(:uncited_with_no_retrievals), works(:stale), works(:not_stale)],
+      Work.stale_and_published
   end
 
   def test_should_be_stale_based_on_retrieval_age
-    check_staleness(articles(:stale)) { |a| a.retrievals.first.update_attribute :retrieved_at, 2.years.ago }
+    check_staleness(works(:stale)) { |a| a.retrievals.first.update_attribute :retrieved_at, 2.years.ago }
   end
 
   def test_staleness_on_new
-    a = Article.new
+    a = Work.new
     assert a.errors.empty?
     assert a.stale?
   end
 
   def test_staleness_on_create
-    a = Article.create :doi => '10.1/foo'
+    a = Work.create :doi => '10.1/foo'
     assert a.valid?, a.errors.full_messages
     assert a.stale?
 
     a.published_on = 1.day.ago
     assert a.save
-    assert Article.stale_and_published.include?(a)
+    assert Work.stale_and_published.include?(a)
   end
 
-  def test_retrievals_created_on_newly_created_article
-    a = Article.create :doi => '10.1/foo'
+  def test_retrievals_created_on_newly_created_work
+    a = Work.create :doi => '10.1/foo'
     assert a.valid?, a.errors.full_messages
     assert_equal Source.active.count, a.retrievals.count
   end
 
   def test_staleness_excludes_failed_retrievals
-    a = Article.create :doi => '10.1/foo', :published_on => 1.day.ago
+    a = Work.create :doi => '10.1/foo', :published_on => 1.day.ago
     assert a.valid?, a.errors.full_messages
     assert a.stale?
 
     r = a.retrievals.first(:conditions => { :source_id => sources(:citeulike).id })
     assert r.valid?
     assert_equal Time.at(0), r.retrieved_at
-    assert Article.stale_and_published.include?(a)
+    assert Work.stale_and_published.include?(a)
   end
 
   def test_staleness_excludes_disabled_sources
-    assert_equal 3, Article.stale_and_published.count
+    assert_equal 3, Work.stale_and_published.count
     Source.update_all :disable_until => 3.days.from_now
-    assert_equal [], Article.stale_and_published
+    assert_equal [], Work.stale_and_published
     Source.update_all :disable_until => 1.second.ago
-    assert_equal 3, Article.stale_and_published.count
+    assert_equal 3, Work.stale_and_published.count
   end
 
   def test_staleness_excludes_failed_retrievals_and_disabled_sources
-    a = Article.create! :doi => '10.1/foo', :published_on => 1.day.ago
+    a = Work.create! :doi => '10.1/foo', :published_on => 1.day.ago
     r = a.retrievals.first(:conditions => { :source_id => sources(:citeulike).id })
     assert_equal Time.at(0), r.retrieved_at
     Source.update_all :disable_until => 3.days.from_now
 
-    assert !Article.stale_and_published.include?(a)
+    assert !Work.stale_and_published.include?(a)
   end
 
   def test_cited
-    cited = Article.cited(1)
+    cited = Work.cited(1)
     assert cited.size > 0
     cited.each do |a|
       assert a.citations_count > 0
@@ -107,7 +107,7 @@ class ArticleTest < ActiveSupport::TestCase
   end
 
   def test_uncited
-    uncited = Article.cited(0)
+    uncited = Work.cited(0)
     assert uncited.size > 0
     uncited.each do |a|
       assert_equal 0, a.citations_count
@@ -115,16 +115,16 @@ class ArticleTest < ActiveSupport::TestCase
   end
 
   def test_cited_consistency
-    assert_equal Article.count, Article.cited(1).count + Article.cited(0).count
-    assert_equal Article.count, Article.cited(nil).count
-    assert_equal Article.count, Article.cited('blah').count
+    assert_equal Work.count, Work.cited(1).count + Work.cited(0).count
+    assert_equal Work.count, Work.cited(nil).count
+    assert_equal Work.count, Work.cited('blah').count
   end
 
-  def check_staleness(article, &block)
-    article.update_attribute :retrieved_at, 1.minute.ago
-    article.retrievals.each {|r| r.update_attribute :retrieved_at, 1.minute.ago }
-    assert !article.stale?
-    yield article
-    assert article.stale?
+  def check_staleness(work, &block)
+    work.update_attribute :retrieved_at, 1.minute.ago
+    work.retrievals.each {|r| r.update_attribute :retrieved_at, 1.minute.ago }
+    assert !work.stale?
+    yield work
+    assert work.stale?
   end
 end

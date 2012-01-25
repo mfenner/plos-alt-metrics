@@ -20,9 +20,9 @@ class Citeulike < Source
   
   def uses_search_url; true; end
 
-  def perform_query(article, options={})
+  def perform_query(work, options={})
 
-    url = "http://www.citeulike.org/api/posts/for/doi/#{CGI.escape(article.doi)}"
+    url = "http://www.citeulike.org/api/posts/for/doi/#{CGI.escape(work.doi)}"
     
     Rails.logger.info "Citeulike query: #{url}"
     
@@ -38,7 +38,7 @@ class Citeulike < Source
 
         citation = {}
         citation[:username] = cite.attributes['username']
-        citation[:articleid] = cite.attributes['article_id']
+        citation[:workid] = cite.attributes['work_id']
         citation[:post_time] = post_time.content
         citation[:tags] = tags.join ', ' 
         citation[:uri] = link.attributes['url']
@@ -46,14 +46,14 @@ class Citeulike < Source
         citations << citation
 
         # Note CiteULike's internal ID if we haven't already
-        options[:retrieval].local_id ||= citation[:articleid]
+        options[:retrieval].local_id ||= citation[:workid]
       end
       citations
     end
   end
 
   def public_url(retrieval)
-    retrieval.local_id && ("http://www.citeulike.org/article-posts/" \
+    retrieval.local_id && ("http://www.citeulike.org/work-posts/" \
                            + retrieval.local_id)
   end
   

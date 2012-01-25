@@ -19,10 +19,12 @@
 -%>
 <div class="border">
 <div class="page">
-  <h1>Add a new article</h1>
+  <h1>Editing work <%=h @work.doi %></h1>
 
-  <%= render :partial => "form", :object => @article %>
+  <%= render :partial => "form", :object => @work %>
 
-  <%= link_to 'Back to list', articles_path %>
+  <%= link_to 'Show', @work %>
+  <br/>
+  <%= link_to 'Back to list', works_path %>
 </div>
 </div>

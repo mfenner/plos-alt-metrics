@@ -20,7 +20,7 @@
       <%= APP_CONFIG['application'] %>
     </title>
     <link rel="shortcut icon" href="/favicon.ico">
-    <%= auto_discovery_link_tag(:rss, { :controller => "articles", :action => "index" }) %>
+    <%= auto_discovery_link_tag(:rss, { :controller => "works", :action => "index" }) %>
 		<!--[if lt IE 9]>
 		  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -35,7 +35,7 @@
 				<div class="container">
 				  <h3><a href="#"><%= APP_CONFIG['application'] %></a></h3>
 				  <%= render_navigation %>
-				  <% if ["articles", "authors", "groups", "journals"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
+				  <% if ["works", "authors", "groups", "journals"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
 			      <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get") do %>
 			        <%= search_field_tag :q, params[:q], :placeholder => "Search" %>
 			      <% end %>
@@ -65,9 +65,9 @@
 									  <li class="divider"></li>
 			   	          <li><%= link_to 'Edit Author', edit_author_path(@author, :partial => "twitter"), :remote => true %></li>
 			              <li><%= link_to "Refresh", author_path(@author.username, :refresh => "now"), :remote => true %></li>
-										<% elsif controller.controller_name == "articles" and controller.action_name == "show" %>
+										<% elsif controller.controller_name == "works" and controller.action_name == "show" %>
 										  <li class="divider"></li>
-				              <li><%= link_to "Refresh", article_path(@article.short_doi, :refresh => "now"), :remote => true %></li>
+				              <li><%= link_to "Refresh", work_path(@work.short_doi, :refresh => "now"), :remote => true %></li>
 						      <% elsif controller.controller_name == "sources" and controller.action_name == "show" %>
 				            <li class="divider"></li>
 				   	        <li><%= link_to 'Edit Source', edit_source_path(@source) %></li>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120108163048) do
+ActiveRecord::Schema.define(:version => 20120125201814) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -19,37 +19,6 @@ ActiveRecord::Schema.define(:version => 20120108163048) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "homepageURL"
-  end
-
-  create_table "articles", :force => true do |t|
-    t.string   "doi",                                                :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "retrieved_at",    :default => '1970-01-01 00:00:00', :null => false
-    t.string   "pub_med"
-    t.string   "pub_med_central"
-    t.date     "published_on"
-    t.text     "title"
-    t.integer  "journal_id"
-    t.text     "volume"
-    t.text     "issue"
-    t.text     "first_page"
-    t.text     "last_page"
-    t.integer  "year"
-    t.integer  "mas"
-    t.string   "mendeley"
-    t.string   "mendeley_url"
-    t.string   "scopus"
-    t.string   "short_doi"
-    t.integer  "book_id"
-    t.string   "content_type"
-  end
-
-  add_index "articles", ["doi"], :name => "index_articles_on_doi", :unique => true
-
-  create_table "articles_groups", :id => false, :force => true do |t|
-    t.integer "article_id"
-    t.integer "group_id"
   end
 
   create_table "authentications", :force => true do |t|
@@ -103,9 +72,10 @@ ActiveRecord::Schema.define(:version => 20120108163048) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "article_description"
+    t.text     "work_description"
     t.text     "author_description"
     t.text     "group_description"
+    t.text     "journal_description"
   end
 
   create_table "citations", :force => true do |t|
@@ -120,7 +90,7 @@ ActiveRecord::Schema.define(:version => 20120108163048) do
   add_index "citations", ["retrieval_id"], :name => "index_citations_on_retrieval_id"
 
   create_table "contributors", :force => true do |t|
-    t.integer  "article_id"
+    t.integer  "work_id"
     t.string   "surname"
     t.string   "given_name"
     t.string   "role"
@@ -205,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20120108163048) do
   end
 
   create_table "retrievals", :force => true do |t|
-    t.integer  "article_id",                                               :null => false
+    t.integer  "work_id",                                                  :null => false
     t.integer  "source_id",                                                :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -216,8 +186,8 @@ ActiveRecord::Schema.define(:version => 20120108163048) do
     t.boolean  "running"
   end
 
-  add_index "retrievals", ["article_id", "citations_count", "other_citations_count"], :name => "retrievals_article_id"
-  add_index "retrievals", ["source_id", "article_id"], :name => "index_retrievals_on_source_id_and_article_id", :unique => true
+  add_index "retrievals", ["source_id", "work_id"], :name => "index_retrievals_on_source_id_and_article_id", :unique => true
+  add_index "retrievals", ["work_id", "citations_count", "other_citations_count"], :name => "retrievals_article_id"
 
   create_table "sources", :force => true do |t|
     t.string   "type"
@@ -268,5 +238,36 @@ ActiveRecord::Schema.define(:version => 20120108163048) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "works", :force => true do |t|
+    t.string   "doi",                                                :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "retrieved_at",    :default => '1970-01-01 00:00:00', :null => false
+    t.string   "pub_med"
+    t.string   "pub_med_central"
+    t.date     "published_on"
+    t.text     "title"
+    t.integer  "journal_id"
+    t.text     "volume"
+    t.text     "issue"
+    t.text     "first_page"
+    t.text     "last_page"
+    t.integer  "year"
+    t.integer  "mas"
+    t.string   "mendeley"
+    t.string   "mendeley_url"
+    t.string   "scopus"
+    t.string   "short_doi"
+    t.integer  "book_id"
+    t.string   "content_type"
+  end
+
+  add_index "works", ["doi"], :name => "index_articles_on_doi", :unique => true
+
+  create_table "works_groups", :id => false, :force => true do |t|
+    t.integer "work_id"
+    t.integer "group_id"
+  end
 
 end

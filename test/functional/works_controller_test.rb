@@ -18,7 +18,7 @@
 
 require 'test_helper'
 
-class ArticlesControllerTest < ActionController::TestCase
+class WorksControllerTest < ActionController::TestCase
   include Fetcher
 
   def setup
@@ -34,7 +34,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_should_get_index
     get :index
     assert_response :success
-    assert_not_nil assigns(:articles)
+    assert_not_nil assigns(:works)
   end
 
   def test_should_get_index_in_csv_format
@@ -49,25 +49,25 @@ class ArticlesControllerTest < ActionController::TestCase
 
   def test_should_order_by_doi_by_published_on
     results = get_csv :order => "published_on"
-    assert results[0][0] == articles(:stale).doi
-    assert results[1][0] == articles(:not_stale).doi
+    assert results[0][0] == works(:stale).doi
+    assert results[1][0] == works(:not_stale).doi
   end
 
-  def test_should_get_only_cited_articles
+  def test_should_get_only_cited_works
     results = get_csv :cited => "1"
-    assert_equal Article.cited(1).count, results.size
-    assert_equal Article.cited(1).collect(&:doi), results.collect(&:first)
+    assert_equal Work.cited(1).count, results.size
+    assert_equal Work.cited(1).collect(&:doi), results.collect(&:first)
   end
 
-  def test_should_get_only_uncited_articles
+  def test_should_get_only_uncited_works
     results = get_csv :cited => "0"
-    assert_equal Article.cited(0).count, results.size
-    assert_equal Article.cited(0).collect(&:doi), results.collect(&:first)
+    assert_equal Work.cited(0).count, results.size
+    assert_equal Work.cited(0).collect(&:doi), results.collect(&:first)
   end
 
   def test_should_include_source_counts
     results = get_csv
-    a, b = articles(:not_stale), articles(:stale)
+    a, b = works(:not_stale), works(:stale)
     assert_equal [a.doi, a.published_on.to_s, a.title.to_s.strip_tags, "0", "1"], results[0]
     assert_equal [b.doi, b.published_on.to_s, b.title.to_s.strip_tags, "1", "1"], results[1]
   end
@@ -75,7 +75,7 @@ class ArticlesControllerTest < ActionController::TestCase
   def test_should_filter_by_query
     results = get_csv :query => "pgen"
     assert results.size == 1
-    assert results[0][0] == articles(:stale).doi
+    assert results[0][0] == works(:stale).doi
   end
 
   def test_should_get_new
@@ -83,77 +83,77 @@ class ArticlesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_create_article
-    assert_difference('Article.count') do
-      post :create, :article => { :doi => "10.0/dummy" }
+  def test_should_create_work
+    assert_difference('Work.count') do
+      post :create, :work => { :doi => "10.0/dummy" }
     end
 
-    assert_redirected_to article_path(assigns(:article))
+    assert_redirected_to work_path(assigns(:work))
   end
 
   def test_should_work_with_arbitrary_dois
-    assert_difference('Article.count', 5) do
-      post :create, :article => { :doi => "10.1000/182" }
-      post :create, :article => { :doi => "10.0092/ooh" }
-      post :create, :article => { :doi => "10.10/♥" }
-      post :create, :article => { :doi => "1.0/1337" }
-      post :create, :article => { :doi => "10.9898098098098/นก" }
+    assert_difference('Work.count', 5) do
+      post :create, :work => { :doi => "10.1000/182" }
+      post :create, :work => { :doi => "10.0092/ooh" }
+      post :create, :work => { :doi => "10.10/♥" }
+      post :create, :work => { :doi => "1.0/1337" }
+      post :create, :work => { :doi => "10.9898098098098/นก" }
     end
   end
 
   def test_should_require_doi
-    post :create, :article => {}
+    post :create, :work => {}
     assert_tag :tag => "div", 
                :attributes => { :class => "fieldWithErrors" },
                :descendant => { :tag => "input", 
-                                :attributes => { :id => "article_doi" } }
+                                :attributes => { :id => "work_doi" } }
   end
 
-  def test_should_show_article
-    get :show, :id => article_one_id
+  def test_should_show_work
+    get :show, :id => work_one_id
     assert_response :success
   end
 
-  def test_should_show_article_csv_sources
-    get :show, :id => articles(:stale).doi, :format => 'csv'
+  def test_should_show_work_csv_sources
+    get :show, :id => works(:stale).doi, :format => 'csv'
     assert @response.body =~ /citeulike/i
     assert @response.body =~ /pubmed/i
   end
 
-  def test_should_show_article_csv_sources_citeulike
-    get :show, :id => articles(:stale).doi, :format => 'csv', :source => 'citeulike'
+  def test_should_show_work_csv_sources_citeulike
+    get :show, :id => works(:stale).doi, :format => 'csv', :source => 'citeulike'
     assert @response.body =~ /citeulike/i
     assert @response.body !~ /pubmed/i
   end
 
-  def test_should_show_article_csv_sources_pubmed
-    get :show, :id => articles(:stale).doi, :format => 'csv', :source => 'pubmed'
+  def test_should_show_work_csv_sources_pubmed
+    get :show, :id => works(:stale).doi, :format => 'csv', :source => 'pubmed'
     assert @response.body !~ /citeulike/i
     assert @response.body =~ /pubmed/i, @response.body
   end
 
   def test_should_get_edit
-    get :edit, :id => article_one_id
+    get :edit, :id => work_one_id
     assert_response :success
   end
 
-  def test_should_update_article
-    put :update, :id => article_one_id, :article => { }
-    assert_redirected_to article_path(assigns(:article))
+  def test_should_update_work
+    put :update, :id => work_one_id, :work => { }
+    assert_redirected_to work_path(assigns(:work))
   end
 
-  def test_should_destroy_article
-    assert_difference('Article.count', -1) do
-      delete :destroy, :id => article_one_id
+  def test_should_destroy_work
+    assert_difference('Work.count', -1) do
+      delete :destroy, :id => work_one_id
     end
 
-    assert_redirected_to articles_path
+    assert_redirected_to works_path
   end
 
   def test_should_generate_route_using_doi
     # This ought to be as simple as:
-    #   path = "articles/info:doi%2F10.1000%2Fjournal.pone.1000/edit"
-    #   opts = {:controller => "articles", 
+    #   path = "works/info:doi%2F10.1000%2Fjournal.pone.1000/edit"
+    #   opts = {:controller => "works", 
     #           :id => "info:doi/10.1000/journal.pone.1000", 
     #           :action => "edit"}
     #   assert_generates path, opts
@@ -161,40 +161,40 @@ class ArticlesControllerTest < ActionController::TestCase
     # the DOI in the @opts hash. If I escape the DOI, it
     # finds the route but ends up double-escaping the URI, which causes
     # the comparison to fail. By doing extra escaping in the path, it passes:
-    path = "articles/info:doi%252F10.1000%252Fjournal.pone.1000/edit"
-    opts = {:controller => "articles", :id => "info:doi%2F10.1000%2Fjournal.pone.1000", :action => "edit"}
+    path = "works/info:doi%252F10.1000%252Fjournal.pone.1000/edit"
+    opts = {:controller => "works", :id => "info:doi%2F10.1000%2Fjournal.pone.1000", :action => "edit"}
     assert_generates path, opts
   end
 
   def test_should_recognize_route_using_doi
-    path = "articles/info:doi%2F10.1000%2Fjournal.pone.1000/edit"
-    opts = {:controller => "articles", :id => "info:doi/10.1000/journal.pone.1000", :action => "edit"}
+    path = "works/info:doi%2F10.1000%2Fjournal.pone.1000/edit"
+    opts = {:controller => "works", :id => "info:doi/10.1000/journal.pone.1000", :action => "edit"}
     assert_recognizes opts, path
   end
 
   def test_should_route_formats
     %w/ xml csv json html /.each do |format|
-      assert_routing "/articles/#{article_one_id}.#{format}", :controller => 'articles', :action => 'show', :id => CGI.unescape(article_one_id), :format => format
+      assert_routing "/works/#{work_one_id}.#{format}", :controller => 'works', :action => 'show', :id => CGI.unescape(work_one_id), :format => format
     end
-    assert_routing "/articles/#{article_one_id}", :controller => 'articles', :action => 'show', :id => CGI.unescape(article_one_id)
+    assert_routing "/works/#{work_one_id}", :controller => 'works', :action => 'show', :id => CGI.unescape(work_one_id)
   end
 
   def self.make_format_test(format_name, options={})
     format = options[:format] ||= format_name
     content_type = "application/#{options.delete(:type) || format}"
     define_method("test_should_generate_#{format_name}_format") do
-      options[:id] = article_one_id
+      options[:id] = work_one_id
       get :show, options
       assert_response :success
       assert_equal content_type, @response.content_type
       if format == "xml"
         result = parse_xml(@response.body)
-        citations_count = result.find("//article").first.attributes["citations_count"]
+        citations_count = result.find("//work").first.attributes["citations_count"]
       elsif format == "json"
         body = @response.body
         body = body[options[:callback].length+1..-2] \
           unless options[:callback].nil?
-        citations_count = ActiveSupport::JSON.decode(body)["article"]["citations_count"]
+        citations_count = ActiveSupport::JSON.decode(body)["work"]["citations_count"]
       end
       assert citations_count
     end
@@ -211,7 +211,7 @@ class ArticlesControllerTest < ActionController::TestCase
     :type => "json", :history => "1")
 
 private
-  def article_one_id
-    articles(:not_stale).to_param.gsub("/", "%2F")
+  def work_one_id
+    works(:not_stale).to_param.gsub("/", "%2F")
   end
 end

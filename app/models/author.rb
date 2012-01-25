@@ -23,7 +23,7 @@ class Author < ActiveRecord::Base
   has_many :positions
   has_many :authentications
   has_many :contributors, :dependent => :destroy
-  has_many :articles, :through => :contributors
+  has_many :works, :through => :contributors
   has_many :members
   has_many :groups, :through => :members
   has_many :friendships
@@ -69,7 +69,7 @@ class Author < ActiveRecord::Base
    end
   
   def stale?
-    new_record? or author.articles.empty?
+    new_record? or author.works.empty?
   end
 
   def refreshed!
@@ -87,7 +87,7 @@ class Author < ActiveRecord::Base
         :location => location,
         :description => description,
         :website => website,
-        :articles_count => articles_count,
+        :works_count => works_count,
         :updated_at => updated_at
       }
     }
@@ -100,19 +100,19 @@ class Author < ActiveRecord::Base
 	    end
     end
     
-    result[:author][:articles] = []
-    self.articles.each do |article|
-      result[:author][:articles] << {:doi => article.doi, 
-        :shortdoi => article.short_doi,
-        :title => article.title, 
-        :year => article.year,
-        :pub_med => article.pub_med,
-        :pub_med_central => article.pub_med_central,
-        :mas => article.mas,
-        :mendeley => article.mendeley,
-        :citations_count => article.citations_count,
-        :published => (article.published_on.blank? ? nil : article.published_on.to_time),
-        :updated_at => article.retrieved_at}
+    result[:author][:works] = []
+    self.works.each do |work|
+      result[:author][:works] << {:doi => work.doi, 
+        :shortdoi => work.short_doi,
+        :title => work.title, 
+        :year => work.year,
+        :pub_med => work.pub_med,
+        :pub_med_central => work.pub_med_central,
+        :mas => work.mas,
+        :mendeley => work.mendeley,
+        :citations_count => work.citations_count,
+        :published => (work.published_on.blank? ? nil : work.published_on.to_time),
+        :updated_at => work.retrieved_at}
     end
     
     result.to_json(options)
@@ -120,14 +120,14 @@ class Author < ActiveRecord::Base
   
   def to_bib
     bibliography = BibTeX::Bibliography.new
-    self.articles.each do |article|
-      bibliography << article.bib_entry
+    self.works.each do |work|
+      bibliography << work.bib_entry
     end
     bibliography
   end
   
-  def articles_count
-    self.articles.count
+  def works_count
+    self.works.count
   end
   
   def display_name
@@ -230,8 +230,8 @@ class Author < ActiveRecord::Base
     author
   end
   
-  def self.fetch_articles_from_mas(author, options={})
-    # Fetch articles, return empty array if no mas identifier, no response, or no articles found
+  def self.fetch_works_from_mas(author, options={})
+    # Fetch works, return empty array if no mas identifier, no response, or no works found
     return [] if author.mas.blank?
     
     url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{author.mas}&StartIdx=1&EndIdx=50"
@@ -240,11 +240,11 @@ class Author < ActiveRecord::Base
     result = SourceHelper.get_json(url, options)["d"]["Publication"]
     return [] if result.nil?
     
-    articles = result["Result"]
+    works = result["Result"]
   end
   
-  def self.fetch_articles_from_authorclaim(author, options={})
-    # Fetch articles, return empty array if no authorclaim identifier, no response, or no articles found
+  def self.fetch_works_from_authorclaim(author, options={})
+    # Fetch works, return empty array if no authorclaim identifier, no response, or no works found
     return [] if author.authorclaim.blank?
     
     url = "ftp://ftp.authorclaim.org/#{author.authorclaim[1,1].to_s}/#{author.authorclaim[2,1].to_s}/#{author.authorclaim}.amf.xml"
@@ -259,21 +259,21 @@ class Author < ActiveRecord::Base
       contributor["given_name"] << person.find_first("amf:givenname").content if person.find_first("amf:givenname")
       contributor["given_name"] << (contributor["given_name"].blank? ? "" : " ") + person.find_first("amf:additionalname").content if person.find_first("amf:additionalname")
       contributor["surname"] = person.find_first("amf:familyname").content if person.find_first("amf:familyname")
-      document.find("//amf:isauthorof/amf:text").each do |article|
-        ref = article.attributes.get_attribute("ref").value
-        # Only use article if reference has DOI
+      document.find("//amf:isauthorof/amf:text").each do |work|
+        ref = work.attributes.get_attribute("ref").value
+        # Only use work if reference has DOI
         next unless ref.match(/^info:lib\/crossref:/)
         result = {}
         result["DOI"] = CGI::unescape(ref[18..-1])
-        result["Title"] = article.find_first("amf:title").content
+        result["Title"] = work.find_first("amf:title").content
         results << result
       end
-      { :contributor => contributor, :articles => results }
+      { :contributor => contributor, :works => results }
     end
   end
   
-  def self.fetch_articles_from_scopus(author, options={})
-    # Fetch articles, return empty array if no mas identifier, no response, or no articles found
+  def self.fetch_works_from_scopus(author, options={})
+    # Fetch works, return empty array if no mas identifier, no response, or no works found
     return [] if author.scopus.blank?
     
     url = "http://api.elsevier.com/content/author/AUTHOR_ID:#{author.scopus}"
@@ -284,18 +284,18 @@ class Author < ActiveRecord::Base
     result = SourceHelper.get_json(url, options)
     return [] if result.nil?
     
-    articles = result["Result"]
+    works = result["Result"]
   end
   
   def citations_count(source=nil, options={})
     citations = []
-    articles.each do |article|
+    works.each do |work|
       unless source.nil?
-        citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
-        citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << work.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << work.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
       else
-        citations << article.retrievals.sum(:citations_count)
-        citations << article.retrievals.sum(:other_citations_count)
+        citations << work.retrievals.sum(:citations_count)
+        citations << work.retrievals.sum(:other_citations_count)
       end
     end
     citations = citations.sum
@@ -304,8 +304,8 @@ class Author < ActiveRecord::Base
   def get_cites_by_category(categoryname)
     citations = []
     categoryname = categoryname.downcase
-    articles.each do |article|
-      citations << article.retrievals.map do |ret|
+    works.each do |work|
+      citations << work.retrievals.map do |ret|
         if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
           #Cast this to an array to get around a ruby 'singularize' bug
           { :name => ret.source.name.downcase, :citations => ret.citations.to_a }

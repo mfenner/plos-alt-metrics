@@ -22,9 +22,9 @@
 	  # header row 
     csv << ["doi", "title", "journal", "year"]
     # data rows
-    unless @author.articles.empty?
-      @author.articles.each do |article|
-        csv << [ article.doi, article.title.blank? ? "" : article.title, article.journal.blank? ? "" : article.journal.title, article.year ]
+    unless @author.works.empty?
+      @author.works.each do |work|
+        csv << [ work.doi, work.title.blank? ? "" : work.title, work.journal.blank? ? "" : work.journal.title, work.year ]
       end
     end
   end

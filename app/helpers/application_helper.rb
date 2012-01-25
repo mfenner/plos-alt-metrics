@@ -12,11 +12,11 @@ module ApplicationHelper
     date.blank? ? nil : date.strftime("%Y-%m-%d")
   end
   
-  def formatted_citation(article, options = {})
+  def formatted_citation(work, options = {})
     formatted_citation = ""
-    unless article.contributors.blank? 
+    unless work.contributors.blank? 
       names = []
-      article.contributors.each do |contributor|
+      work.contributors.each do |contributor|
         unless (contributor.author_id.blank? or options[:without_links])  
           names << link_to(contributor.brief_name, author_path(contributor.author.username))
         else
@@ -33,11 +33,11 @@ module ApplicationHelper
       end
     end
     if options[:without_links] 
-      formatted_citation << "<em>" + article.journal.title + "</em>. " unless article.journal.blank?
+      formatted_citation << "<em>" + work.journal.title + "</em>. " unless work.journal.blank?
     else
-      formatted_citation << "<em>" + link_to(article.journal.title, journal_path(article.journal.issn_print)) + "</em>. " unless article.journal.blank?
+      formatted_citation << "<em>" + link_to(work.journal.title, journal_path(work.journal.issn_print)) + "</em>. " unless work.journal.blank?
     end
-  	formatted_citation << article.book.title + ". " unless article.book.blank?
-    formatted_citation << article.year.to_s + (article.volume ? ":#{article.volume}" : "") + (article.issue ? " (#{article.issue})" : "") + (article.first_page ? ";#{article.first_page}" : "") + ((article.last_page and article.last_page > article.first_page) ? "-#{article.last_page}": "")
+  	formatted_citation << work.book.title + ". " unless work.book.blank?
+    formatted_citation << work.year.to_s + (work.volume ? ":#{work.volume}" : "") + (work.issue ? " (#{work.issue})" : "") + (work.first_page ? ";#{work.first_page}" : "") + ((work.last_page and work.last_page > work.first_page) ? "-#{work.last_page}": "")
   end
 end

@@ -21,12 +21,12 @@
 <div class="border">
 <div class="page">
 
-<h1>Article Summaries</h1>
+<h1>Work Summaries</h1>
 
 <% for record in @result %>
-  <div class="article">
+  <div class="work">
     <span class="doi">
-    <%=link_to h(record[:article].doi), article_path(record[:article]) %></h3>
+    <%=link_to h(record[:work].doi), work_path(record[:work]) %></h3>
     <span class="details">
       <ul>
       <% for groupcount in record[:groupcounts] %>

@@ -2,19 +2,19 @@
 	<ul data-role="listview" data-theme="c" data-inset="true">
 	  <li data-role="list-divider"><%= category.name %></li>
 	  <% category.sources.active.each do |source| %>
-	    <% if source.prefix.blank? or @article.doi.match(/^#{source.prefix}/) %>
-	      <% if @article.citations_by_source(source) and @article.citations_by_source(source)[:public_url] and @article.citations_by_source(source)[:total] > 0 %>
-	        <li><a href="<%= @article.citations_by_source(source)[:public_url] %>">
+	    <% if source.prefix.blank? or @work.doi.match(/^#{source.prefix}/) %>
+	      <% if @work.citations_by_source(source) and @work.citations_by_source(source)[:public_url] and @work.citations_by_source(source)[:total] > 0 %>
+	        <li><a href="<%= @work.citations_by_source(source)[:public_url] %>">
 		      <%= image_tag source.class.to_s.downcase + "_sm.gif", :class => "ui-li-icon source" %>
 	        <%= source.name %>
-	        <span class="ui-li-count"><%= @article.citations_by_source(source)[:total] %></span>
+	        <span class="ui-li-count"><%= @work.citations_by_source(source)[:total] %></span>
 	        </a>
 	        </li>
 	      <% else %>
 	        <li>
 		      <%= image_tag source.class.to_s.downcase + "_sm.gif", :class => "ui-li-icon source" %>
 		      <%= source.name %>
-		      <span class="ui-li-count"><%= @article.citations_by_source(source) ? @article.citations_by_source(source)[:total] : 0 %></span>
+		      <span class="ui-li-count"><%= @work.citations_by_source(source) ? @work.citations_by_source(source)[:total] : 0 %></span>
 		      </li>
 	      <% end %>
 	    <% end %>

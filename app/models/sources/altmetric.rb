@@ -20,9 +20,9 @@ class Altmetric < Source
   # Requires Mendeley Consumer Key
   def uses_partner_id; true; end
 
-  def perform_query(article, options = {})
+  def perform_query(work, options = {})
   
-    url = "http://api.altmetric.com/unstable/doi/" + CGI.escape(article.doi)
+    url = "http://api.altmetric.com/unstable/doi/" + CGI.escape(work.doi)
     consumer_key= "?key=" + partner_id.to_s
     Rails.logger.info "Altmetric query: #{url + consumer_key}"
     results = SourceHelper.get_json(url + consumer_key, options)
@@ -34,7 +34,7 @@ class Altmetric < Source
     results = results["posts"]
     return [] if results.nil?
 
-    Rails.logger.debug "Altmetric got #{results.inspect} for #{article.inspect}"
+    Rails.logger.debug "Altmetric got #{results.inspect} for #{work.inspect}"
     if results
       citations = []
       results.each do |result|

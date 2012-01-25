@@ -17,7 +17,7 @@
 # limitations under the License.
 
 class Journal < ActiveRecord::Base
-  has_many :articles
+  has_many :works
   
   validates_presence_of :issn_print
   validates_uniqueness_of :issn_print
@@ -28,19 +28,19 @@ class Journal < ActiveRecord::Base
     issn_print[0..3] + "-" + issn_print[4..7]
   end
   
-  def articles_count
-    self.articles.count
+  def works_count
+    self.works.count
   end
   
   def citations_count(source=nil, options={})
     citations = []
-    articles.each do |article|
+    works.each do |work|
       unless source.nil?
-        citations << article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
-        citations << article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << work.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << work.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
       else
-        citations << article.retrievals.sum(:citations_count)
-        citations << article.retrievals.sum(:other_citations_count)
+        citations << work.retrievals.sum(:citations_count)
+        citations << work.retrievals.sum(:other_citations_count)
       end
     end
     citations = citations.sum
@@ -49,8 +49,8 @@ class Journal < ActiveRecord::Base
   def get_cites_by_category(categoryname)
     citations = []
     categoryname = categoryname.downcase
-    articles.each do |article|
-      citations << article.retrievals.map do |ret|
+    works.each do |work|
+      citations << work.retrievals.map do |ret|
         if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
           #Cast this to an array to get around a ruby 'singularize' bug
           { :name => ret.source.name.downcase, :citations => ret.citations.to_a }

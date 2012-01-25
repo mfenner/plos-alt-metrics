@@ -19,8 +19,8 @@
 Provider: ScienceCard
 Content:text/plain; charset="UTF-8"
 
-<% unless @author.articles.empty? %>
-  <% @author.articles.each do |article| %>
-<%= article.to_ris %>
+<% unless @author.works.empty? %>
+  <% @author.works.each do |work| %>
+<%= work.to_ris %>
   <% end %>
 <% end %>

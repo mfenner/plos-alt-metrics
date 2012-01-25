@@ -27,8 +27,8 @@
   empty_row = Array.new(month_count, 0)
   FasterCSV.generate do |csv|
     csv << ["DOI", "Published", "Title"] + months.map {|date| "#{date.month}/#{date.year}" }
-    @articles.each do |article|
-      retrieval = article.retrievals.detect {|r| r.source_id == @source.id }
+    @works.each do |work|
+      retrieval = work.retrievals.detect {|r| r.source_id == @source.id }
       month_totals = if retrieval.nil? 
         empty_row
       else
@@ -42,7 +42,7 @@
           end
         end
       end
-      csv << [article.doi, article.published_on, article.title.to_s.strip_tags] + month_totals
+      csv << [work.doi, work.published_on, work.title.to_s.strip_tags] + month_totals
     end
   end
 -%>
@@ -55,9 +55,9 @@
 
   FasterCSV.generate do |csv|
     csv << ["DOI", "Published", "Title"] + sources.map(&:name)
-    @articles.each do |article|
+    @works.each do |work|
       source_counts = sources.map do |source|
-        retrieval = article.retrievals.detect {|r| r.source_id == source.id }
+        retrieval = work.retrievals.detect {|r| r.source_id == source.id }
         if one_month && (one_month != this_month)
           history = retrieval.histories.detect {|h| h.year == one_month.year && h.month == one_month.month } \
             if retrieval
@@ -66,7 +66,7 @@
           (retrieval && retrieval.total_citations_count) || 0
         end
       end
-      csv << [article.doi, article.published_on, article.title.to_s.strip_tags] + source_counts
+      csv << [work.doi, work.published_on, work.title.to_s.strip_tags] + source_counts
     end
   end 
 -%>
