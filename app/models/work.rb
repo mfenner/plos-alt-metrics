@@ -27,7 +27,7 @@ class Work < ActiveRecord::Base
   has_many :contributors, :order => :position, :dependent => :destroy
   has_and_belongs_to_many :groups
   
-  validates :url, :title, :presence => true
+  validates :url, :title, :type, :presence => true
   validates :url, :uniqueness => true
 
   after_create :create_retrievals

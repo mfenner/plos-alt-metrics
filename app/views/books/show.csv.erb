@@ -1,0 +1,36 @@
+<%#
+  # $HeadURL$
+  # $Id$
+  #
+  # Copyright (c) 2009-2010 by Public Library of Science, a non-profit corporation
+  # http://www.plos.org/
+  #
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #     http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
+-%>
+<%=
+  FasterCSV.generate do |csv|
+	  # header row 
+    csv << ["doi", "title", "book", "year"]
+    # data rows
+    unless @book.book_contents.empty?
+      @book.book_contents.each do |book_content|
+        csv << [ book_content.doi, book_content.title.blank? ? "" : book_content.title, book_content.book.title, book_content.year ]
+      end
+    end
+    unless @book.conference_papers.empty?
+      @book.conference_papers.each do |conference_paper|
+        csv << [ conference_paper.doi, conference_paper.title.blank? ? "" : conference_paper.title, conference_paper.book.title, conference_paper.year ]
+      end
+    end
+  end
+%>

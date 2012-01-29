@@ -19,10 +19,10 @@
 class Journal < ActiveRecord::Base
   has_many :journal_articles
   
-  validates_presence_of :issn_print
   validates_uniqueness_of :issn_print
-  validates_presence_of :issn_electronic
   validates_uniqueness_of :issn_electronic
+  
+  validates :isbn_print, :issn_electronic, :title, :presence => true
   
   def issn
     issn_print[0..3] + "-" + issn_print[4..7]

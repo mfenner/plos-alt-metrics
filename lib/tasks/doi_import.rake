@@ -18,9 +18,9 @@
 
 require 'doi'
 
-desc "Bulk-import DOIs from standard input"
+desc "Bulk-import works from standard input using URL"
 task :doi_import => :environment do
-  puts "Reading DOIs from standard input..."
+  puts "Reading URLs from standard input..."
   valid = []
   invalid = []
   duplicate = []
@@ -47,7 +47,7 @@ task :doi_import => :environment do
       unless existing
         article = Article.create(:doi => doi, :published_on => published_on, 
                        :title => title)
-        RetrievalWorker.async_retrieval(:article_id => article.id) 
+        #RetrievalWorker.async_retrieval(:article_id => article.id) 
         created << doi
       else
         if existing.published_on != published_on or existing.title != title

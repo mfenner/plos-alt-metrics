@@ -1,0 +1,27 @@
+<div class="content">
+  <% unless @books.empty? %>
+	<table>
+		<thead>
+		<th><h2><%= pluralize(@books.total_entries, 'Book') %> </h2></th>
+		</thead>
+		<tbody>
+		<% @books.in_groups_of(2, false) do |books| %> 
+		  <tr>  
+		    <% books.each do |book| %>  
+		    	<td>
+			      <% unless book.nil? %>
+							<span><%= link_to book.title, book_path(book.isbn_print) %></span><br/>
+							<%= book.isbn_print %>
+		        <% end %>
+	      	</td>
+		    <% end %>  
+		  </tr>  
+	<% end %>
+	</tbody>
+	</table>
+	
+	<%= will_paginate @books %>
+  <% else %>
+    <h2>No books found</h2>
+  <% end %>
+</div>

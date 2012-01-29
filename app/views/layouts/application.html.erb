@@ -35,7 +35,7 @@
 				<div class="container">
 				  <h3><a href="#"><%= APP_CONFIG['application'] %></a></h3>
 				  <%= render_navigation %>
-				  <% if ["works", "authors", "groups", "journals"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
+				  <% if ["works", "authors", "groups", "journals", "books"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
 			      <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get") do %>
 			        <%= search_field_tag :q, params[:q], :placeholder => "Search" %>
 			      <% end %>

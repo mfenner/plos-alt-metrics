@@ -1,0 +1,35 @@
+<div class="content">
+  <div class="page-header">
+    <h2><%= @book.title %> <small>ISBN <%= @book.isbn_print %></small></h2>
+  </div>
+
+  <div class="row">
+		<div class="span4 offset12">
+			<p><%= link_to "JSON", book_path(@book.isbn_print, :format => :json) %> | <%= link_to "XML", book_path(@book.isbn_print, :format => :xml) %> | <%= link_to "BibTeX", book_path(@book.isbn_print, :format => :bib) %> | <%= link_to "RIS", book_path(@book.isbn_print, :format => :ris) %> | <%= link_to "CSV", book_path(@book.isbn_print, :format => :csv) %></p>
+		</div>
+	</div>
+
+	<ul class="tabs" data-tabs="tabs" >
+		<li class="active"><a href="#source">Metrics</a></li>
+		<% unless @book.book_contents.empty? %>
+		  <li><a href="#book_content">Book Chapters</a></li>
+		<% end %>
+		<% unless @book.conference_papers.empty? %>
+		  <li><a href="#conference_paper">Conference Papers</a></li>
+		<% end %>
+	</ul>	
+	
+	<div class="tab-content">		
+		<div class="tab-pane active" id="source">
+		  <%= render :partial => 'source'%>
+		</div>
+
+		<div class="tab-pane" id="book_content">
+		  <%= render :partial => 'book_content'%>
+		</div>
+		
+		<div class="tab-pane" id="conference_paper">
+		  <%= render :partial => 'conference_paper'%>
+		</div>
+	</div>
+</div>

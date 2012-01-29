@@ -38,8 +38,12 @@ module ApplicationHelper
       else
         formatted_citation << "<em>" + link_to(work.journal.title, journal_path(work.journal.issn_print)) + "</em>. "
       end
-    elsif work.type == "BookContent" and !work.book.blank?
-  	  formatted_citation << work.book.title + ". " unless work.book.blank?
+    elsif (work.type == "BookContent" or work.type == "ConferencePaper") and !work.book.blank?
+      if options[:without_links]
+  	    formatted_citation << "In: " + work.book.title + ". "
+  	  else
+  	    formatted_citation << "In: " + link_to(work.book.title, book_path(work.book.isbn_print)) + ". "
+  	  end
   	end
     formatted_citation << work.year.to_s + (work.volume ? ":#{work.volume}" : "") + (work.issue ? " (#{work.issue})" : "") + (work.first_page ? ";#{work.first_page}" : "") + ((work.last_page and work.last_page > work.first_page) ? "-#{work.last_page}": "")
   end

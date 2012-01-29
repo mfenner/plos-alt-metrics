@@ -26,6 +26,7 @@ PlosAltMetrics::Application.routes.draw do
   
   resources :groups
   resources :journals
+  resources :books
   
   # Admin resources
   resources :sources

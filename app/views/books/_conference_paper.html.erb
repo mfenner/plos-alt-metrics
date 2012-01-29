@@ -1,0 +1,67 @@
+<%#
+  # Copyright (c) 2011 Martin Fenner
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #     http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
+-%>
+
+<% unless @book.conference_papers.empty? %>
+	<div class="conference_paper">
+		<table class="zebra-striped">
+			<thead>
+			<th>
+				<h2><%= pluralize(@book.conference_papers.count, 'Conference Paper') %></h2>
+			</th>
+			<% active_categories.each do |category| %>
+		    <% category.sources.active.each do |source| %>
+		      <% if source.prefix.blank? or @book.title.match(/^PLoS/) %>
+		      <th>
+				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.work_description + ": " + source.name %>
+			    </th>
+			  <% end %>	
+			  <% end %>
+	    <% end %>
+	    </thead>
+	    <tbody>
+	    <% @book.conference_papers.each do |conference_paper| %>
+	      <tr>
+					<td>	
+	      	  <span itemprop="name" class="name"><%= link_to conference_paper.title, work_path(conference_paper.id) %></span><br/>
+	          <%= formatted_citation(conference_paper).html_safe %>
+	          <br/><%= link_to "http://doi.org/" + conference_paper.short_doi, "http://doi.org/" + conference_paper.short_doi, :itemprop => "url" %>
+	      	</td>
+	          <% active_categories.each do |category| %>
+					    <% category.sources.active.each do |source| %>
+					      <% if source.prefix.blank? or conference_paper.doi.match(/^#{source.prefix}/) %>
+				        <td>
+					        <% citation = conference_paper.citations_by_source(source) %>
+								  <% if citation and citation[:total] > 0 %>
+	                 <% if citation[:public_url] %>
+	                   <%= link_to h(citation[:total]), citation[:public_url]  %>
+	                 <% else %>
+	                   <%= h(citation[:total]) %>
+	                 <% end %>
+	               <% end %>
+					    </td>
+					    <% end %>
+				    <% end %>
+	   	  <% end %>
+		  </tr>
+	    <% end %>
+		</tbody>
+		</table>
+	</div>
+<% else %>
+  <div class="alert-message warning fade in" data-alert="alert" >
+    <a class="close" href="#">&times;</a>
+    <p>No book content found.</p>
+  </div>
+<% end %>

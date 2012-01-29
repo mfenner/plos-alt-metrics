@@ -18,5 +18,36 @@
 
 class Book < ActiveRecord::Base
   has_many :book_contents
+  has_many :conference_papers
+  
+  validates :isbn_print, :title, :presence => true
+  
+  def citations_count(source=nil, options={})
+    citations = []
+    book_contents.each do |book_content|
+      unless source.nil?
+        citations << book_content.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << book_content.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+      else
+        citations << book_content.retrievals.sum(:citations_count)
+        citations << book_content.retrievals.sum(:other_citations_count)
+      end
+    end
+    citations = citations.sum
+  end
+  
+  def get_cites_by_category(categoryname)
+    citations = []
+    categoryname = categoryname.downcase
+    book_contents.each do |book_content|
+      citations << book_content.retrievals.map do |ret|
+        if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
+          #Cast this to an array to get around a ruby 'singularize' bug
+          { :name => ret.source.name.downcase, :citations => ret.citations.to_a }
+        end
+      end.compact
+    end
+    citations = citations.sum
+  end
 
 end

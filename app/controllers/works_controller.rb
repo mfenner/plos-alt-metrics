@@ -117,6 +117,9 @@ class WorksController < ApplicationController
   # POST /works
   # POST /works.xml
   def create
+    # Set type to "Other" if no type is provided
+    params[:work][:type] ||= "Other"
+    
     @work = Work.new(params[:work])
 
     respond_to do |format|
