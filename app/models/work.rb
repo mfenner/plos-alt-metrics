@@ -446,11 +446,13 @@ class Work < ActiveRecord::Base
             unless isbn_print.blank?
               book = Book.find_or_create_by_isbn_print(:isbn_print => isbn_print,
                                                        :title => result[:volume_title],
-                                                       :isbn_electronic => isbn_electronic)
+                                                       :isbn_electronic => isbn_electronic,
+                                                       :year => result[:year])
             else
               book = Book.find_or_create_by_isbn_electronic(:isbn_electronic => isbn_electronic,
                                                           :title => result[:volume_title],
-                                                          :isbn_print => isbn_electronic)
+                                                          :isbn_print => isbn_electronic,
+                                                          :year => result[:year])
             end
             book_id = book.id
           else

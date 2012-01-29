@@ -18,7 +18,7 @@
 		<table class="zebra-striped">
 		  <thead>
 			<th>
-				<h2><%= pluralize(@author.book_contents.count, 'Book Content') %></h2>
+				<h2><%= pluralize(@author.book_contents.count, 'Book Chapter') %></h2>
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>

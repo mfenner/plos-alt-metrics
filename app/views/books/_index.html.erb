@@ -2,7 +2,7 @@
   <% unless @books.empty? %>
 	<table>
 		<thead>
-		<th><h2><%= pluralize(@books.total_entries, 'Book') %> </h2></th>
+		<th><h2><%= pluralize(@books.total_entries, 'Books and Proceedings') %> </h2></th>
 		</thead>
 		<tbody>
 		<% @books.in_groups_of(2, false) do |books| %> 
@@ -12,6 +12,9 @@
 			      <% unless book.nil? %>
 							<span><%= link_to book.title, book_path(book.isbn_print) %></span><br/>
 							<%= book.isbn_print %>
+							<% unless book.year.blank? %>
+							  (<%= book.year %>)
+							<% end %>
 		        <% end %>
 	      	</td>
 		    <% end %>  

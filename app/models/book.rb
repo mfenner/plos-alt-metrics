@@ -20,7 +20,7 @@ class Book < ActiveRecord::Base
   has_many :book_contents
   has_many :conference_papers
   
-  validates :isbn_print, :title, :presence => true
+  validates :isbn_print, :title, :year, :presence => true
   
   def citations_count(source=nil, options={})
     citations = []

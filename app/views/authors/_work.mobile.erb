@@ -9,7 +9,7 @@
   <div data-role="collapsible">
 	<h3 class="show">Works</h3>
   <ul data-role="listview" data-theme="c" data-filter="true" data-filter-placeholder="Filter works...">
-    <% @works.each do |work| %>
+    <% @author.works.each do |work| %>
 	    <li><a href="<%= work_path(work.id) %>" class="normal">
         <h3><%= work.title %></h3>
         <%= formatted_citation(work, :without_links => true).html_safe %>
