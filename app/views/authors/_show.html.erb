@@ -16,8 +16,16 @@
 	<ul class="tabs" data-tabs="tabs" >
 		<li class="<%= @author.has_profile ? '' : 'active' %>"><a href="#service">Identifiers</a></li>
 		<% if @author.has_profile %>
-		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
-		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#work">Works</a></li>
+		<li class="active"><a href="#source">Metrics</a></li>
+		<% unless @author.journal_articles.empty? %>
+		  <li><a href="#journal_article">Journal Articles (<%= @author.journal_articles.count %>)</a></li>
+		<% end %>
+		<% unless @author.conference_papers.empty? %>
+		  <li><a href="#conference_paper">Conference Papers (<%= @author.conference_papers.count %>)</a></li>
+		<% end %>
+		<% unless @author.book_contents.empty? %>
+		  <li><a href="#book_content">Book Content (<%= @author.book_contents.count %>)</a></li>
+		<% end %>
 		<% end %>
 	</ul>	
 	
@@ -27,12 +35,20 @@
 		</div>
 		
 		<% if @author.has_profile %>
-			<div class="tab-pane <%= params[:page].blank? ? 'active' : '' %>" id="source">
+			<div class="tab-pane active" id="source">
 			  <%= render :partial => 'source'%>
 			</div>
 
-			<div class="tab-pane <%= params[:page].blank? ? '' : 'active' %>" id="work">
-			  <%= render :partial => 'work'%>
+			<div class="tab-pane" id="journal_article">
+			  <%= render :partial => 'journal_article' %>
+			</div>
+			
+			<div class="tab-pane" id="conference_paper">
+			  <%= render :partial => 'conference_paper' %>
+			</div>
+			
+			<div class="tab-pane" id="book_content">
+			  <%= render :partial => 'book_content' %>
 			</div>
 		<% end %>
 	</div>

@@ -55,9 +55,7 @@ class AuthorsController < ApplicationController
     if params[:refresh] == "now"
       Retriever.new(:lazy => false, :only_source => false).delay.update_works_by_author(@author)   
     end
-    
-    @works = @author.works.paginate :page => params[:page], :per_page => 10, :include => :retrievals, :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
-    
+        
     respond_to do |format|
       format.html do 
         if request.xhr?
@@ -93,9 +91,7 @@ class AuthorsController < ApplicationController
   end
   
   # GET /authors/1/edit
-  def edit
-    @works = @author.works.paginate :page => params[:page], :per_page => 10, :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
-    
+  def edit    
     respond_to do |format|
       format.html { render :show }
       format.js { render :show }
@@ -128,9 +124,7 @@ class AuthorsController < ApplicationController
 
   # PUT /authors/1
   # PUT /authors/1.xml
-  def update
-    @works = @author.works.paginate :page => params[:page], :per_page => 10, :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
-  
+  def update  
     respond_to do |format|
       if @author.update_attributes(params[:author])
         if params[:service] == "mas"

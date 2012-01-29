@@ -7,15 +7,13 @@
 	  <div class="span11">
 			<div itemscope itemtype="http://schema.org/ScholarlyArticle">
 		    <p><%= formatted_citation(@work).html_safe %>
-				  <% if @work.content_type != "journal_work" %>
-		        <em><%= @work.content_type.sub!(/_/, ' ') ? @work.content_type.capitalize : @work.content_type.capitalize %></em>
-		      <% end %>
-				  <br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %></p>
+				<br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
+				<span class="label"><%= @work.type.underscore.humanize %></span></p>
 	     </div>
 	   </div>
 
 		 <div class="span4 offset1">
-			 <p><%= link_to "JSON", work_path(@work.short_doi, :format => :json) %> | <%= link_to "XML", work_path(@work.short_doi, :format => :xml) %> | <%= link_to "BibTeX", work_path(@work.short_doi, :format => :bib) %> | <%= link_to "RIS", work_path(@work.short_doi, :format => :ris) %> | <%= link_to "CSV", work_path(@work.short_doi, :format => :csv) %></p>
+			 <p><%= link_to "JSON", work_path(@work.id, :format => :json) %> | <%= link_to "XML", work_path(@work.id, :format => :xml) %> | <%= link_to "BibTeX", work_path(@work.id, :format => :bib) %> | <%= link_to "RIS", work_path(@work.id, :format => :ris) %> | <%= link_to "CSV", work_path(@work.id, :format => :csv) %></p>
 		 </div>
 	</div>
 

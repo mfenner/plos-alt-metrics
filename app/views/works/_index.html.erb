@@ -17,10 +17,8 @@
       	<td>	
       	  <span itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></span><br/>
           <%= formatted_citation(work).html_safe %>
-          <% if work.content_type != "journal_work" %>
-            <i><%= work.content_type.sub!(/_/, ' ') ? work.content_type.capitalize : work.content_type.capitalize %></i>
-          <% end %>
           <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+          <span class="label"><%= work.type.underscore.humanize %></span>
       	</td>
 	      	<% work.citations_by_category.each do |citations| %>  
             <% citations[:sources].each do |citation| %>

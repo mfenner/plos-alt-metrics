@@ -22,8 +22,13 @@ class Author < ActiveRecord::Base
   
   has_many :positions
   has_many :authentications
+  
   has_many :contributors, :dependent => :destroy
-  has_many :works, :through => :contributors
+  has_many :works, :through => :contributors 
+  has_many :journal_articles, :through => :contributors, :foreign_key => :work_id
+  has_many :conference_papers, :through => :contributors, :foreign_key => :work_id
+  has_many :book_contents, :through => :contributors, :foreign_key => :work_id
+  
   has_many :members
   has_many :groups, :through => :members
   has_many :friendships

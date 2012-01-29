@@ -17,7 +17,7 @@
 # limitations under the License.
 
 class Journal < ActiveRecord::Base
-  has_many :works
+  has_many :journal_articles
   
   validates_presence_of :issn_print
   validates_uniqueness_of :issn_print
@@ -28,19 +28,19 @@ class Journal < ActiveRecord::Base
     issn_print[0..3] + "-" + issn_print[4..7]
   end
   
-  def works_count
-    self.works.count
+  def journal_articles_count
+    self.journal_articles.count
   end
   
   def citations_count(source=nil, options={})
     citations = []
-    works.each do |work|
+    journal_articles.each do |journal_article|
       unless source.nil?
-        citations << work.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
-        citations << work.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << journal_article.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << journal_article.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
       else
-        citations << work.retrievals.sum(:citations_count)
-        citations << work.retrievals.sum(:other_citations_count)
+        citations << journal_article.retrievals.sum(:citations_count)
+        citations << journal_article.retrievals.sum(:other_citations_count)
       end
     end
     citations = citations.sum
@@ -49,8 +49,8 @@ class Journal < ActiveRecord::Base
   def get_cites_by_category(categoryname)
     citations = []
     categoryname = categoryname.downcase
-    works.each do |work|
-      citations << work.retrievals.map do |ret|
+    journal_articles.each do |journal_article|
+      citations << journal_article.retrievals.map do |ret|
         if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
           #Cast this to an array to get around a ruby 'singularize' bug
           { :name => ret.source.name.downcase, :citations => ret.citations.to_a }

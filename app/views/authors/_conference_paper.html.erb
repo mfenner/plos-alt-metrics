@@ -13,12 +13,12 @@
   # limitations under the License.
 -%>
 
-<% unless @author.works.empty? %>
+<% unless @author.conference_papers.empty? %>
 	<div class="work">
 		<table class="zebra-striped">
 		  <thead>
 			<th>
-				<h2><%= pluralize(@author.works.count, 'Work') %></h2>
+				<h2><%= pluralize(@author.conference_papers.count, 'Conference Paper') %></h2>
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
@@ -29,15 +29,14 @@
 	    <% end %>
 			</thead>
 			<tbody>
-	    <% @works.each do |work| %>
+	    <% @author.conference_papers.each do |work| %>
 	      <tr>
 	      	<td>	
 	      	  <span itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></span><br/>
 	          <%= formatted_citation(work).html_safe %>
-	          <% if !work.content_type.blank? and work.content_type != "journal_work" %>
-	            <span class="content_type"><%= work.content_type.sub!(/_/, ' ') ? work.content_type.capitalize : work.content_type.capitalize %></span>
-	          <% end %>
-	          <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	          <% unless work.short_doi.blank? %>
+	            <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	           <% end %>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
@@ -57,11 +56,10 @@
 	    <% end %>
 		</tbody>
 		</table>
-		<%= will_paginate @works %>
 	</div>
 <% else %>
   <div class="alert-message warning fade in" data-alert="alert" >
     <a class="close" href="#">&times;</a>
-    <p>No works found.</p>
+    <p>No conference papers found.</p>
   </div>
 <% end %>

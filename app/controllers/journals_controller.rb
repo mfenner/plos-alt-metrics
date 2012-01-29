@@ -49,7 +49,7 @@ class JournalsController < ApplicationController
   # GET /journals/1.xml
   def show
     load_journal
-    @works = @journal.works.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
+    @journal_articles = @journal.journal_articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
     
     respond_to do |format|
       format.html do 
@@ -84,7 +84,7 @@ class JournalsController < ApplicationController
   
   # GET /journals/1/edit
   def edit
-    @works = @journal.works.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
+    @journal_articles = @journal.journal_articles.paginate :page => params[:page], :per_page => 20, :include => :retrievals, :order => "retrievals.citations_count desc, works.year desc"
     if request.xhr?
       render :partial => params[:partial]
     else

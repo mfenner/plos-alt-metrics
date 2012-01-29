@@ -32,12 +32,15 @@ module ApplicationHelper
         formatted_citation << names.join(", ") + ". "
       end
     end
-    if options[:without_links] 
-      formatted_citation << "<em>" + work.journal.title + "</em>. " unless work.journal.blank?
-    else
-      formatted_citation << "<em>" + link_to(work.journal.title, journal_path(work.journal.issn_print)) + "</em>. " unless work.journal.blank?
-    end
-  	formatted_citation << work.book.title + ". " unless work.book.blank?
+    if work.type == "JournalArticle" and !work.journal.blank?
+      if options[:without_links] 
+        formatted_citation << "<em>" + work.journal.title + "</em>. "
+      else
+        formatted_citation << "<em>" + link_to(work.journal.title, journal_path(work.journal.issn_print)) + "</em>. "
+      end
+    elsif work.type == "BookContent" and !work.book.blank?
+  	  formatted_citation << work.book.title + ". " unless work.book.blank?
+  	end
     formatted_citation << work.year.to_s + (work.volume ? ":#{work.volume}" : "") + (work.issue ? " (#{work.issue})" : "") + (work.first_page ? ";#{work.first_page}" : "") + ((work.last_page and work.last_page > work.first_page) ? "-#{work.last_page}": "")
   end
 end

@@ -14,6 +14,9 @@
 
 class Contributor < ActiveRecord::Base
   belongs_to :work
+  belongs_to :journal_article, :foreign_key => :work_id
+  belongs_to :conference_paper, :foreign_key => :work_id
+  belongs_to :book_content, :foreign_key => :work_id
   belongs_to :author
   acts_as_list :scope => :work
   

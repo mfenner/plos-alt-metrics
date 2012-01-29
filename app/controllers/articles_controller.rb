@@ -6,6 +6,6 @@ class ArticlesController < ApplicationController
 
   def show
     @work = Work.find_by_short_doi!(params[:id])
-    redirect_to works_path(@work)
+    redirect_to work_path(@work.id)
   end
 end

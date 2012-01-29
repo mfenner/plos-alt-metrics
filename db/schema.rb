@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120125201814) do
+ActiveRecord::Schema.define(:version => 20120127010102) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -138,6 +138,11 @@ ActiveRecord::Schema.define(:version => 20120125201814) do
     t.integer  "members_count"
   end
 
+  create_table "groups_works", :id => false, :force => true do |t|
+    t.integer "work_id"
+    t.integer "group_id"
+  end
+
   create_table "histories", :force => true do |t|
     t.integer  "retrieval_id",                   :null => false
     t.integer  "year",                           :null => false
@@ -260,14 +265,9 @@ ActiveRecord::Schema.define(:version => 20120125201814) do
     t.string   "scopus"
     t.string   "short_doi"
     t.integer  "book_id"
-    t.string   "content_type"
+    t.string   "type"
   end
 
   add_index "works", ["doi"], :name => "index_articles_on_doi", :unique => true
-
-  create_table "works_groups", :id => false, :force => true do |t|
-    t.integer "work_id"
-    t.integer "group_id"
-  end
 
 end

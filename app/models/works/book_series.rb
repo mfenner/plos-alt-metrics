@@ -1,0 +1,3 @@
+class BookSeries < Work
+  
+end

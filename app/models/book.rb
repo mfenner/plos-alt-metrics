@@ -17,6 +17,6 @@
 # limitations under the License.
 
 class Book < ActiveRecord::Base
-  has_many :works
+  has_many :book_contents
 
 end

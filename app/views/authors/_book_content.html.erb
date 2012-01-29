@@ -13,37 +13,33 @@
   # limitations under the License.
 -%>
 
-<% unless @journal.works.empty? %>
+<% unless @author.book_contents.empty? %>
 	<div class="work">
 		<table class="zebra-striped">
-			<thead>
+		  <thead>
 			<th>
-				<h2><%= pluralize(@journal.works.count, 'Work') %></h2>
+				<h2><%= pluralize(@author.book_contents.count, 'Book Content') %></h2>
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
-		      <% if source.prefix.blank? or @journal.title.match(/^PLoS/) %>
 		      <th>
 				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.work_description + ": " + source.name %>
 			    </th>
-			    <% end %>
 			  <% end %>
 	    <% end %>
-	    </thead>
-	    <tbody>
-	    <% @works.each do |work| %>
+			</thead>
+			<tbody>
+	    <% @author.book_contents.each do |work| %>
 	      <tr>
-					<td>	
+	      	<td>	
 	      	  <span itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></span><br/>
 	          <%= formatted_citation(work).html_safe %>
-						<% if work.content_type != "journal_work" %>
-	            <span class="content_type"><%= work.content_type.sub!(/_/, ' ').capitalize %></span>
-	          <% end %>
-	          <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	          <% unless work.short_doi.blank? %>
+	            <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	           <% end %>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
-					      <% if source.prefix.blank? or work.doi.match(/^#{source.prefix}/) %>
 				        <td>
 					        <% citation = work.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
@@ -54,18 +50,16 @@
 	                 <% end %>
 	               <% end %>
 					    </td>
-					    <% end %>
 				    <% end %>
 	   	  <% end %>
 		  </tr>
 	    <% end %>
 		</tbody>
 		</table>
-		<%= will_paginate @works %>
 	</div>
 <% else %>
   <div class="alert-message warning fade in" data-alert="alert" >
     <a class="close" href="#">&times;</a>
-    <p>No works found.</p>
+    <p>No book content found.</p>
   </div>
 <% end %>

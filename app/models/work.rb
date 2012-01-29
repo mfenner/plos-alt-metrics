@@ -24,9 +24,8 @@ class Work < ActiveRecord::Base
   has_many :sources, :through => :retrievals 
   has_many :citations, :through => :retrievals
   has_many :authors, :through => :contributors
-  has_many :contributors, :order => :position, :dependent => :destroy #, :conditions => "contributors.service = 'mas'"
+  has_many :contributors, :order => :position, :dependent => :destroy
   has_and_belongs_to_many :groups
-  belongs_to :journal
   belongs_to :book
 
   validates_format_of :doi, :with => DOI::FORMAT
@@ -224,8 +223,8 @@ class Work < ActiveRecord::Base
   
   def to_bib
     # Define BibTeX citation
-    case content_type
-    when "journal_work"
+    case type
+    when "JournalArticle"
       bib_entry = BibTeX::Entry.new({
          :type => "work",
          :title => title,
@@ -237,7 +236,7 @@ class Work < ActiveRecord::Base
       bib_entry.add(:volume => volume) unless volume.blank?
       bib_entry.add(:number => issue) unless issue.blank?
       bib_entry.add(:pages => pages) unless pages.blank?
-    when "book_content"
+    when "BookContent"
       bib_entry = BibTeX::Entry.new({
          :type => "incollection",
          :title => title,
@@ -273,8 +272,8 @@ class Work < ActiveRecord::Base
   
   def to_ris (options={})
     # Define RIS citation
-    case content_type
-    when "journal_work"
+    case type
+    when "JournalArticle"
       ris = ["TY  - JOUR",
              "T1  - #{title}",
              "DO  - #{doi}",
@@ -290,7 +289,7 @@ class Work < ActiveRecord::Base
       ris << "ER  - "
       ris << ""
       ris.join("\r\n")
-    when "book_content"
+    when "BookContent"
       ris = ["TY  - CHAP",
              "T1  - #{title}",
              "DO  - #{doi}",
@@ -307,7 +306,7 @@ class Work < ActiveRecord::Base
       ris << "ER  - "
       ris << ""
       ris.join("\r\n")
-    when "conference_paper"
+    when "ConferencePaper"
       ris = ["TY  - CPAPER",
              "T1  - #{title}",
              "DO  - #{doi}",
@@ -323,6 +322,8 @@ class Work < ActiveRecord::Base
       ris << "ER  - "
       ris << ""
       ris.join("\r\n")
+    else
+      nil
     end
   end
   
@@ -415,7 +416,7 @@ class Work < ActiveRecord::Base
           isbn_electronic = query_result.find_first("crossref_result:isbn[@type='electronic']") ? query_result.find_first("crossref_result:isbn[@type='electronic']").content : ""
           
           result[:doi] = query_result.find_first("crossref_result:doi")
-          result[:content_type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value : ""
+          result[:type] = result[:doi].attributes.get_attribute("type") ? result[:doi].attributes.get_attribute("type").value.camelize : "Other"
         
           #contributors_element = query_result.find_first("crossref_result:contributors")
           #extract_contributors(contributors_element, work) if contributors_element
@@ -465,7 +466,7 @@ class Work < ActiveRecord::Base
                                   :issue => result[:issue],
                                   :first_page => result[:first_page],
                                   :last_page => result[:last_page],
-                                  :content_type => result[:content_type],
+                                  :type => result[:type],
                                   :journal_id => journal_id,
                                   :book_id => book_id)
         end

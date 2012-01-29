@@ -20,7 +20,7 @@ module PlosAltMetrics
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/models/sources)
+    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/models/sources #{config.root}/app/models/works)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
