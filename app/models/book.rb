@@ -33,6 +33,15 @@ class Book < ActiveRecord::Base
         citations << book_content.retrievals.sum(:other_citations_count)
       end
     end
+    conference_papers.each do |conference_paper|
+      unless source.nil?
+        citations << conference_paper.retrievals.sum(:citations_count, :conditions => ["retrievals.source_id = ?", source])
+        citations << conference_paper.retrievals.sum(:other_citations_count, :conditions => ["retrievals.source_id = ?", source])
+      else
+        citations << conference_paper.retrievals.sum(:citations_count)
+        citations << conference_paper.retrievals.sum(:other_citations_count)
+      end
+    end
     citations = citations.sum
   end
   
@@ -41,6 +50,14 @@ class Book < ActiveRecord::Base
     categoryname = categoryname.downcase
     book_contents.each do |book_content|
       citations << book_content.retrievals.map do |ret|
+        if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
+          #Cast this to an array to get around a ruby 'singularize' bug
+          { :name => ret.source.name.downcase, :citations => ret.citations.to_a }
+        end
+      end.compact
+    end
+    conference_papers.each do |conference_paper|
+      citations << conference_paper.retrievals.map do |ret|
         if ret.source.category.name.downcase == categoryname && (ret.citations_count + ret.other_citations_count) > 0
           #Cast this to an array to get around a ruby 'singularize' bug
           { :name => ret.source.name.downcase, :citations => ret.citations.to_a }

@@ -1,6 +1,11 @@
 <div class="content">
   <div class="page-header">
-    <h2><%= @book.title %> <small>ISBN <%= @book.isbn_print %></small></h2>
+    <h2><%= @book.title %> 
+	    <small>ISBN <%= @book.isbn_print %>
+			<% unless @book.year.blank? %>
+			  (<%= @book.year %>)
+			<% end %>
+			</small></h2>
   </div>
 
   <div class="row">
