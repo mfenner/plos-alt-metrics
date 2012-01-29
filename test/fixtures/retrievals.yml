@@ -17,36 +17,36 @@
 # limitations under the License.
 
 not_stale_pubmed:
-  article: not_stale
+  work: not_stale
   source: pubmed
   citations_count: 1
   other_citations_count: 0
   retrieved_at: <%= Date.today - 1.day %>
 
 not_stale_citeulike:
-  article: not_stale
+  work: not_stale
   source: citeulike
   citations_count: 0
   # default retrieved_at == 1970
 
 stale_pubmed:
-  article: stale
+  work: stale
   source: pubmed
   citations_count: 1
   retrieved_at: <%= Date.today - 2.years %>
 
 stale_citeulike:
-  article: stale
+  work: stale
   source: citeulike
   citations_count: 1
   retrieved_at: <%= Date.today - 2.years %>
 
 uncited_with_no_retrievals_pubmed:
-  article: uncited_with_no_retrievals
+  work: uncited_with_no_retrievals
   source: pubmed
   # default retrieved_at == 1970
 
 uncited_with_no_retrievals_citeulike:
-  article: uncited_with_no_retrievals
+  work: uncited_with_no_retrievals
   source: citeulike
   # default retrieved_at == 1970

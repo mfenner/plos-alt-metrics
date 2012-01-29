@@ -26,10 +26,9 @@ class Work < ActiveRecord::Base
   has_many :authors, :through => :contributors
   has_many :contributors, :order => :position, :dependent => :destroy
   has_and_belongs_to_many :groups
-
-
-  validates_format_of :doi, :with => DOI::FORMAT
-  validates_uniqueness_of :doi
+  
+  validates :url, :title, :presence => true
+  validates :url, :uniqueness => true
 
   after_create :create_retrievals
 

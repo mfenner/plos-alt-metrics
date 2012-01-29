@@ -24,20 +24,20 @@ class RetrieverTest < ActiveSupport::TestCase
     Net::HTTP.expects(:new).returns(Sleepy.new(10))
     elapsed = Benchmark.realtime do
       assert_raise Retriever::RetrieverTimeout do
-        Retriever.update_articles [articles(:not_stale)], nil, 1.seconds
+        Retriever.update_works [works(:not_stale)], nil, 1.seconds
       end
     end
     assert elapsed < 10
   end
 
-  test "second article is sourced on timeout" do
+  test "second work is sourced on timeout" do
     Net::HTTP.expects(:new).returns(Sleepy.new(10))
-    article1 = articles(:not_stale)
-    article2 = articles(:uncited_with_no_retrievals)
-    article2.expects(:citations_count).never
+    work1 = works(:not_stale)
+    work2 = works(:uncited_with_no_retrievals)
+    work2.expects(:citations_count).never
     elapsed = Benchmark.realtime do
       assert_raise Retriever::RetrieverTimeout do
-        Retriever.update_articles [article1, article2], nil, 1.seconds
+        Retriever.update_works [work1, work2], nil, 1.seconds
       end
     end
     assert elapsed < 10
@@ -51,10 +51,10 @@ class RetrieverTest < ActiveSupport::TestCase
     resp = Net::HTTPOK.new('1.1', '200', '')
     resp.expects(:body).at_least_once.returns('')
     Net::HTTP.expects(:new).at_least_once.returns(Sleepy.new(2, resp))
-    article1 = articles(:not_stale)
-    article2 = articles(:uncited_with_no_retrievals)
-    article2.expects(:citations_count).at_least_once
-    Retriever.update_articles [article1, article2]
+    work1 = works(:not_stale)
+    work2 = works(:uncited_with_no_retrievals)
+    work2.expects(:citations_count).at_least_once
+    Retriever.update_works [work1, work2]
     assert pubmed.reload.disable_until.present?
   end
 end

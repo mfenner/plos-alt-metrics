@@ -201,7 +201,7 @@ class Retriever
       # Only add works with DOI and title
       unless result["DOI"].nil? or result["Title"].nil?
         result["DOI"] = DOI::clean(result["DOI"])
-        work = Work.find_or_create_by_doi(:doi => result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
+        work = Work.find_or_create_by_doi(:doi => result["DOI"], :url => "http://dx.doi.org/"+ result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
         if work.valid?
           Work.update_via_crossref(work)
@@ -232,10 +232,10 @@ class Retriever
     
     results.each do |result|
       # Only add journal works
-      unless result["uuid"].nil? or result["title"].nil? or result["type"] != "Journal Work"
+      unless result["uuid"].nil? or result["title"].nil? or result["type"] != "JournalArticle"
         metadata = Work.fetch_from_mendeley(result["uuid"])
         unless metadata["identifiers"]["doi"].nil?
-          work = Work.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
+          work = Work.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :url => "http://dx.doi.org/" + metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
           # Check that DOI is valid
           if work.valid?
             Work.update_via_crossref(work)

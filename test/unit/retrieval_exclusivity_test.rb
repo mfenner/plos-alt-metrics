@@ -22,7 +22,7 @@ class RetrievalExclusivityTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false
 
   def test_try_to_exclusively
-    l = Retrieval.create! :article_id => 1, :source_id => 1
+    l = Retrieval.create! :work_id => 1, :source_id => 1
     t = Thread.new do
       l.try_to_exclusively do
         assert l.running

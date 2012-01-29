@@ -17,18 +17,21 @@
 # limitations under the License.
 
 stale:
+  url: http://dx.doi.org/10.1371/journal.pgen.1000111
   doi: 10.1371/journal.pgen.1000111
   title: Jackdaws love my big sphinx of quartz
   published_on: 2005-10-05
   # default retrieved_at == 1970
 
 not_stale:
+  url: http://dx.doi.org/10.1371/journal.pbio.0000005
   doi: 10.1371/journal.pbio.0000005
   title: The merry-go-round broke down
   published_on: 2007-01-01
   retrieved_at: <%= Date.yesterday %>
 
 uncited_with_no_retrievals:
+  url: http://dx.doi.org/10.1371/uncited
   doi: 10.1371/uncited
   title: Please cite me!
   published_on: 2010-01-01

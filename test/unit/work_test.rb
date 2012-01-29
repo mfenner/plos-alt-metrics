@@ -20,7 +20,7 @@ require 'test_helper'
 
 class WorkTest < ActiveSupport::TestCase
   def setup
-    @work = Work.new :doi => "10.0/dummy"
+    @work = Work.new :url => "http://dx.doi.org/10.0/dummy", :doi => '10.0/dummy', :type => 'JournalArticle' 
   end
 
   def test_should_save
@@ -28,15 +28,15 @@ class WorkTest < ActiveSupport::TestCase
     assert @work.errors.empty?
   end
 
-  def test_should_require_doi
-    @work.doi = nil
-    assert !@work.save, "work should not be saved without a DOI"
+  def test_should_require_url
+    @work.url = nil
+    assert !@work.save, "work should not be saved without a URL"
   end
 
-  def test_should_require_doi_uniqueness
+  def test_should_require_url_uniqueness
     assert @work.save
-    @work2 = Work.new :doi => "10.0/dummy"
-    assert !@work2.save, "work requires unique DOI"
+    @work2 = Work.new :url => "http://dx.doi.org/10.0/dummy", :doi => '10.0/dummy', :type => 'JournalArticle' 
+    assert !@work2.save, "work requires unique URL"
   end
 
   def test_should_find_stale_works
@@ -55,7 +55,7 @@ class WorkTest < ActiveSupport::TestCase
   end
 
   def test_staleness_on_create
-    a = Work.create :doi => '10.1/foo'
+    a = Work.create :url => 'http://dx.doi.org/10.1/foo', :doi => '10.1/foo', :type => 'JournalArticle' 
     assert a.valid?, a.errors.full_messages
     assert a.stale?
 
@@ -65,13 +65,13 @@ class WorkTest < ActiveSupport::TestCase
   end
 
   def test_retrievals_created_on_newly_created_work
-    a = Work.create :doi => '10.1/foo'
+    a = Work.create :url => 'http://dx.doi.org/10.1/foo', :doi => '10.1/foo', :type => 'JournalArticle' 
     assert a.valid?, a.errors.full_messages
     assert_equal Source.active.count, a.retrievals.count
   end
 
   def test_staleness_excludes_failed_retrievals
-    a = Work.create :doi => '10.1/foo', :published_on => 1.day.ago
+    a = Work.create :url => 'http://dx.doi.org/10.1/foo', :doi => '10.1/foo', :type => 'JournalArticle', :published_on => 1.day.ago
     assert a.valid?, a.errors.full_messages
     assert a.stale?
 
@@ -90,7 +90,7 @@ class WorkTest < ActiveSupport::TestCase
   end
 
   def test_staleness_excludes_failed_retrievals_and_disabled_sources
-    a = Work.create! :doi => '10.1/foo', :published_on => 1.day.ago
+    a = Work.create! :url => 'http://dx.doi.org/10.1/foo', :doi => '10.1/foo', :type => 'JournalArticle', :published_on => 1.day.ago
     r = a.retrievals.first(:conditions => { :source_id => sources(:citeulike).id })
     assert_equal Time.at(0), r.retrieved_at
     Source.update_all :disable_until => 3.days.from_now

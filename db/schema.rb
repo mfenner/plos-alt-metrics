@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120127010102) do
+ActiveRecord::Schema.define(:version => 20120129144032) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -266,6 +266,7 @@ ActiveRecord::Schema.define(:version => 20120127010102) do
     t.string   "short_doi"
     t.integer  "book_id"
     t.string   "type"
+    t.string   "url"
   end
 
   add_index "works", ["doi"], :name => "index_articles_on_doi", :unique => true

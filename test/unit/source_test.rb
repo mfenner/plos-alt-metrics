@@ -41,12 +41,12 @@ class SourceTest < ActiveSupport::TestCase
     s.expects(:perform_query).raises.then.returns(12345).twice
 
     assert_raise RuntimeError do
-      s.query articles(:stale)
+      s.query works(:stale)
     end
     assert s.disable_until > (delay-1).seconds.from_now
-    assert_equal false, s.query(articles(:stale))
+    assert_equal false, s.query(works(:stale))
     sleep delay
-    assert_equal 12345, s.query(articles(:stale))
+    assert_equal 12345, s.query(works(:stale))
   end
 
   def test_source_sends_notification_email_on_long_delay
@@ -54,14 +54,14 @@ class SourceTest < ActiveSupport::TestCase
     s.update_attribute :disable_delay, 2.days
     s.expects(:perform_query).raises.once
     assert_raise RuntimeError do
-      s.query articles(:stale)
+      s.query works(:stale)
     end
     assert_equal 1, ActionMailer::Base.deliveries.size
   end
 
-  def test_new_source_creates_retrievals_for_all_articles
+  def test_new_source_creates_retrievals_for_all_works
     s = Source.create
     assert s.valid?
-    assert_equal Article.count, s.retrievals.count
+    assert_equal Work.count, s.retrievals.count
   end
 end
