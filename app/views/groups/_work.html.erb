@@ -38,9 +38,8 @@
 					<td class="name">	
 	      	  <span itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></span><br/>
 	          <%= formatted_citation(work).html_safe %>
-						<% if work.content_type != "journal_work" %>
-	            <span class="content_type"><%= work.content_type.sub!(/_/, ' ').capitalize %></span>
-	          <% end %><br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+						<span class="label"><%= work.type.underscore.humanize %></span>
+						<br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>

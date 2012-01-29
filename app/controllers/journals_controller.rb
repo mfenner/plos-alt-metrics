@@ -61,7 +61,7 @@ class JournalsController < ApplicationController
       end
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @journal.works.to_xml
+        render :xml => @journal.journal_articles.to_xml
       end
       format.csv  { render :csv => @journal }
       format.json { render :json => @journal.to_json, :callback => params[:callback] }
