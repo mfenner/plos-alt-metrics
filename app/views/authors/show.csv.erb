@@ -22,9 +22,23 @@
 	  # header row 
     csv << ["doi", "title", "journal", "year"]
     # data rows
-    unless @author.works.empty?
-      @author.works.each do |work|
-        csv << [ work.doi, work.title.blank? ? "" : work.title, work.journal.blank? ? "" : work.journal.title, work.year ]
+    unless @author.journal_articles.empty?
+      @author.journal_articles.each do |journal_article|
+        csv << [ journal_article.doi, journal_article.title.blank? ? "" : journal_article.title, journal_article.journal.blank? ? "" : journal_article.journal.title, journal_article.year ]
+      end
+    end
+		csv << ["doi", "title", "book", "year"]
+    # data rows
+    unless @author.book_contents.empty?
+      @author.book_contents.each do |book_content|
+        csv << [ book_content.doi, book_content.title.blank? ? "" : book_content.title, book_content.book.blank? ? "" : book_content.book.title, book_content.year ]
+      end
+    end
+		csv << ["doi", "title", "book", "year"]
+    # data rows
+    unless @author.conference_papers.empty?
+      @author.conference_papers.each do |conference_paper|
+        csv << [ conference_paper.doi, conference_paper.title.blank? ? "" : conference_paper.title, conference_paper.book.blank? ? "" : conference_paper.book.title, conference_paper.year ]
       end
     end
   end

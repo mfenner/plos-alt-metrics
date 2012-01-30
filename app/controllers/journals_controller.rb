@@ -39,6 +39,7 @@ class JournalsController < ApplicationController
           render :partial => "index" 
         end
       end
+      format.mobile { redirect_to works_path }
       format.xml  { render :xml => @journals }
       format.json { render :json => @journals, :callback => params[:callback] }
       format.csv  { render :csv => @journals }
@@ -63,6 +64,7 @@ class JournalsController < ApplicationController
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
         render :xml => @journal.journal_articles.to_xml
       end
+      format.mobile { redirect_to works_path }
       format.csv  { render :csv => @journal }
       format.json { render :json => @journal.to_json, :callback => params[:callback] }
       format.bib { render :bib => @journal }
