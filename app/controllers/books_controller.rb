@@ -60,7 +60,7 @@ class BooksController < ApplicationController
       end
       format.xml do
         response.headers['Content-Disposition'] = 'attachment; filename=' + params[:id].sub(/^info:/,'') + '.xml'
-        render :xml => @book.book_articles.to_xml
+        render :xml => @book.book_contents.to_xml
       end
       format.csv  { render :csv => @book }
       format.json { render :json => @book.to_json, :callback => params[:callback] }
