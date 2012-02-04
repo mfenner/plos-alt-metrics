@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
     end
   end
   
-  attr_accessible :username, :name, :mas, :mendeley, :userclaim, :googlescholar, :twitter, :location, :description, :image, :website, :remember_me
+  attr_accessible :username, :name, :mas, :mendeley, :authorclaim, :googlescholar, :twitter, :location, :description, :image, :website, :remember_me
   
   validates_numericality_of :mas, :allow_blank => true
   validates_uniqueness_of :mas, :allow_blank => true
@@ -88,7 +88,7 @@ class User < ActiveRecord::Base
         :name => name,
         :mas => mas, 
         :mendeley => mendeley, 
-        :userclaim => userclaim,
+        :authorclaim => authorclaim,
         :location => location,
         :description => description,
         :website => website,
@@ -140,7 +140,7 @@ class User < ActiveRecord::Base
 	end
 	
 	def has_profile
-	  !mas.blank? or !userclaim.blank? or !mendeley.blank? or !googlescholar.blank?
+	  !mas.blank? or !authorclaim.blank? or !mendeley.blank? or !googlescholar.blank?
 	end
   
   def self.fetch_properties(user, options={})
@@ -248,11 +248,11 @@ class User < ActiveRecord::Base
     works = result["Result"]
   end
   
-  def self.fetch_works_from_userclaim(user, options={})
-    # Fetch works, return empty array if no userclaim identifier, no response, or no works found
-    return [] if user.userclaim.blank?
+  def self.fetch_works_from_authorclaim(user, options={})
+    # Fetch works, return empty array if no authorclaim identifier, no response, or no works found
+    return [] if user.authorclaim.blank?
     
-    url = "ftp://ftp.userclaim.org/#{user.userclaim[1,1].to_s}/#{user.userclaim[2,1].to_s}/#{user.userclaim}.amf.xml"
+    url = "ftp://ftp.authorclaim.org/#{user.authorclaim[1,1].to_s}/#{user.authorclaim[2,1].to_s}/#{user.authorclaim}.amf.xml"
     Rails.logger.info "UserClaim query: #{url}"
     
     SourceHelper.get_xml(url, options) do |document|

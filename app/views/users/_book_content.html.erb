@@ -32,7 +32,7 @@
 	    <% @user.book_contents.each do |work| %>
 	      <tr>
 	      	<td>	
-	      	  <span itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></span><br/>
+	      	  <h4 itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></h4>
 	          <%= formatted_citation(work).html_safe %>
 	          <% unless work.short_doi.blank? %>
 	            <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
