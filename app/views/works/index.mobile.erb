@@ -10,7 +10,7 @@
   <% end %>
 	<ul data-role="listview" data-theme="c">
     <% @works.each do |work| %>
-	    <li><a href="<%= work_path(work.short_doi) %>" class="normal">
+	    <li><a href="<%= work_path(work.id) %>" class="normal">
         <h3><%= work.title %></h3>
         <%= formatted_citation(work, :without_links => true).html_safe %>
         </a>
