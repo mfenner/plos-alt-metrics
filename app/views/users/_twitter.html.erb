@@ -1,0 +1,31 @@
+<% if params[:partial] == "twitter" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?))) %>
+  <div class="edit">
+		<%= form_for :user, :url => user_path(@user.username, :partial => "twitter", :service => "twitter"), :html => { :method => :put, :remote => true } do |f| %>
+		  <h3>Name</h3>
+		  <%= f.text_field :name, :class => :name %>
+		  <div class="submit">
+			  <%= link_to "Cancel", user_path(@user.username, :partial => "twitter"), :remote => true %>
+		    <%= f.submit("Submit", :class => "btn primary") %>
+		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
+		  </div>
+		<% end %>
+	</div>
+<% else %>
+	<h2>
+		<%= h(@user.display_name) %>
+		<% if current_user == @user or current_user.try(:admin?) %>
+			<%= link_to image_tag("wrench.png"), edit_user_path(@user.username, :partial => "twitter"), :remote => true, :title => "Edit Name" %>
+		<% end %>
+	</h2>
+  <h4><%= link_to "@#{@user.username}", "http://twitter.com/" + @user.username %></h4>
+	<% unless @user.location.blank? %>
+		<%= @user.location %>
+	<% end %>
+	<p>
+	<% unless @user.description.blank? %>
+		<%= @user.description %><br/>
+	<% end %>
+	<% unless @user.website.blank? %>
+		<%= link_to @user.website, @user.website %>
+	<% end %>
+<% end %>

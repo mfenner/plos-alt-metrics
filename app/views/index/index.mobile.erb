@@ -1,23 +1,23 @@
 <div data-role="header">
 	<%= link_to 'Articles', works_path, "data-role" => "button", "data-icon" => "grid", "data-transition" => "reverse slide" %>
 	<h1>About</h1>
-	<% unless author_signed_in? %>
-    <%= link_to 'Sign in', author_omniauth_authorize_path(:twitter), "data-role" => "button", "class" => "ui-btn-right", "data-icon" => "gear", "rel" => "external" %>
+	<% unless user_signed_in? %>
+    <%= link_to 'Sign in', user_omniauth_authorize_path(:twitter), "data-role" => "button", "class" => "ui-btn-right", "data-icon" => "gear", "rel" => "external" %>
   <% else %>
-    <%= link_to 'Your Page', author_path(current_author.username), "data-role" => "button", "data-icon" => "gear" %>
+    <%= link_to 'Your Page', user_path(current_user.username), "data-role" => "button", "data-icon" => "gear" %>
   <% end %>
 </div>
 
 <div data-role="content">
 	<h2>What is ScienceCard?</h2>
  
-	ScienceCard is a web service that collects all scientific works published by an author and displays their aggregate work-level metrics. ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort, and to export and reuse this information elsewhere. To make this as effortless as possible, ScienceCard relies on unique identifiers for authors (currently identifiers from Microsoft Academic Search and AuthorClaim) and works (currently digital object identifiers or DOIs). Future versions will add more author identifiers services, including ORCID when the service launches in 2012, as well as other identifiers for scholarly content (e.g. from ArXiV).<p>
+	ScienceCard is a web service that collects all scientific works published by a user and displays their aggregate work-level metrics. ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort, and to export and reuse this information elsewhere. To make this as effortless as possible, ScienceCard relies on unique identifiers for authors (currently identifiers from Microsoft Academic Search and AuthorClaim) and works (currently digital object identifiers or DOIs). Future versions will add more author identifiers services, including ORCID when the service launches in 2012, as well as other identifiers for scholarly content (e.g. from ArXiV).<p>
 
   ScienceCard uses freely available sources for the work-level metrics. Some sources are only available from some publishers (e.g. HTML page views or PDF downloads), or when you are a publisher yourself (e.g. CrossRef).
 
 <h3>Getting Started</h3>
 
-  You can search for ScienceCards by author name or Twitter nickname. You can also go directly to a ScienceCard using the Twitter nickname, e.g. <a href="http://sciencecard.org/mfenner">http://sciencecard.org/mfenner</a>. Only ScienceCards of authors that have registered with ScienceCard are displayed.<p>
+  You can search for ScienceCards by user name or Twitter nickname. You can also go directly to a ScienceCard using the Twitter nickname, e.g. <a href="http://sciencecard.org/mfenner">http://sciencecard.org/mfenner</a>. Only ScienceCards of users that have registered with ScienceCard are displayed.<p>
 
   To create your own ScienceCard, create an account by logging in via Twitter. Next add at least one author identifier - currently Microsoft Academic Search and AuthorClaim are supported.<p>
 		
@@ -27,7 +27,7 @@
 ScienceCard would not be possible without the content retrieved from Twitter, Mendeley, PubMed Central, CiteULike, Scopus, Microsoft Academic Search and CrossRef. Other services will be added in the future. 
 
 <h3>The ScienceCard API</h3>
-ScienceCard is not only a website, but also provides an Application Programming Interface (API) so that the content can be reused elsewhere. All author pages are available in html, json, xml, csv, bib and ris formats, simply append the format to the author page, e.g. <a href="http://sciencecard.org/mfenner.json">http://sciencecard.org/mfenner.json</a> or <a href="http://sciencecard.org/mfenner.bib">http://sciencecard.org/mfenner.bib</a>. You can import references into your reference manager using the bib or ris format. The <a href="http://wordpress.org/extend/plugins/contact-info-options/">Contact Info Options</a> Wordpress plugin adds a ScienceCard field to the user profile, so you can display ScienceCard information in your Wordpress author page.
+ScienceCard is not only a website, but also provides an Application Programming Interface (API) so that the content can be reused elsewhere. All user pages are available in html, json, xml, csv, bib and ris formats, simply append the format to the user page, e.g. <a href="http://sciencecard.org/mfenner.json">http://sciencecard.org/mfenner.json</a> or <a href="http://sciencecard.org/mfenner.bib">http://sciencecard.org/mfenner.bib</a>. You can import references into your reference manager using the bib or ris format. The <a href="http://wordpress.org/extend/plugins/contact-info-options/">Contact Info Options</a> Wordpress plugin adds a ScienceCard field to the user profile, so you can display ScienceCard information in your Wordpress user page.
 
 <h3>Setting up your own Server</h3>
 ScienceCard is an open source application based on the PLoS Article-Level Metrics Developer API Server. This means that you can download and install the software and run your own ScienceCard server. here are at least two good reasons to do this: a) you are a publisher and want to provide work-level metrics for your authors or b) you are an institution and want to provide these metrics for your researchers. ScienceCard uses the <a href="http://rubyonrails.org/">Ruby on Rails</a> web framework and can easily be extended, e.g. if you want to allow researchers to log in using their institutional accounts.

@@ -34,7 +34,7 @@
 				<div class="container">
 				  <h3><a href="#"><%= APP_CONFIG['application'] %></a></h3>
 				  <%= render_navigation %>
-				  <% if ["works", "authors", "groups", "journals", "books"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
+				  <% if ["works", "users", "groups", "journals", "books"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
 			      <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get") do %>
 			        <%= search_field_tag :q, params[:q], :placeholder => "Search" %>
 			      <% end %>
@@ -43,27 +43,27 @@
 						<li class="dropdown" data-dropdown="dropdown" >
 						  <a href="#" class="dropdown-toggle"><%= image_tag "user.png" %></a>
 					    <ul class="dropdown-menu">
-					      <% if author_signed_in? %>
-			            <li><%= link_to 'Your Card', author_path(current_author.username) %></li>
+					      <% if user_signed_in? %>
+			            <li><%= link_to 'Your Card', user_path(current_user.username) %></li>
 			            <li class="divider"></li>
-			   	        <li><%= link_to 'Sign out', destroy_author_session_path, :method => :delete %></li>
+			   	        <li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
 			          <% else %>
-			            <li><%= link_to 'Sign in with Twitter', author_omniauth_authorize_path(:twitter) %></li>
+			            <li><%= link_to 'Sign in with Twitter', user_omniauth_authorize_path(:twitter) %></li>
 			          <% end %>
 					    </ul>
 					  </li>
 	        </ul>	
-					<% if current_author.try(:admin?) %>
+					<% if current_user.try(:admin?) %>
 						<ul class="nav secondary-nav">
 							<li class="dropdown" data-dropdown="dropdown" >
 							  <a href="#" class="dropdown-toggle">Administration</a>
 						    <ul class="dropdown-menu">
 					        <li><%= link_to 'Sources', sources_path %></li>
 						      <li><%= link_to 'Categories', categories_path %></li>
-						      <% if controller.controller_name == "authors" and controller.action_name == "show" %>
+						      <% if controller.controller_name == "users" and controller.action_name == "show" %>
 									  <li class="divider"></li>
-			   	          <li><%= link_to 'Edit Author', edit_author_path(@author, :partial => "twitter"), :remote => true %></li>
-			              <li><%= link_to "Refresh", author_path(@author.username, :refresh => "now"), :remote => true %></li>
+			   	          <li><%= link_to 'Edit User', edit_user_path(@user, :partial => "twitter"), :remote => true %></li>
+			              <li><%= link_to "Refresh", user_path(@user.username, :refresh => "now"), :remote => true %></li>
 										<% elsif controller.controller_name == "works" and controller.action_name == "show" %>
 										  <li class="divider"></li>
 				              <li><%= link_to "Refresh", work_path(@work.short_doi, :refresh => "now"), :remote => true %></li>

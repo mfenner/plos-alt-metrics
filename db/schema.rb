@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120129172912) do
+ActiveRecord::Schema.define(:version => 20120204202753) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -22,42 +22,13 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
   end
 
   create_table "authentications", :force => true do |t|
-    t.integer  "author_id"
+    t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
     t.string   "token"
     t.string   "secret"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "authors", :force => true do |t|
-    t.string   "name"
-    t.string   "mas"
-    t.integer  "staleness",           :default => 1209600
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "sort_name"
-    t.text     "image"
-    t.text     "website"
-    t.text     "native_name"
-    t.string   "remember_token"
-    t.datetime "remember_created_at"
-    t.boolean  "admin",               :default => false
-    t.string   "username"
-    t.string   "location"
-    t.text     "description"
-    t.string   "mendeley"
-    t.integer  "contributions_count"
-    t.string   "twitter"
-    t.integer  "sign_in_count",       :default => 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "authorclaim"
-    t.string   "scopus"
-    t.string   "googlescholar"
   end
 
   create_table "books", :force => true do |t|
@@ -74,7 +45,7 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "work_description"
-    t.text     "author_description"
+    t.text     "user_description"
     t.text     "group_description"
     t.text     "journal_description"
   end
@@ -98,7 +69,7 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "author_id"
+    t.integer  "user_id"
     t.string   "service"
     t.string   "mas"
     t.string   "authorclaim"
@@ -123,7 +94,7 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "friendships", :force => true do |t|
-    t.integer  "author_id"
+    t.integer  "user_id"
     t.string   "friend_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -164,7 +135,7 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
   end
 
   create_table "members", :force => true do |t|
-    t.integer  "author_id"
+    t.integer  "user_id"
     t.integer  "group_id"
     t.boolean  "admin",      :default => false
     t.datetime "created_at"
@@ -172,7 +143,7 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
   end
 
   create_table "positions", :force => true do |t|
-    t.integer  "author_id"
+    t.integer  "user_id"
     t.integer  "affiliation_id"
     t.boolean  "is_active"
     t.integer  "staleness",      :default => 1209600
@@ -222,28 +193,32 @@ ActiveRecord::Schema.define(:version => 20120129172912) do
 
   create_table "users", :force => true do |t|
     t.string   "name"
+    t.string   "mas"
+    t.integer  "staleness",           :default => 1209600
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "sort_name"
+    t.text     "image"
+    t.text     "website"
+    t.text     "native_name"
+    t.string   "remember_token"
+    t.datetime "remember_created_at"
+    t.boolean  "admin",               :default => false
     t.string   "username"
     t.string   "location"
     t.text     "description"
-    t.string   "image"
-    t.string   "website"
-    t.boolean  "admin"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.string   "mendeley"
+    t.integer  "contributions_count"
+    t.string   "twitter"
+    t.integer  "sign_in_count",       :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "authorclaim"
+    t.string   "scopus"
+    t.string   "googlescholar"
   end
-
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "works", :force => true do |t|
     t.string   "doi",                                                :null => false

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class GroupsController < ApplicationController
-  before_filter :authenticate_author!
+  before_filter :authenticate_user!
   before_filter :load_group, 
                 :only => [ :edit, :update, :destroy ]
 
@@ -26,9 +26,9 @@ class GroupsController < ApplicationController
         :conditions => ["groups.name REGEXP ? or groups.mendeley REGEXP ?", params[:q],params[:q]],
         :order => 'groups.name' 
     else
-      if author_signed_in?
-        # Fetch all groups with the authors you are following
-        #@groups = Group.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 12
+      if user_signed_in?
+        # Fetch all groups with the users you are following
+        #@groups = Group.paginate :conditions => ["FIND_IN_SET(contributions.user_id, '?')",current_user.friends], :include => [:users, :contributions], :page => params[:page], :per_page => 12
         @groups = Group.paginate :page => params[:page], :per_page => 12, :order => 'groups.name'
       else
         @groups = Group.paginate :page => params[:page], :per_page => 12, :order => 'groups.name'

@@ -190,11 +190,11 @@ class Retriever
     result
   end
   
-  def update_works_by_author(author)
-    Rails.logger.info "Updating author #{author.inspect}..."
+  def update_works_by_user(user)
+    Rails.logger.info "Updating user #{user.inspect}..."
     
-    # Fetch works from author, return nil if no response
-    results = Author.fetch_works_from_mas(author)
+    # Fetch works from user, return nil if no response
+    results = User.fetch_works_from_mas(user)
     return nil if results.nil?
     
     results.each do |result|
@@ -205,8 +205,8 @@ class Retriever
         # Check that DOI is valid
         if work.valid?
           Work.update_via_crossref(work)
-          unless author.works.include?(work)
-            author.works << work 
+          unless user.works.include?(work)
+            user.works << work 
           end
           # Create shortDOI if it doesn't exist yet
           if work.short_doi.blank?
@@ -217,8 +217,8 @@ class Retriever
       end
     end  
     
-    author.refreshed!.save!
-    Rails.logger.info "Refreshed author #{author.mas}"
+    user.refreshed!.save!
+    Rails.logger.info "Refreshed user #{user.mas}"
   end
   
   def update_works_by_group(group)
@@ -250,20 +250,20 @@ class Retriever
     Rails.logger.info "Refreshed group #{group.mendeley}"
   end
   
-  def update_author(author)
-    Rails.logger.info "Updating author #{author.inspect}..."
+  def update_user(user)
+    Rails.logger.info "Updating user #{user.inspect}..."
     
-    # Fetch Microsoft Academic Search properties from author, return nil if no response
-    properties = Author.fetch_properties(author)
+    # Fetch Microsoft Academic Search properties from user, return nil if no response
+    properties = User.fetch_properties(user)
     return nil if properties.nil?
     
-    author = Author.update_properties(author, properties)
+    user = User.update_properties(user, properties)
     
     # Update Twitter properties
-    Author.update_via_twitter(author)
+    User.update_via_twitter(user)
     
-    author.refreshed!.save!
-    Rails.logger.info "Refreshed author #{author.username}"
+    user.refreshed!.save!
+    Rails.logger.info "Refreshed user #{user.username}"
   end
   
   def update_group(group)
@@ -313,7 +313,7 @@ class Retriever
     end
   end
   
-  def self.update_authors(authors, adjective=nil, timeout_period=50.minutes, include_works=true)
+  def self.update_users(users, adjective=nil, timeout_period=50.minutes, include_works=true)
     require 'timeout'
     begin
 
@@ -327,24 +327,24 @@ class Retriever
       
       Timeout::timeout timeout_period.to_i, RetrieverTimeout do
         lazy = ENV.fetch("LAZY", "1") == "1"
-        Rails.logger.debug ["Updating", authors.size.to_s,
+        Rails.logger.debug ["Updating", users.size.to_s,
               lazy ? "stale" : nil, adjective,
-              authors.size == 1 ? "author" : "authors"].compact.join(" ")
+              users.size == 1 ? "user" : "users"].compact.join(" ")
         retriever = self.new(:lazy => lazy,
           :raise_on_error => ENV["RAISE_ON_ERROR"])
 
-        authors.each do |author|
-          retriever.update_author(author)
+        users.each do |user|
+          retriever.update_user(user)
           if include_works
-            old_count = author.works_count || 0
-            retriever.update_works_by_author(author)
-            new_count = author.works_count || 0
-            Rails.logger.debug "MAS: #{author.mas} count now #{new_count} (#{new_count - old_count})"
+            old_count = user.works_count || 0
+            retriever.update_works_by_user(user)
+            new_count = user.works_count || 0
+            Rails.logger.debug "MAS: #{user.mas} count now #{new_count} (#{new_count - old_count})"
           end
         end
       end
     rescue RetrieverTimeout => e
-      Rails.logger.error "Timeout exceeded on author update" + e.backtrace.join("\n")
+      Rails.logger.error "Timeout exceeded on user update" + e.backtrace.join("\n")
       raise e
     end
   end

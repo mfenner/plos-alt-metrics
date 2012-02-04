@@ -1,43 +1,33 @@
 <div class="content">
-<% unless @works.empty? %>
-	<table class="zebra-striped">
-		<thead>
-		<th><h2><%= pluralize(@works.total_entries, 'Work') + ((author_signed_in? and params[:q].blank?) ? ' by Authors you are Following' : "") %></h2></th>
-		<% active_categories.each do |category| %>
-	    <% category.sources.active.each do |source| %>
-	      <th class="count">
-			    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.work_description + ": " + source.name %>
-		    </th>
-		  <% end %>
-    <% end %>
-    </thead>
-    <tbody>
-    <% @works.each do |work| %>
-      <tr>
-      	<td>	
-      	  <span itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></span><br/>
-          <%= formatted_citation(work).html_safe %>
-          <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
-          <span class="label"><%= work.type.underscore.humanize %></span>
-      	</td>
-	      	<% work.citations_by_category.each do |citations| %>  
-            <% citations[:sources].each do |citation| %>
-    	        <td>
-							  <% if citation and citation[:total] > 0 %>
-                 <% if citation[:public_url] %>
-                   <%= link_to h(citation[:total]), citation[:public_url]  %>
-                 <% else %>
-                   <%= h(citation[:total]) %>
-                 <% end %>
-               <% end %>
-				    </td>
-         <% end %>
-   	  <% end %>
-	  </tr>
-    <% end %>
-    </tbody>
-    </table>
-    <%= will_paginate @works %>
+	<div class="page-header">
+    <h2><h2><%= "Works" + (user_signed_in? ? ' by Users you are Following' : "") %></h2></h2>
+  </div>
+	
+  <% unless @works.empty? %>
+		<% @works.each do |work| %>
+			<div class="row">
+				<% unless work.users.empty? %>
+				  <div class="span1">
+				  	<% work.users.each do |user| %>
+						  <%= image_tag "http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works" %>
+						<% end %>
+					</div>
+				<% end %>
+		    <div class="span11">
+				  <div itemscope itemtype="http://schema.org/ScholarlyArticle">
+					  <h4><%= link_to work.title, work_path(work.id) %></h4>
+			      <p><%= formatted_citation(work).html_safe %>
+				    <br/>
+				    <% unless work.short_doi.blank? %>
+					    <%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+					  <% end %>
+					  <span class="label"><%= work.type.underscore.humanize %></span></p>
+		      </div>
+		    </div>
+		  </div>
+    <% end %>	
+		<%= will_paginate @works %>
   <% else %>
     <h2>No works found</h2>
   <% end %>
+</div>

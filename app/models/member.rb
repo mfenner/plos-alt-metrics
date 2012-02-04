@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class Member < ActiveRecord::Base
-  belongs_to :author
+  belongs_to :user
   belongs_to :group
   
 end

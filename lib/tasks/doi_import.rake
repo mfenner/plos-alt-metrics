@@ -64,8 +64,8 @@ task :doi_import => :environment do
   puts "Saved #{created.size} new articles, updated #{updated.size} articles, ignored #{duplicate.size} other existing articles"
 end
 
-desc "Bulk-import authors from standard input using Twitter username"
-task :author_import => :environment do
+desc "Bulk-import users from standard input using Twitter username"
+task :user_import => :environment do
   puts "Reading Twitter usernames from standard input..."
   valid = []
   invalid = []
@@ -86,16 +86,16 @@ task :author_import => :environment do
   puts "Read #{valid.size} valid entries; ignored #{invalid.size} invalid entries"
   if valid.size > 0
     valid.each do |username, name|
-      existing = Author.find_by_username(username)
+      existing = user.find_by_username(username)
       unless existing
-        author = Author.create(:username => username, :name => name)
+        user = user.create(:username => username, :name => name)
         created << username
       else
         duplicate << username
       end
     end
   end
-  puts "Saved #{created.size} new authors, updated #{updated.size} authors, ignored #{duplicate.size} other existing authors"
+  puts "Saved #{created.size} new users, updated #{updated.size} users, ignored #{duplicate.size} other existing users"
 end
 
 desc "Bulk-import groups from standard input using Mendeley group id"

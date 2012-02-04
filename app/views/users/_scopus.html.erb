@@ -1,0 +1,20 @@
+<% if params[:service] == "scopus" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?))) %>
+  <div class="edit">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "scopus"), :remote => true, :method => :put do |f| %>
+    <h3>Scopus Author ID</h3>
+		    <%= f.text_field :scopus %>
+		  <p>
+			  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true, :method => :get %>
+		    <%= f.submit("Submit") %>
+		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
+		<% end %>
+	</div>
+<% else %>
+	  <%= image_tag "scopus.png", :class => "photo_mini", :title => "Scopus" %><br/>
+		<span class="name"><%= @user.scopus.blank? ? "not set" : link_to(@user.scopus, "http://scopus.org/profile/" + @user.scopus) %></span>
+		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_user_path(@user.username, :partial => "service", :service => "scopus"),
+		                                       :remote => true,
+		  																		 :method => :get },
+		                                       :title => "Edit Scopus" %>
+		<% end %>
+<% end %>

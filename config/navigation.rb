@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Configures your navigation
 SimpleNavigation::Configuration.run do |navigation|
   # Specify a custom renderer if needed.
   # The default renderer is SimpleNavigation::Renderer::List which renders HTML lists.
@@ -50,7 +48,7 @@ SimpleNavigation::Configuration.run do |navigation|
     #                            against the current URI.  You may also use a proc, or the symbol <tt>:subpath</tt>. 
     #
     primary.dom_class = 'navigation'
-    primary.item :authors, 'Authors', authors_path
+    primary.item :users, 'Users', users_path
     primary.item :works, 'Works', works_path, :highlights_on => :subpath 
     primary.item :journals, 'Journals', journals_path, :highlights_on => :subpath
     primary.item :books, 'Books', books_path, :highlights_on => :subpath

@@ -1,0 +1,41 @@
+<div class="content">
+  <% unless @users.empty? %>
+	<table>
+		<thead>
+		<th><h2><%= (user_signed_in? and params[:q].blank?) ? 'Following ' : "") + pluralize(@users.total_entries, 'Author' %></h2></th>
+		</thead>
+		<tbody>
+		<% @users.in_groups_of(2, false) do |users| %> 
+		  <tr>  
+		    <% users.each do |user| %>  
+		    	<td>
+			      <% unless user.nil? %>
+							<%= image_tag "http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_mini" %>
+		      	  <span class="name"><%= link_to user.display_name, user_path(user.username) %></span><br/>
+		          <%= link_to "@#{user.username}", "http://twitter.com/#{user.username}" %>
+		        <% end %>
+	      	</td>
+		    <% end %>  
+		  </tr>  
+	<% end %>
+	</tbody>
+	</table>
+	
+	<%= will_paginate @users %>
+
+<% else %>
+  <div class="row">
+    <div class="span12">
+	<h2>Welcome to ScienceCard</h2>
+	<p>ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other work-level metrics for these publications.</p>
+	<ol>
+		<li>To create your own ScienceCard, simply <%= link_to "sign in with Twitter", user_omniauth_authorize_path(:twitter) %>. Then optionally link your ScienceCard to your Microsoft Academic Search and/or AuthorClaim profile on the ScienceCard profile page.</li>
+		<li>ScienceCard automatically lists the available ScienceCards of the people you follow on Twitter. Or search for the ScienceCards of people you know, using the search box on this page.</li>
+		<li>ScienceCard automatically lists the works written by the people you follow. Or <%= link_to "search", works_path %> for works written by ScienceCard users.</li>
+		<li>Once you found the ScienceCard of the person you are interested in, you can look at his publications, and how often they have been downloaded, bookmarked or cited. </li>
+	</ol>
+	<p>ScienceCard was started in September 2011 by Martin Fenner. Please contact him <%= link_to "@ScienceCard", "http://twitter.com/sciencecard" %> if you have questions or comments.</p>
+	</div>
+	</div>
+<% end %>
+</div>

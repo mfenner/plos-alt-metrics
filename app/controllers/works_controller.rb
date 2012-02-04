@@ -17,7 +17,7 @@
 # limitations under the License.
 
 class WorksController < ApplicationController
-  before_filter :authenticate_author!, :except => [ :index, :show ]
+  before_filter :authenticate_user!, :except => [ :index, :show ]
   before_filter :load_work, 
                 :only => [ :edit, :update, :destroy ]
   
@@ -29,25 +29,25 @@ class WorksController < ApplicationController
     # order=doi|published_on (whitelist, default to doi)
     # source=source_type
     if !params[:username].blank?
-      @author = Author.find_by_username!(params[:username])
-      @works = @author.works.paginate :page => params[:page], :per_page => 10, :include => [:authors, :retrievals], 
-        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]],
+      @user = Author.find_by_username!(params[:username])
+      @works = @user.works.paginate :page => params[:page], :per_page => 10, :include => [:users, :retrievals], 
+        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]],
         :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
-      render :partial => "authors/work" and return
+      render :partial => "users/work" and return
     elsif !params[:q].blank?
       @works = Work.paginate :page => params[:page], 
         :per_page => 10,
-        :include => :authors,
-        :conditions => ["authors.name REGEXP ? or authors.username REGEXP ? or authors.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
+        :include => :users,
+        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
     else
       collection = Work
       collection = collection.cited(params[:cited])  if params[:cited]
       collection = collection.query(params[:query])  if params[:query]
       collection = collection.order(params[:order])  if params[:order]
       
-      if author_signed_in?
-        # Fetch all works by the authors you are following
-        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.author_id, '?')",current_author.friends], :include => [:authors, :contributors], :page => params[:page], :per_page => 10
+      if user_signed_in?
+        # Fetch all works by the users you are following
+        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
       else
         @works = collection.paginate :page => params[:page], :per_page => 10
       end

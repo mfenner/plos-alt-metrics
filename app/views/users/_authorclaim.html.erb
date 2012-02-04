@@ -1,0 +1,22 @@
+<% if params[:service] == "authorclaim" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?))) %>
+  <div class="span12 edit">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "authorclaim"), :html => { :method => :put, :remote => true } do |f| %>
+    <h3>AuthorClaim</h3>
+		<%= f.text_field :authorclaim %>
+		<div class="submit">
+			  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+		    <%= f.submit("Submit", :class => "btn primary") %>
+		</div>
+		<% end %>
+	</div>
+<% else %>
+  <div class="span4">
+	  <%= image_tag "authorclaim.png", :class => "photo_mini", :title => "AuthorClaim" %><br/>
+		<span class="name"><%= @user.authorclaim.blank? ? "not set" : link_to(@user.authorclaim, "http://authorclaim.org/profile/" + @user.authorclaim) %></span>
+		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_user_path(@user.username, :partial => "service", :service => "authorclaim"),
+		                                       :remote => true,
+																					 :method => :get,
+		                                       :title => "Edit AuthorClaim" %>
+		<% end %>
+	</div>
+<% end %>

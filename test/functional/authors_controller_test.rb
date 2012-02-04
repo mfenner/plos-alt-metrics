@@ -18,7 +18,7 @@
 
 require 'test_helper'
 
-class AuthorsControllerTest < ActionController::TestCase
+class UsersControllerTest < ActionController::TestCase
   include Fetcher
 
   def setup
@@ -34,7 +34,7 @@ class AuthorsControllerTest < ActionController::TestCase
   def test_should_get_index
     get :index
     assert_response :success
-    assert_not_nil assigns(:authors)
+    assert_not_nil assigns(:users)
   end
 
   def test_should_get_index_in_csv_format
@@ -47,68 +47,68 @@ class AuthorsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_should_create_author
-    assert_difference('Author.count') do
-      post :create, :author => { :mas => "1" }
+  def test_should_create_user
+    assert_difference('User.count') do
+      post :create, :user => { :mas => "1" }
     end
 
-    assert_redirected_to author_path(assigns(:author))
+    assert_redirected_to user_path(assigns(:user))
   end
 
   def test_should_require_mas
-    post :create, :author => {}
+    post :create, :user => {}
     assert_tag :tag => "div", 
                :attributes => { :class => "fieldWithErrors" },
                :descendant => { :tag => "input", 
-                                :attributes => { :id => "author_mas" } }
+                                :attributes => { :id => "user_mas" } }
   end
 
-  def test_should_show_author
-    get :show, :id => authors(:one).id
+  def test_should_show_user
+    get :show, :id => users(:one).id
     assert_response :success
   end
 
   def test_should_get_edit
-    get :edit, :id => authors(:one).id
+    get :edit, :id => users(:one).id
     assert_response :success
   end
 
-  def test_should_update_author
-    put :update, :id => authors(:one).id, :author => { }
-    assert_redirected_to author_path(assigns(:author))
+  def test_should_update_user
+    put :update, :id => users(:one).id, :user => { }
+    assert_redirected_to user_path(assigns(:user))
   end
 
-  def test_should_destroy_author
-    assert_difference('Author.count', -1) do
-      delete :destroy, :id => authors(:one).id
+  def test_should_destroy_user
+    assert_difference('User.count', -1) do
+      delete :destroy, :id => users(:one).id
     end
 
-    assert_redirected_to authors_path
+    assert_redirected_to users_path
   end
 
   def test_should_route_formats
     %w/ xml csv json html /.each do |format|
-      assert_routing "/authors/#{authors(:one).id}.#{format}", :controller => 'authors', :action => 'show', :id => CGI.unescape(authors(:one).id), :format => format
+      assert_routing "/users/#{users(:one).id}.#{format}", :controller => 'users', :action => 'show', :id => CGI.unescape(users(:one).id), :format => format
     end
-    assert_routing "/authors/#{authors(:one).id}", :controller => 'authors', :action => 'show', :id => CGI.unescape(authors(:one).id)
+    assert_routing "/users/#{users(:one).id}", :controller => 'users', :action => 'show', :id => CGI.unescape(users(:one).id)
   end
 
   def self.make_format_test(format_name, options={})
     format = options[:format] ||= format_name
     content_type = "application/#{options.delete(:type) || format}"
     define_method("test_should_generate_#{format_name}_format") do
-      options[:id] = authors(:one).id
+      options[:id] = users(:one).id
       get :show, options
       assert_response :success
       assert_equal content_type, @response.content_type
       if format == "xml"
         result = parse_xml(@response.body)
-        citations_count = result.find("//author").first.attributes["citations_count"]
+        citations_count = result.find("//user").first.attributes["citations_count"]
       elsif format == "json"
         body = @response.body
         body = body[options[:callback].length+1..-2] \
           unless options[:callback].nil?
-        citations_count = ActiveSupport::JSON.decode(body)["author"]["citations_count"]
+        citations_count = ActiveSupport::JSON.decode(body)["user"]["citations_count"]
       end
       assert citations_count
     end

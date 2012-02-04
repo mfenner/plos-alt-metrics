@@ -18,7 +18,7 @@
 
 class Group < ActiveRecord::Base
   has_many :members
-  has_many :authors, :through => :members
+  has_many :users, :through => :members
   has_and_belongs_to_many :works
 
   validates_presence_of :mendeley

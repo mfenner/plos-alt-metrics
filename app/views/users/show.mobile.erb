@@ -1,0 +1,28 @@
+<div data-role="header">
+	<%= link_to 'Authors', users_path, "data-role" => "button", "data-icon" => "home", "data-transition" => "reverse slide" %>
+	<h1><%= "@#{@user.username}" %></h1>
+	<% if user_signed_in? and current_user == @user %>
+	  <%= link_to 'Sign out', destroy_user_session_path, "data-role" => "button", "class" => "ui-btn-right", "data-icon" => "gear", "rel" => "external" %>
+	<% end %>
+</div>
+
+<div data-role="content">
+	<ul data-role="listview" data-theme="c" class="show">
+	  <li><a href="<%= "http://twitter.com/#{@user.username}" %>" class="signed_in" rel="external">
+		  <%= image_tag "http://api.twitter.com/1/users/profile_image/#{@user.username}" %>
+	    <h3><%= "#{@user.display_name}" %></h3>
+			<% unless @user.description.blank? %>
+				<%= @user.description %><br/>
+			<% end %>
+			<% unless @user.location.blank? %>
+				<%= @user.location %>
+			<% end %>
+	    </a>
+	  </li>
+	</ul>
+	<p>
+		
+	<%= render :partial => 'service' %>
+		
+	<%= render :partial => 'work' %>
+</div>

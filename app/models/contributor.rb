@@ -17,10 +17,10 @@ class Contributor < ActiveRecord::Base
   belongs_to :journal_article, :foreign_key => :work_id
   belongs_to :conference_paper, :foreign_key => :work_id
   belongs_to :book_content, :foreign_key => :work_id
-  belongs_to :author
+  belongs_to :user
   acts_as_list :scope => :work
   
-  attr_accessible :work_id, :author_id, :service, :mas, :authorclaim, :surname, :given_name, :role
+  attr_accessible :work_id, :user_id, :service, :mas, :authorclaim, :surname, :given_name, :role
   
   def name
     return surname if given_name.blank?

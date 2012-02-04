@@ -13,6 +13,6 @@
 # limitations under the License.
 
 class Friendship < ActiveRecord::Base
-  belongs_to :author
-  belongs_to :friend, :class_name => "Author"
+  belongs_to :user
+  belongs_to :friend, :class_name => "User"
 end

@@ -23,7 +23,7 @@ class Work < ActiveRecord::Base
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals 
   has_many :citations, :through => :retrievals
-  has_many :authors, :through => :contributors
+  has_many :users, :through => :contributors
   has_many :contributors, :order => :position, :dependent => :destroy
   has_and_belongs_to_many :groups
   
@@ -227,7 +227,7 @@ class Work < ActiveRecord::Base
       bib_entry = BibTeX::Entry.new({
          :type => "work",
          :title => title,
-         :author => contributors_with_names,
+         :user => contributors_with_names,
          :doi => doi,
          :url => "http://doi.org/" + short_doi,
          :journal => journal ? journal.title : ""})
@@ -239,7 +239,7 @@ class Work < ActiveRecord::Base
       bib_entry = BibTeX::Entry.new({
          :type => "incollection",
          :title => title,
-         :author => contributors_with_names,
+         :user => contributors_with_names,
          :doi => doi,
          :url => "http://doi.org/" + short_doi,
          :publisher => "",
@@ -252,7 +252,7 @@ class Work < ActiveRecord::Base
       bib_entry = BibTeX::Entry.new({
          :type => "inproceedings",
          :title => title,
-         :author => contributors_with_names,
+         :user => contributors_with_names,
          :doi => doi,
          :url => "http://doi.org/" + short_doi,
          :booktitle => book ? book.title : ""})

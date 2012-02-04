@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class JournalsController < ApplicationController
-  before_filter :authenticate_author!, :except => [ :index, :show ]
+  before_filter :authenticate_user!, :except => [ :index, :show ]
 
   # GET /journals
   # GET /journals.xml
@@ -24,9 +24,9 @@ class JournalsController < ApplicationController
         :conditions => ["journals.title REGEXP ? or journals.issn_print REGEXP ? or journals.issn_print REGEXP ?", params[:q],params[:q],params[:q]],
         :order => 'journals.title' 
     else
-      if author_signed_in?
-        # Fetch all journals with the authors you are following
-        #@journals = Journal.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 12
+      if user_signed_in?
+        # Fetch all journals with the users you are following
+        #@journals = Journal.paginate :conditions => ["FIND_IN_SET(contributions.user_id, '?')",current_user.friends], :include => [:users, :contributions], :page => params[:page], :per_page => 12
         @journals = Journal.paginate :page => params[:page], :per_page => 12, :order => 'journals.title'
       else
         @journals = Journal.paginate :page => params[:page], :per_page => 12, :order => 'journals.title'

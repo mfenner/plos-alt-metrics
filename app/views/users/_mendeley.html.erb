@@ -1,0 +1,22 @@
+<% if params[:service] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?))) %>
+  <div class="span12 edit">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mendeley"), :html => { :method => :put, :remote => true } do |f| %>
+    <h3>Mendeley</h3>
+		<%= f.text_field :mendeley, :class => "span3" %>
+		<div class="submit">
+	    <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+		  <%= f.submit("Submit", :class => "btn primary") %>
+		</div>
+		<% end %>
+	</div>
+<% else %>
+  <div class="span4">
+	  <%= image_tag "mendeley.png", :class => "photo_mini", :title => "Mendeley" %><br/>
+		<span class="name"><%= @user.mendeley.blank? ? "not set" : link_to(@user.mendeley, "http://www.mendeley.com/profiles/" + @user.mendeley) %></span>
+		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_user_path(@user.username, :partial => "service", :service => "mendeley"),
+		                                       :remote => true,
+																					 :method => :get,
+		                                       :title => "Edit Mendeley" %>
+		<% end %>
+	</div>
+<% end %>

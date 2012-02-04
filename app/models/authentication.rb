@@ -1,5 +1,5 @@
 class Authentication < ActiveRecord::Base
-  belongs_to :author
+  belongs_to :user
   
   validates_uniqueness_of :uid, :scope => :provider
 end

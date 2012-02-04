@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class BooksController < ApplicationController
-  before_filter :authenticate_author!, :except => [ :index, :show ]
+  before_filter :authenticate_user!, :except => [ :index, :show ]
 
   # GET /books
   # GET /books.xml
@@ -24,9 +24,9 @@ class BooksController < ApplicationController
         :conditions => ["books.title REGEXP ? or books.isbn_print REGEXP ? or books.isbn_electronic REGEXP ?", params[:q],params[:q],params[:q]],
         :order => 'books.title' 
     else
-      if author_signed_in?
-        # Fetch all books with the authors you are following
-        #@books = Book.paginate :conditions => ["FIND_IN_SET(contributions.author_id, '?')",current_author.friends], :include => [:authors, :contributions], :page => params[:page], :per_page => 12
+      if user_signed_in?
+        # Fetch all books with the users you are following
+        #@books = Book.paginate :conditions => ["FIND_IN_SET(contributions.user_id, '?')",current_user.friends], :include => [:users, :contributions], :page => params[:page], :per_page => 12
         @books = Book.paginate :page => params[:page], :per_page => 12, :order => 'books.title'
       else
         @books = Book.paginate :page => params[:page], :per_page => 12, :order => 'books.title'

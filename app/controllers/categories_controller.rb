@@ -13,7 +13,7 @@
 # limitations under the License.
 
 class CategoriesController < ApplicationController
-  before_filter :authenticate_author!
+  before_filter :authenticate_user!
 
   #This is a way of excepting a list of DOIS and getting back summaries for them all.
   #Works with no cites are not returned

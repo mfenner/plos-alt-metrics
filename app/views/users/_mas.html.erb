@@ -1,0 +1,27 @@
+<% if params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) %>
+  <div class="span12 edit">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mas"), :html => { :method => :put, :remote => true } do |f| %>
+	  <h3>Microsoft Academic Search</h3>
+    <% if mas_choices(@user).nil? or mas_choices(@user).empty? %>
+      <%= f.text_field :mas, :class => "span3" %>
+    <% else %>
+      <%= f.select(:mas, mas_choices(@user), :include_blank => 'None', :prompt => 'Please Select:') %>
+    <% end %>
+		  <div class="submit">
+		    <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+		    <%= f.submit("Submit", :class => "btn primary") %>
+		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
+		  </div>
+		<% end %>
+	</div>
+<% else %>
+  <div class="span4">
+	  <%= image_tag "mas.png", :class => "photo_mini", :title => "Microsoft Academic Search" %><br/>
+		<span class="name"><%= @user.mas.blank? ? "not set" : link_to(@user.mas, "http://academic.research.microsoft.com/Author/" + @user.mas) %></span>
+		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_user_path(@user.username, :partial => "service", :service => "mas"),
+			                                     :remote => true,
+		                                       :method => :get,
+		                                       :title => "Edit Microsoft Academic Search" %>
+		<% end %>
+	</div>
+<% end %>

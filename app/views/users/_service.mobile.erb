@@ -1,0 +1,40 @@
+<% if @user.has_profile %>
+  <div data-role="collapsible-set">
+	<div data-role="collapsible">
+		<h3>Author Identifiers</h3>
+	<ul data-role="listview" data-theme="c" data-inset="true">
+	  <% unless @user.mas.blank? %>
+	    <li class="inset"><a href="<%= "http://academic.research.microsoft.com/Author/#{@user.mas}" %>" class="inset">
+	      <%= image_tag "mas.png" %>
+	      <h3>Academic Search</h3>
+	      <%= @user.mas %>
+	      </a>
+	    </li>
+	  <% end %>
+	  <% unless @user.authorclaim.blank? %>
+	    <li class="inset"><a href="<%= "http://authorclaim.org/profile/#{@user.authorclaim}" %>" class="inset">
+	      <%= image_tag "authorclaim.png" %>
+	      <h3>AuthorClaim</h3>
+	      <%= @user.authorclaim %>
+	      </a>
+	    </li>
+	  <% end %>
+		<% unless @user.mendeley.blank? %>
+	    <li class="inset"><a href="<%= "http://www.mendeley.com/profiles/#{@user.mendeley}" %>" class="inset">
+	      <%= image_tag "mendeley.png" %>
+	      <h3>Mendeley</h3>
+	      <%= @user.mendeley %>
+	      </a>
+	    </li>
+	  <% end %>
+		<% unless @user.googlescholar.blank? %>
+	    <li class="inset"><a href="<%= "http://scholar.google.com/citations?user=#{@user.googlescholar}" %>" class="inset">
+	      <%= image_tag "googlescholar.png" %>
+	      <h3>Google Scholar</h3>
+	      <%= @user.googlescholar %>
+	      </a>
+	    </li>
+	  <% end %>
+	</ul>
+	</div>
+<% end %>

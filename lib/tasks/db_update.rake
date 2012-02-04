@@ -69,20 +69,20 @@ namespace :db do
       Retriever.update_articles([article])
     end
     
-    desc "Update all authors"
-    task :authors => :environment do
+    desc "Update all users"
+    task :users => :environment do
       ENV["LAZY"] = "0"
       limit = (ENV["LIMIT"] || 0).to_i
-      authors = Author.limit(limit)
-      Retriever.update_authors(authors)
+      users = User.limit(limit)
+      Retriever.update_users(users)
     end
     
-    desc "Update one specified author"
-    task :one_author => :environment do
+    desc "Update one specified user"
+    task :one_user => :environment do
       username = ENV["username"] or abort("Username not specified (eg, 'username=mfenner')")
-      author = Author.find_by_username(username) or abort("Author not found: #{twitter}")
+      user = User.find_by_username(username) or abort("User not found: #{twitter}")
       ENV["LAZY"] ||= "0"
-      Retriever.update_authors([author])
+      Retriever.update_users([user])
     end
     
     desc "Update all groups"

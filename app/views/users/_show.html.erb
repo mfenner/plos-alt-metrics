@@ -1,0 +1,55 @@
+<div class="content">
+	<div class="row">
+	  <div class="span3" id="photo">
+			<% unless @user.image.blank? %>
+		    <%= image_tag @user.image, :class => "photo" %>
+		  <% end %>
+		</div>
+		<div class="span8" id="twitter">
+		  <%= render :partial => 'twitter' %>
+		</div>
+		<div class="span4 offset1">
+			<p><%= link_to "JSON", user_path(@user.username, :format => :json) %> | <%= link_to "XML", user_path(@user.username, :format => :xml) %> | <%= link_to "BibTeX", user_path(@user.username, :format => :bib) %> | <%= link_to "RIS", user_path(@user.username, :format => :ris) %> | <%= link_to "CSV", user_path(@user.username, :format => :csv) %></p>
+		</div>
+	</div>
+	
+	<ul class="tabs" data-tabs="tabs" >
+		<li class="<%= @user.has_profile ? '' : 'active' %>"><a href="#service">Identifiers</a></li>
+		<% if @user.has_profile %>
+		<li class="active"><a href="#source">Metrics</a></li>
+		<% unless @user.journal_articles.empty? %>
+		  <li><a href="#journal_article">Journal Articles (<%= @user.journal_articles.count %>)</a></li>
+		<% end %>
+		<% unless @user.conference_papers.empty? %>
+		  <li><a href="#conference_paper">Conference Papers (<%= @user.conference_papers.count %>)</a></li>
+		<% end %>
+		<% unless @user.book_contents.empty? %>
+		  <li><a href="#book_content">Book Chapters (<%= @user.book_contents.count %>)</a></li>
+		<% end %>
+		<% end %>
+	</ul>	
+	
+	<div class="tab-content">
+		<div class="tab-pane <%= @user.has_profile ? '' : 'active' %>" id="service">
+			<%= render :partial => 'service' %>
+		</div>
+		
+		<% if @user.has_profile %>
+			<div class="tab-pane active" id="source">
+			  <%= render :partial => 'source'%>
+			</div>
+
+			<div class="tab-pane" id="journal_article">
+			  <%= render :partial => 'journal_article' %>
+			</div>
+			
+			<div class="tab-pane" id="conference_paper">
+			  <%= render :partial => 'conference_paper' %>
+			</div>
+			
+			<div class="tab-pane" id="book_content">
+			  <%= render :partial => 'book_content' %>
+			</div>
+		<% end %>
+	</div>
+</div>

@@ -4,8 +4,8 @@ module ApplicationHelper
     categories = Category.find :all, :conditions => ["sources.active=1"], :include => :sources, :order => :category_id
   end
   
-  def mas_choices(author)
-    Author.search_for_mas_authors(author)
+  def mas_choices(user)
+    User.search_for_mas_users(user)
   end
 
   def xml_date(date)
@@ -17,8 +17,8 @@ module ApplicationHelper
     unless work.contributors.blank? 
       names = []
       work.contributors.each do |contributor|
-        unless (contributor.author_id.blank? or options[:without_links])  
-          names << link_to(contributor.brief_name, author_path(contributor.author.username))
+        unless (contributor.user_id.blank? or options[:without_links])  
+          names << link_to(contributor.brief_name, user_path(contributor.user.username))
         else
           names << contributor.brief_name
         end
