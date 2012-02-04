@@ -226,8 +226,8 @@ class User < ActiveRecord::Base
           end
         end
       end
-    rescue Twitter::Unuserized
-      Rails.logger.debug "Twitter query error: not userized to get friends from #{user.username}"
+    rescue Twitter::Unauthorized
+      Rails.logger.debug "Twitter query error: not authorized to get friends from #{user.username}"
     rescue Twitter::BadRequest
       Rails.logger.debug "Twitter rate limit exceeded"
     end

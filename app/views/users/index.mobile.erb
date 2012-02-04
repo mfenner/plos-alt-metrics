@@ -1,6 +1,6 @@
 <div data-role="header">
 	<% unless user_signed_in? %>
-    <%= link_to 'Sign in', user_omniauth_userize_path(:twitter), "data-role" => "button", "data-icon" => "gear", "rel" => "external" %>
+    <%= link_to 'Sign in', user_omniauth_authorize_path(:twitter), "data-role" => "button", "data-icon" => "gear", "rel" => "external" %>
   <% else %>
     <%= link_to 'Your Card', user_path(current_user.username), "data-role" => "button", "data-icon" => "gear" %>
   <% end %>
