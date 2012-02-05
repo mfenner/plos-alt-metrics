@@ -21,7 +21,11 @@
 				    <% unless work.short_doi.blank? %>
 					    <%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
 					  <% end %>
-					  <span class="label"><%= work.type.underscore.humanize %></span></p>
+					  <span class="label"><%= work.type.underscore.humanize %></span>
+					  <% unless work.published_on.blank? %>
+					    <br /><%= time_ago_in_words(work.published_on) + " ago" %>
+					  <% end %>
+					</p>
 		      </div>
 		    </div>
 		  </div>

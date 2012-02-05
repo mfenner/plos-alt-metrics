@@ -22,7 +22,7 @@
 			</th>
 			<% active_categories.each do |category| %>
 		    <% category.sources.active.each do |source| %>
-		      <th>
+		      <th class="source">
 				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.work_description + ": " + source.name %>
 			    </th>
 			  <% end %>
@@ -32,9 +32,14 @@
 	    <% @user.journal_articles.each do |work| %>
 	      <tr>
 	      	<td>	
-	      	  <h4 itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></h4>
+	      	  <h4 itemprop="name"><%= link_to work.title, work_path(work.id) %></h4>
 	          <%= formatted_citation(work).html_safe %>
-	          <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	          <% unless work.short_doi.blank? %>
+	            <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	          <% end %>
+						<% unless work.published_on.blank? %>
+					    <br /><%= time_ago_in_words(work.published_on) + " ago" %>
+					  <% end %>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
