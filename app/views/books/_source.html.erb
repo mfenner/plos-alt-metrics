@@ -6,7 +6,7 @@
 		  <div class="row">
 		    <% category.sources.reusable.each do |source| %>
 		      <% if @book.citations_count(source) > 0 %>
-		      <div class="span4 source">
+		      <div class="span3 source">
 					  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
 					</div>
 			    <% end %>
@@ -16,7 +16,7 @@
 			<div class="row">
 		    <% category.sources.reusable.each do |source| %>
 		      <% if @book.citations_count(source) > 0 %>
-		      <div class="span4">
+		      <div class="span3">
 		        <legend><%= @book.citations_count(source) %></legend>
 		      </div>
 		    <% end %>
@@ -25,8 +25,7 @@
 		<% end %>	
 	<% end %>
 <% else %>
-  <div class="alert-message warning fade in" data-alert="alert" >
-    <a class="close" href="#">&times;</a>
-    <p>No metrics found.</p>
+  <div class="alert alert-info">
+    No metrics found.
   </div>
 <% end %>

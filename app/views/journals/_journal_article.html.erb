@@ -15,7 +15,7 @@
 
 <% unless @journal.journal_articles.empty? %>
 	<div class="journal_article">
-		<table class="zebra-striped">
+		<table class="table table-striped">
 			<thead>
 			<th>
 				<h2><%= pluralize(@journal.journal_articles.count, 'Journal Article') %></h2>
@@ -34,7 +34,7 @@
 	    <% @journal_articles.each do |journal_article| %>
 	      <tr>
 					<td>	
-	      	  <span itemprop="name" class="name"><%= link_to journal_article.title, work_path(journal_article.id) %></span><br/>
+	      	  <h4 itemprop="name" class="name"><%= link_to journal_article.title, work_path(journal_article.id) %></h4>
 	          <%= formatted_citation(journal_article).html_safe %>
 	          <br/><%= link_to "http://doi.org/" + journal_article.short_doi, "http://doi.org/" + journal_article.short_doi, :itemprop => "url" %>
 	      	</td>
@@ -61,8 +61,7 @@
 		<%= will_paginate @journal_articles %>
 	</div>
 <% else %>
-  <div class="alert-message warning fade in" data-alert="alert" >
-    <a class="close" href="#">&times;</a>
-    <p>No journal articles found.</p>
+  <div class="alert alert-info">
+    No journal articles found.
   </div>
 <% end %>

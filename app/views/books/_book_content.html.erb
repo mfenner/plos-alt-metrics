@@ -15,7 +15,7 @@
 
 <% unless @book.book_contents.empty? %>
 	<div class="book_content">
-		<table class="zebra-striped">
+		<table class="table table-striped">
 			<thead>
 			<th>
 				<h2><%= pluralize(@book.book_contents.count, 'Book Chapter') %></h2>
@@ -34,7 +34,7 @@
 	    <% @book.book_contents.each do |book_content| %>
 	      <tr>
 					<td>	
-	      	  <span itemprop="name" class="name"><%= link_to book_content.title, work_path(book_content.id) %></span><br/>
+	      	  <h4 itemprop="name" class="name"><%= link_to book_content.title, work_path(book_content.id) %></h4>
 	          <%= formatted_citation(book_content).html_safe %>
 	          <br/><%= link_to "http://doi.org/" + book_content.short_doi, "http://doi.org/" + book_content.short_doi, :itemprop => "url" %>
 	      	</td>
@@ -60,8 +60,7 @@
 		</table>
 	</div>
 <% else %>
-  <div class="alert-message warning fade in" data-alert="alert" >
-    <a class="close" href="#">&times;</a>
-    <p>No book content found.</p>
+  <div class="alert alert-info">
+    No book content found.
   </div>
 <% end %>

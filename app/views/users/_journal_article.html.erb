@@ -15,7 +15,7 @@
 
 <% unless @user.journal_articles.empty? %>
 	<div class="work">
-		<table class="zebra-striped">
+		<table class="table table-striped">
 		  <thead>
 			<th>
 				<h2><%= pluralize(@user.journal_articles.count, 'Journal Article') %></h2>
@@ -56,8 +56,7 @@
 		</table>
 	</div>
 <% else %>
-  <div class="alert-message warning fade in" data-alert="alert" >
-    <a class="close" href="#">&times;</a>
-    <p>No works found.</p>
+  <div class="alert alert-info">
+    No journal articles found.
   </div>
 <% end %>

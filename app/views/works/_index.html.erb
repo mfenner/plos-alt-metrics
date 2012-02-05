@@ -9,11 +9,11 @@
 				<% unless work.users.empty? %>
 				  <div class="span1">
 				  	<% work.users.each do |user| %>
-						  <%= image_tag "http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works" %>
+						  <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
 						<% end %>
 					</div>
 				<% end %>
-		    <div class="span11">
+		    <div class="span8">
 				  <div itemscope itemtype="http://schema.org/ScholarlyArticle">
 					  <h4><%= link_to work.title, work_path(work.id) %></h4>
 			      <p><%= formatted_citation(work).html_safe %>
@@ -28,6 +28,8 @@
     <% end %>	
 		<%= will_paginate @works %>
   <% else %>
-    <h2>No works found</h2>
+    <div class="alert alert-info">
+      No works found.
+	  </div>
   <% end %>
 </div>

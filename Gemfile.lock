@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/thomas-mcdonald/bootstrap-sass.git
+  revision: 995124911ec54aa1b860b7f0e78b6a6b63f6f560
+  branch: 2.0
+  specs:
+    bootstrap-sass (2.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -39,8 +46,6 @@ GEM
       latex-decode (>= 0.0.6)
       multi_json (~> 1.0)
     bluecloth (2.2.0)
-    bootstrap-sass (1.4.4)
-      sass-rails (~> 3.1)
     bootstrap-will_paginate (0.0.4)
       will_paginate
     builder (3.0.0)
@@ -200,7 +205,7 @@ DEPENDENCIES
   acts_as_list
   addressable
   bibtex-ruby (~> 2.0.1)
-  bootstrap-sass (~> 1.4.4)
+  bootstrap-sass!
   bootstrap-will_paginate
   builder
   bundler

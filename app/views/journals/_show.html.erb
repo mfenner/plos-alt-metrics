@@ -4,14 +4,14 @@
   </div>
 
   <div class="row">
-		<div class="span4 offset12">
+		<div class="span3 offset9">
 			<p><%= link_to "JSON", journal_path(@journal.issn_print, :format => :json) %> | <%= link_to "XML", journal_path(@journal.issn_print, :format => :xml) %> | <%= link_to "BibTeX", journal_path(@journal.issn_print, :format => :bib) %> | <%= link_to "RIS", journal_path(@journal.issn_print, :format => :ris) %> | <%= link_to "CSV", journal_path(@journal.issn_print, :format => :csv) %></p>
 		</div>
 	</div>
 
-	<ul class="tabs" data-tabs="tabs" >
-		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source">Metrics</a></li>
-		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#journal_article">Journal Articles</a></li>
+	<ul class="nav nav-tabs">
+		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source" data-toggle="tab">Metrics</a></li>
+		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#journal_article" data-toggle="tab">Journal Articles</a></li>
 	</ul>	
 	
 	<div class="tab-content">		

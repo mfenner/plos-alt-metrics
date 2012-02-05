@@ -9,18 +9,18 @@
   </div>
 
   <div class="row">
-		<div class="span4 offset12">
+		<div class="span3 offset9">
 			<p><%= link_to "JSON", book_path(@book.isbn_print, :format => :json) %> | <%= link_to "XML", book_path(@book.isbn_print, :format => :xml) %> | <%= link_to "BibTeX", book_path(@book.isbn_print, :format => :bib) %> | <%= link_to "RIS", book_path(@book.isbn_print, :format => :ris) %> | <%= link_to "CSV", book_path(@book.isbn_print, :format => :csv) %></p>
 		</div>
 	</div>
 
-	<ul class="tabs" data-tabs="tabs" >
-		<li class="active"><a href="#source">Metrics</a></li>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#source" data-toggle="tab">Metrics</a></li>
 		<% unless @book.book_contents.empty? %>
-		  <li><a href="#book_content">Book Chapters</a></li>
+		  <li><a href="#book_content" data-toggle="tab">Book Chapters</a></li>
 		<% end %>
 		<% unless @book.conference_papers.empty? %>
-		  <li><a href="#conference_paper">Conference Papers</a></li>
+		  <li><a href="#conference_paper" data-toggle="tab">Conference Papers</a></li>
 		<% end %>
 	</ul>	
 	

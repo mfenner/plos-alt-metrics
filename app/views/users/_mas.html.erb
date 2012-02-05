@@ -15,10 +15,10 @@
 		<% end %>
 	</div>
 <% else %>
-  <div class="span4">
+  <div class="span3">
 	  <%= image_tag "mas.png", :class => "photo_mini", :title => "Microsoft Academic Search" %><br/>
 		<span class="name"><%= @user.mas.blank? ? "not set" : link_to(@user.mas, "http://academic.research.microsoft.com/Author/" + @user.mas) %></span>
-		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_user_path(@user.username, :partial => "service", :service => "mas"),
+		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to '<i class="icon-pencil"></i>'.html_safe, edit_user_path(@user.username, :partial => "service", :service => "mas"),
 			                                     :remote => true,
 		                                       :method => :get,
 		                                       :title => "Edit Microsoft Academic Search" %>

@@ -4,7 +4,7 @@
   </div>
 
 	<div class="row">
-	  <div class="span11">
+	  <div class="span8">
 			<div itemscope itemtype="http://schema.org/ScholarlyArticle">
 		    <p><%= formatted_citation(@work).html_safe %>
 				<br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
@@ -12,7 +12,7 @@
 	     </div>
 	   </div>
 
-		 <div class="span4 offset1">
+		 <div class="span3 offset1">
 			 <p><%= link_to "JSON", work_path(@work.id, :format => :json) %> | <%= link_to "XML", work_path(@work.id, :format => :xml) %> | <%= link_to "BibTeX", work_path(@work.id, :format => :bib) %> | <%= link_to "RIS", work_path(@work.id, :format => :ris) %> | <%= link_to "CSV", work_path(@work.id, :format => :csv) %></p>
 		 </div>
 	</div>

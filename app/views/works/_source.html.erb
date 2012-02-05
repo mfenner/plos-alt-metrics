@@ -5,7 +5,7 @@
 		<div class="row">       
 			<% category.sources.active.each do |source| %>
 			  <% if @work.citations_by_source(source)[:total] > 0 %>
-			    <div class="span4 source">
+			    <div class="span3 source">
 					  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
 					</div>
 			  <% end %>
@@ -15,7 +15,7 @@
 	  <div class="row">
 			<% category.sources.active.each do |source| %>
 			  <% if @work.citations_by_source(source)[:total] > 0 %>
-			    <div class="span4">
+			    <div class="span3">
 						<legend><% if @work.citations_by_source(source) and @work.citations_by_source(source)[:public_url] and @work.citations_by_source(source)[:total] > 0 %>
 	            <%= link_to h(@work.citations_by_source(source)[:total]), @work.citations_by_source(source)[:public_url] %>
 	          <% else %>

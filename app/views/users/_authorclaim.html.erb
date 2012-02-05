@@ -10,10 +10,10 @@
 		<% end %>
 	</div>
 <% else %>
-  <div class="span4">
+  <div class="span3">
 	  <%= image_tag "authorclaim.png", :class => "photo_mini", :title => "AuthorClaim" %><br/>
 		<span class="name"><%= @user.authorclaim.blank? ? "not set" : link_to(@user.authorclaim, "http://authorclaim.org/profile/" + @user.authorclaim) %></span>
-		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to image_tag("edit.gif"), edit_user_path(@user.username, :partial => "service", :service => "authorclaim"),
+		<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to '<i class="icon-pencil"></i>'.html_safe, edit_user_path(@user.username, :partial => "service", :service => "authorclaim"),
 		                                       :remote => true,
 																					 :method => :get,
 		                                       :title => "Edit AuthorClaim" %>
