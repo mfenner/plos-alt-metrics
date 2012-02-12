@@ -17,8 +17,10 @@ xml.rss(:version=>"1.0") do
         xml.dc :date, xml_date(work.published_on) unless work.published_on.blank?
         xml.prism :doi, work.doi
         xml.prism :url, "http://doi.org/#{work.short_doi}"
-        xml.prism :publicationName, work.journal.title unless work.journal.blank?
-        xml.prism :issn, work.journal.issn unless work.journal.blank?
+        if work.type == "JournalArticle"
+          xml.prism :publicationName, work.journal.title unless work.journal.blank?
+          xml.prism :issn, work.journal.issn unless work.journal.blank?
+        end
         xml.prism :publicationDate, xml_date(work.published_on) unless work.published_on.blank?
         xml.prism :volume, work.volume unless work.volume.blank?
         xml.prism :number, work.issue unless work.issue.blank?
