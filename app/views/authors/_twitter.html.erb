@@ -1,7 +1,7 @@
 <% if params[:partial] == "twitter" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?))) %>
   <div class="edit">
 	  <div class="profile">
-			<%= form_for :author, :url => author_url(:id => @author.username, :partial => "twitter", :service => "twitter"), :remote => true, :method => :put do |f| %>
+			<%= form_for :author, :url => author_url(@author.username, :partial => "twitter", :service => "twitter"), :html => { :method => :put, :remote => true } do |f| %>
 			  <h3>Name</h3>
 			  <%= f.text_field :name, :class => :name %><p>
 				<%= link_to "Cancel", author_path(@author.username, :partial => "twitter"), :remote => true %>

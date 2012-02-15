@@ -1,13 +1,10 @@
 <td class="rating">
-	<% if author_signed_in? and !(controller.action_name == "edit" and post.id == @post.id) %>
-    <span class="post_links"><%= link_to (image_tag((post.authors.any? {|author| author == current_author } ? "change.png" : "classify.png")) + (post.authors.any? {|author| author == current_author } ? " Change" : " Classify")), edit_post_url(:id => post, :author_id => current_author.id, :page => params[:page], :q => params[:q]), :remote => true, :title => "Classify this tweet" %></span>
-  <% end %>
   <% unless post.ratings.empty? %>
 	  <strong><%= pluralize(post.ratings.count, 'Classification') %></strong><br />
     <% if post.spam %>
       Spam
     <% else %>
-      <%= post.topic.html_safe if post.topic %>
+      <%= (post.topic+ "<br/>").html_safe if post.topic %>
 	    <%= post.rhetoric.html_safe %>
 	    <%= post.is_author.html_safe if post.is_author %>
 	    <%= post.method.html_safe if post.method %>

@@ -1,6 +1,6 @@
 <% if params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@author.errors.empty?)) %>
   <div class="edit">
-	  <%= remote_form_for :author, :update => "service", :url => author_url(:id => @author.username, :partial => "service", :service => "mas"), :before => "Element.show('spinner');", :method => :put do |f| %>
+	  <%= form_for :author, :url => author_url(:id => @author.username, :partial => "service", :service => "mas"), :remote => true, :method => :put do |f| %>
 	  <h3>Microsoft Academic Search</h3>
     <% if mas_choices(@author).nil? or mas_choices(@author).empty? %>
       <%= f.text_field :mas %>
@@ -8,7 +8,7 @@
       <%= f.select(:mas, mas_choices(@author), :include_blank => 'None', :prompt => 'Please Select:') %>
     <% end %>
 		  <p>
-			  <%= link_to_remote "Cancel", :update => "service", :url => author_path(@author.username, :partial => "service"), :method => :get %>
+			  <%= link_to "Cancel", :url => author_path(@author.username, :partial => "service"),:remote => true, :method => :get %>
 		    <%= f.submit("Submit") %>
 		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
 		<% end %>

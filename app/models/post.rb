@@ -21,7 +21,7 @@ class Post < ActiveRecord::Base
   
   def topic
     if ratings.maximum('topic')
-      ratings.maximum('topic') + "<br />"
+      ratings.maximum('topic')
     else
       nil
     end

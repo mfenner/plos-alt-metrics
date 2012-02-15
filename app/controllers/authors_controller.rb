@@ -226,6 +226,7 @@ class AuthorsController < ApplicationController
         end
         format.xml  { head :ok }
         format.json { head :ok }
+        format.js { render :show }
       else
         format.html
         format.js { render "show" }

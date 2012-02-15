@@ -83,6 +83,8 @@ class RatingsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.mobile # index.mobile.erb
+      format.json # index.mobile.erb
+      format.csv # index.mobile.erb
     end
   end
 
