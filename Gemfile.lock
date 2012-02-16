@@ -204,7 +204,7 @@ DEPENDENCIES
   lazy_high_charts
   libxml-ruby (= 2.2.2)
   mocha
-  mysql2 (< 0.3.7)
+  mysql2
   oa-oauth
   rack
   rack-google_analytics

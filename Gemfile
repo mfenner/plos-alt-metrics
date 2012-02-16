@@ -4,7 +4,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.1.3'
 
-gem 'mysql2', '< 0.3.7'
+gem 'mysql2'
 gem 'rack'
 # Rails 3.1 - Asset Pipeline
 gem 'json'
