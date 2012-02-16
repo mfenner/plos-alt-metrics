@@ -1,0 +1,10 @@
+<%=
+  FasterCSV.generate do |csv|
+	  # header row 
+    csv << [ "id", "tweet_id", "tweet_author","tweet_date", "tweet_text", "article_title", "article_url" ]
+    # data rows
+    @posts.each do |post|
+      csv << [ post.id, post.original_id, post.author, post.published_at.to_datetime.to_s(:friendly_date), post.body, post.article_title, post.article_url ]
+    end
+  end
+%>
