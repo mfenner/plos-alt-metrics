@@ -26,6 +26,7 @@ class PostsController < ApplicationController
       format.mobile # index.mobile.erb
       format.js
       format.xml  { render :xml => @posts }
+      format.csv # index.csv.erb
     end
   end
 

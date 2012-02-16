@@ -84,7 +84,7 @@ class RatingsController < ApplicationController
       format.html # index.html.erb
       format.mobile # index.mobile.erb
       format.json # index.mobile.erb
-      format.csv # index.mobile.erb
+      format.csv # index.csv.erb
     end
   end
 
