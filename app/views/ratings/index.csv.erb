@@ -1,10 +1,10 @@
 <%=
   FasterCSV.generate do |csv|
 	  # header row 
-    csv << [ "id", "rating_author", "rating_date", "tweet_id", "tweet_author","is_spam", "topic", "shares_author", "rhetoric", "uses_method", "uses_data", "uses_conclusions" ]
+    csv << [ "id", "post_id", "rating_author", "rating_date", "tweet_id", "tweet_author","is_spam", "topic", "shares_author", "rhetoric", "uses_method", "uses_data", "uses_conclusions" ]
     # data rows
     @ratings.each do |rating|
-      csv << [ rating.id, rating.author.username, rating.updated_at.to_datetime.to_s(:friendly_date), rating.post.original_id, rating.post.author, rating.spam, rating.topic.blank? ? nil : rating.topic, rating.is_author, rating.rhetoric, rating.method, rating.data, rating.conclusions ]
+      csv << [ rating.id, rating.post_id, rating.author.username, rating.updated_at.to_datetime.to_s(:friendly_date), rating.post.original_id, rating.post.author, rating.spam, rating.topic.blank? ? nil : rating.topic, rating.is_author, rating.rhetoric, rating.method, rating.data, rating.conclusions ]
     end
   end
 %>
