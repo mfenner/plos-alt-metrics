@@ -34,8 +34,6 @@ gem "bibtex-ruby", "~> 2.0.1"
 gem "acts_as_list"
 gem "builder"
 gem 'lazy_high_charts'
-gem 'sass'
-gem "jquery-rails"
 
 group :assets do
   gem 'sass-rails',   '~> 3.1.4'

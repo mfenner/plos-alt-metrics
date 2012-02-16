@@ -212,7 +212,6 @@ DEPENDENCIES
   rake
   rdiscount (= 1.6.8)
   ruby-debug
-  sass
   sass-rails (~> 3.1.4)
   simple-navigation
   soap4r (>= 1.5.8)
