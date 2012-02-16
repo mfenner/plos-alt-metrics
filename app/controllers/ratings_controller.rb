@@ -72,7 +72,7 @@ class RatingsController < ApplicationController
     days = Rating.order('created_at').group('DATE(created_at)').count
     @activitychart = LazyHighCharts::HighChart.new('chart') do |f|
       f.chart({:defaultSeriesType=>"spline", :height => 150, :marginRight => 30, :backgroundColor => nil } )
-      f.series(:name => "Ratings", :color => "#41AB5D", :data => days.map {|a| [Date.strptime(a[0], '%Y-%m-%d').to_time.utc.to_i * 1000, a[1]] })
+      f.series(:name => "Ratings", :color => "#41AB5D", :data => days.map {|a| [a[0].to_time.utc.to_i * 1000, a[1]] })
       f.options[:xAxis] = { :type => 'datetime', :tickLength => 0, :lineColor => "#000000", :labels  => { :enabled => true } }
       f.options[:yAxis] = { :min => 0, :max => @posts_with_ratings.count, :lineWidth => 1, :lineColor => "#000000", :gridLineWidth => 0, :title => nil, :labels  => { :enabled => true }, :tickInterval => @posts_with_ratings.count, :showFirstLabel => false }
       f.options[:title][:text] = nil
