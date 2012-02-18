@@ -71,7 +71,7 @@ class ArticlesController < ApplicationController
       redirect_to(@article) and return  # why not just keep going with show?
     end
 
-    load_article(eager_includes)
+    load_article
     format_options = params.slice :citations, :history, :source
 
     if params[:refresh] == "soon" or @article.stale?
@@ -165,13 +165,5 @@ protected
   def load_article(options={})
     # Load one article given query params, for the non-#index actions
     @article = Article.find_by_short_doi!(params[:id], options)
-  end
-
-  def eager_includes
-    returning :include => { :retrievals => [ :source ] } do |r|
-      r[:include][:retrievals] << :citations if params[:citations] == "1"
-      r[:include][:retrievals] << :histories if params[:history] == "1"
-      r[:conditions] = ['LOWER(sources.type) IN (?)', params[:source].downcase.split(",")] if params[:source]
-    end
   end
 end
