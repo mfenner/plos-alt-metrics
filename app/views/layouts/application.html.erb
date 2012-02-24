@@ -36,7 +36,7 @@
 				  <%= render_navigation %>
 				  <% if ["works", "users", "groups", "journals", "books"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
 			      <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "navbar-search pull-left") do %>
-			        <%= search_field_tag :q, params[:q], :placeholder => "Search" %>
+			        <%= search_field_tag :q, params[:q], :placeholder => "Search", :class => "search-query" %>
 			      <% end %>
 			    <% end %>
 					<ul class="nav pull-right">
