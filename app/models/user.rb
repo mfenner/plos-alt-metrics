@@ -147,10 +147,10 @@ class User < ActiveRecord::Base
     # Fetch user information, return nil if no response 
     return nil if user.mas.blank?
     
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=User&UserID=#{user.mas}&StartIdx=1&EndIdx=1"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Author&AuthorID=#{user.mas}&StartIdx=1&EndIdx=1"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
-    result = SourceHelper.get_json(url, options)["d"]["User"]
+    result = SourceHelper.get_json(url, options)["d"]["Author"]
     return nil if result.nil?
     
     properties = result["Result"][0]
@@ -172,10 +172,10 @@ class User < ActiveRecord::Base
   def self.search_for_mas_users(user, options={})
     # Fetch user information, return nil if no response 
     return nil if user.name.blank?
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&UserQuery=#{CGI.escape(user.name)}&ResultObjects=User&StartIdx=1&EndIdx=10"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&AuthorQuery=#{CGI.escape(user.name)}&ResultObjects=Author&StartIdx=1&EndIdx=10"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
-    result = SourceHelper.get_json(url, options)["d"]["User"]
+    result = SourceHelper.get_json(url, options)["d"]["Author"]
     return nil if result.nil?
     
     properties = result["Result"]
@@ -191,7 +191,7 @@ class User < ActiveRecord::Base
   def self.search_for_scopus_users(user, options={})
     # Fetch user information, return nil if no response 
     return nil if user.name.blank?
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&UserQuery=#{CGI.escape(user.name)}&ResultObjects=User&StartIdx=1&EndIdx=10"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&AuthorQuery=#{CGI.escape(user.name)}&ResultObjects=Author&StartIdx=1&EndIdx=10"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
     result = SourceHelper.get_json(url, options)
@@ -239,7 +239,7 @@ class User < ActiveRecord::Base
     # Fetch works, return empty array if no mas identifier, no response, or no works found
     return [] if user.mas.blank?
     
-    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&UserID=#{user.mas}&StartIdx=1&EndIdx=50"
+    url = "http://academic.research.microsoft.com/json.svc/search?AppId=#{APP_CONFIG['mas_app_id']}&ResultObjects=Publication&PublicationContent=AllInfo&AuthorID=#{user.mas}&StartIdx=1&EndIdx=50"
     Rails.logger.info "Microsoft Academic Search query: #{url}"
     
     result = SourceHelper.get_json(url, options)["d"]["Publication"]
@@ -253,7 +253,7 @@ class User < ActiveRecord::Base
     return [] if user.authorclaim.blank?
     
     url = "ftp://ftp.authorclaim.org/#{user.authorclaim[1,1].to_s}/#{user.authorclaim[2,1].to_s}/#{user.authorclaim}.amf.xml"
-    Rails.logger.info "UserClaim query: #{url}"
+    Rails.logger.info "AuthorClaim query: #{url}"
     
     SourceHelper.get_xml(url, options) do |document|
       results = []
