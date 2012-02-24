@@ -1,12 +1,10 @@
 <% if params[:service] == "googlescholar" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?))) %>
-<div class="span12 edit">
-	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "googlescholar"), :html => { :method => :put, :remote => true } do |f| %>
-    <h3>Google Scholar</h3>
-		<%= f.text_field :googlescholar %>
-		<div class="submit">
-			<%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
-		  <%= f.submit("Submit", :class => "btn primary") %>
-		</div>
+<div class="span6">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "googlescholar"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+      <label>Google Scholar</label>
+		  <%= f.text_field :googlescholar %><br />
+		  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true, :class => "btn" %>
+		  <%= f.submit("Submit", :class => "btn-primary") %>
 		<% end %>
 	</div>
 <% else %>

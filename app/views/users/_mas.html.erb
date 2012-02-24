@@ -1,17 +1,15 @@
 <% if params[:service] == "mas" and (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) %>
-  <div class="span12 edit">
-	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mas"), :html => { :method => :put, :remote => true } do |f| %>
-	  <h3>Microsoft Academic Search</h3>
-    <% if mas_choices(@user).nil? or mas_choices(@user).empty? %>
-      <%= f.text_field :mas, :class => "span3" %>
-    <% else %>
-      <%= f.select(:mas, mas_choices(@user), :include_blank => 'None', :prompt => 'Please Select:') %>
-    <% end %>
-		  <div class="submit">
-		    <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
-		    <%= f.submit("Submit", :class => "btn primary") %>
-		    <%= image_tag 'spinner.gif', :id=>'spinner', :style=>"display:none;" %>
-		  </div>
+  <div class="span6">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mas"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+	    <label>Microsoft Academic Search</label>
+      <% if mas_choices(@user).nil? or mas_choices(@user).empty? %>
+        <%= f.text_field :mas %>
+      <% else %>
+        <%= f.select(:mas, mas_choices(@user), :include_blank => 'None', :prompt => 'Please Select:') %>
+      <% end %>
+      <br />
+      <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true, :class => "btn" %>
+      <%= f.submit("Submit", :class => "btn-primary") %>
 		<% end %>
 	</div>
 <% else %>

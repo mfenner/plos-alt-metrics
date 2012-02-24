@@ -1,13 +1,11 @@
 <% if params[:service] == "mendeley" and ((controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?))) %>
-  <div class="span12 edit">
-	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mendeley"), :html => { :method => :put, :remote => true } do |f| %>
-    <h3>Mendeley</h3>
-		<%= f.text_field :mendeley, :class => "span3" %>
-		<div class="submit">
-	    <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
-		  <%= f.submit("Submit", :class => "btn primary") %>
-		</div>
-		<% end %>
+  <div class="span6">
+	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mendeley"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+      <label>Mendeley</label>
+		  <%= f.text_field :mendeley %><br />
+	    <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true, :class => "btn" %>
+		  <%= f.submit("Submit", :class => "btn-primary") %>
+	  <% end %>
 	</div>
 <% else %>
   <div class="span3">
