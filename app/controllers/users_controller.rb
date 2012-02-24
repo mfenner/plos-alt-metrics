@@ -146,7 +146,7 @@ class UsersController < ApplicationController
                 # Check that DOI is valid
                 if work.valid?
                   work.update_attributes(:mas => result["ID"])
-                  result["User"].each do |user|
+                  result["Author"].each do |user|
                     contributor = Contributor.find_or_create_by_work_id_and_mas_and_service(:work_id => work.id,
                                                             :mas => user["ID"],
                                                             :service => "mas",
@@ -160,7 +160,7 @@ class UsersController < ApplicationController
             end
           end
         elsif params[:service] == "userclaim"
-          # First remove all userclaim work claims, e.g. because UserClaim ID was changed or set to empty
+          # First remove all userclaim work claims, e.g. because AuthorClaim ID was changed or set to empty
           @user.contributors.where(:service => "userclaim").each do |contributor|
             contributor.update_attributes(:user_id => nil)
           end
@@ -189,7 +189,7 @@ class UsersController < ApplicationController
             end
           end
         elsif params[:service] == "scopus"
-          # First remove all scopus work claims, e.g. because Scopus User ID was changed or set to empty 
+          # First remove all scopus work claims, e.g. because Scopus Author ID was changed or set to empty 
           @user.contributors.where(:service => "scopus").each do |contributor|
             contributor.update_attributes(:user_id => nil)
           end
@@ -207,7 +207,7 @@ class UsersController < ApplicationController
                 # Check that DOI is valid
                 if work.valid?
                   work.update_attributes(:scopus => result["ID"])
-                  result["User"].each do |user|
+                  result["Author"].each do |user|
                     contributor = Contributor.find_or_create_by_work_id_and_scopus_and_service(:work_id => work.id,
                                                             :scopus => user["ID"],
                                                             :service => "scopus",
