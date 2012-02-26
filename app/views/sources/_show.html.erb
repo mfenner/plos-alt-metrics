@@ -80,7 +80,7 @@
 <ul>
   <% @samples.each do |retrieval| %>
     <% unless retrieval.work.blank? %>
-      <li><%= link_to retrieval.work.doi, work_path(retrieval.work.short_doi) %>:
+      <li><%= link_to retrieval.work.doi, work_path(retrieval.work.id) %>:
       <%= retrieval.total_citations_count %></li>
     <% end %>
   <% end %>
