@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Only return citation count unless specified in options with { :with_citations => true }
-# Specify range of citations returned with { :startidx => 1, :endidx => 50 }
-
 class Altmetric < Source
-  
-  # Requires Mendeley Consumer Key
+    
+  # Requires Altmetric Key
   def uses_partner_id; true; end
 
   def perform_query(work, options = {})

@@ -35,7 +35,7 @@ class Retriever
     end
     
     # Update metadata via CrossRef
-    Work.update_via_crossref(work)
+    # Work.update_via_crossref(work)
 
     # undoing revision 5150.  This way, we will always get the most current list of active sources.
     sources = Source.active
@@ -64,15 +64,10 @@ class Retriever
       retrieval.try_to_exclusively do
         if (not lazy) or retrieval.stale?
           Rails.logger.info "Refreshing source: #{source.inspect}"
-          #If one fails, make note, but then keep going.
-          result = update_one(retrieval, source, work)
-        
-          if result
-            sources_count = sources_count + 1
-            Rails.logger.info "result=#{result}, sources_count incremented: #{sources_count}"
-          else
-            Rails.logger.error "result=#{result}, error refreshing work #{work.inspect}"
-          end
+          
+          async_update_one(retrieval)
+          # TODO: handle async retrieval
+          sources_count = sources_count + 1
         else
           sources_count = sources_count + 1
           Rails.logger.info "Not refreshing source #{source.inspect}"
@@ -91,95 +86,8 @@ class Retriever
     end
   end
 
-  def update_one(retrieval, source, work)
-    Rails.logger.info "Asking #{source.name} about #{work.doi}; last updated #{retrieval.retrieved_at}"
-    
-    success = true
-    begin
-      raw_citations = source.query(work, { :retrieval => retrieval, 
-        :timeout => source.timeout })
-
-      if raw_citations == false
-        Rails.logger.info "Skipping disabled source."
-        success = false
-      elsif raw_citations.is_a? Numeric  # Scopus returns a numeric count
-        Rails.logger.info "Got a count of #{raw_citations.inspect} citations."
-          
-        retrieval.other_citations_count = raw_citations
-        retrieval.retrieved_at = DateTime.now.utc
-      else
-        # Uniquify them - Sources sometimes return duplicates
-        preunique_count = raw_citations.size
-        raw_citations = raw_citations.inject({}) do |h, citation|
-          h[citation[:uri]] = citation; h
-        end
-        Rails.logger.info "Got #{raw_citations.size} citation details."
-        
-        dupCount = preunique_count - raw_citations.size
-        
-        Rails.logger.debug "(after filtering out #{dupCount} duplicates!)"
-            
-        #Uniquify existing citations
-        Rails.logger.debug "Existing citation count: #{retrieval.citations.size}"
-        existing = retrieval.citations.inject({}) do |h, citation|
-          h[citation[:uri]] = citation; h
-        end
-        Rails.logger.debug "After existing citations uniquified: #{existing.size}"
-
-        raw_citations.each do |uri, raw_citation|
-          #Loop through all citations, updating old, creating new.
-          #Remove any old ones from the hash.
-          dbCitation = existing.delete(uri)
-          begin
-            if dbCitation.nil?
-              Rails.logger.info "Creating citation #{uri}"
-              citation = retrieval.citations.create(:uri => uri,
-                :details => symbolize_keys_deeply(raw_citation))
-            else
-              Rails.logger.info "Updating citation: #{dbCitation.id} "
-              citation = retrieval.citations.update(dbCitation.id, {:details => symbolize_keys_deeply(raw_citation), :updated_at => DateTime.now })
-            end
-          rescue Timeout::Error, Timeout::ExitException
-            raise
-          rescue
-            raise if raise_on_error
-            Rails.logger.error "Unable to #{dbCitation.nil? ? 'create' : 'update'} #{raw_citation.inspect}"
-            success = false
-          end
-        end
-        
-        #delete any existing database records that are still in the hash
-        #(This will occur if a citation was created, but the later the source
-        #giving us the citation stopped sending it)
-        Rails.logger.debug "Deleting remaining existing citations: #{existing.size}"
-        existing.values.map(&:destroy)
-        retrieval.retrieved_at = DateTime.now.utc
-      end
-      #Note Issue: 21920, there is a strange problem where these citation counts are not always being set correctly.
-      Rails.logger.debug "Citation count: #{retrieval.citations.size}"
-      Retrieval.reset_counters retrieval.id, :citations
-  
-      retrieval.save!
-    rescue Timeout::Error, Timeout::ExitException
-      # do nothing
-      success = false
-    rescue RetrieverTimeout
-      raise
-    rescue Exception => e
-      raise e if raise_on_error
-      Rails.logger.error "Unable to query"
-      Rails.logger.error e.backtrace.join("\n")
-      success = false
-    end
-
-    if success
-      retrieval.reload
-      history = retrieval.histories.find_or_create_by_year_and_month(retrieval.retrieved_at.year, retrieval.retrieved_at.month)
-      history.citations_count = retrieval.total_citations_count
-      history.save!
-      Rails.logger.info "Saved history[#{history.id}: #{history.year}, #{history.month}] = #{history.citations_count}"
-    end
-    success
+  def async_update_one(retrieval)
+    Resque.enqueue(Retrieval, retrieval.id)
   end
 
   def symbolize_keys_deeply(h)
@@ -219,36 +127,7 @@ class Retriever
     
     user.refreshed!.save!
     Rails.logger.info "Refreshed user #{user.mas}"
-  end
-  
-  def update_works_by_group(group)
-    Rails.logger.info "Updating group #{group.inspect}..."
-    
-    # Fetch works from group, return nil if no response
-    results = Group.fetch_works_from_mas(group)
-    return nil if results.nil?
-    
-    results = results["documents"]
-    
-    results.each do |result|
-      # Only add journal works
-      unless result["uuid"].nil? or result["title"].nil? or result["type"] != "JournalArticle"
-        metadata = Work.fetch_from_mendeley(result["uuid"])
-        unless metadata["identifiers"]["doi"].nil?
-          work = Work.find_or_create_by_doi(:doi => metadata["identifiers"]["doi"], :url => "http://dx.doi.org/" + metadata["identifiers"]["doi"], :mendeley => metadata["uuid"], :title => metadata["title"], :year => metadata["year"])
-          # Check that DOI is valid
-          if work.valid?
-            Work.update_via_crossref(work)
-            group.works << work unless group.works.include?(work)
-            Rails.logger.debug "Work is#{" (new)" if work.new_record?} #{work.inspect} (lazy=#{lazy.inspect}, stale?=#{work.stale?.inspect})"
-          end
-        end
-      end
-    end  
-    
-    group.refreshed!.save!
-    Rails.logger.info "Refreshed group #{group.mendeley}"
-  end
+  end  
   
   def update_user(user)
     Rails.logger.info "Updating user #{user.inspect}..."
@@ -264,19 +143,6 @@ class Retriever
     
     user.refreshed!.save!
     Rails.logger.info "Refreshed user #{user.username}"
-  end
-  
-  def update_group(group)
-    Rails.logger.info "Updating group #{group.inspect}..."
-    
-    # Fetch properties from group, return nil if no response
-    properties = Group.fetch_properties(group)
-    return nil if properties.nil?
-    
-    group = Group.update_properties(group, properties) 
-    
-    group.refreshed!.save!
-    Rails.logger.info "Refreshed group #{group.mendeley}"
   end
 
   def self.update_works(works, adjective=nil, timeout_period=50.minutes)
@@ -345,42 +211,6 @@ class Retriever
       end
     rescue RetrieverTimeout => e
       Rails.logger.error "Timeout exceeded on user update" + e.backtrace.join("\n")
-      raise e
-    end
-  end
-  
-  def self.update_groups(groups, adjective=nil, timeout_period=50.minutes, include_works=true)
-    require 'timeout'
-    begin
-
-      # user can pass in the timeout value. expecting an integer value in minutes
-      timeout_passed_in = ENV.fetch("TIMEOUT", 0).to_i
-      if (timeout_passed_in > 0)
-        timeout_period = timeout_passed_in.minutes
-      end
-
-      Rails.logger.info "Timeout value is #{timeout_period.to_i} seconds"
-      
-      Timeout::timeout timeout_period.to_i, RetrieverTimeout do
-        lazy = ENV.fetch("LAZY", "1") == "1"
-        Rails.logger.debug ["Updating", groups.size.to_s,
-              lazy ? "stale" : nil, adjective,
-              groups.size == 1 ? "group" : "groups"].compact.join(" ")
-        retriever = self.new(:lazy => lazy,
-          :raise_on_error => ENV["RAISE_ON_ERROR"])
-
-        groups.each do |group|
-          retriever.update_group(group)
-          if include_works
-            old_count = group.works_count || 0
-            retriever.update_works_by_group(group)
-            new_count = group.works_count || 0
-            Rails.logger.debug "Mendeley: #{group.mendeley} count now #{new_count} (#{new_count - old_count})"
-          end
-        end
-      end
-    rescue RetrieverTimeout => e
-      Rails.logger.error "Timeout exceeded on group update" + e.backtrace.join("\n")
       raise e
     end
   end

@@ -29,8 +29,6 @@ class User < ActiveRecord::Base
   has_many :conference_papers, :through => :contributors, :foreign_key => :work_id
   has_many :book_contents, :through => :contributors, :foreign_key => :work_id
   
-  has_many :members
-  has_many :groups, :through => :members
   has_many :friendships
   has_many :friends, :through => :friendships, :order => 'sort_name, username'
   

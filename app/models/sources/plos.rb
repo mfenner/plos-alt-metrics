@@ -62,7 +62,7 @@ class Plos < Source
       else
         host = nil
     end
-    retrieval.work.doi.to_s && (host.nil? ? "http://dx.doi.org/" + retrieval.work.doi.to_s : host + "/work/metrics/info%3Adoi%2F" + retrieval.work.doi.to_s)
+    retrieval.work.doi.to_s && (host.nil? ? "http://dx.doi.org/" + retrieval.work.doi.to_s : host + "/article/metrics/info%3Adoi%2F" + retrieval.work.doi.to_s)
   end
   
 end

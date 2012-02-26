@@ -2,26 +2,22 @@
 	<% active_categories.each do |category| %>
 	  <% unless @user.get_cites_by_category(category.name).empty? %>
 			<h3><%= h(category.name) %> <small><%= h(category.user_description) %></small></h3>
-	
-			<div class="row">
-			  <% category.sources.active.each do |source| %>
-			    <% if @user.citations_count(source) > 0 %>
-				    <div class="span3 source">
-						  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
-						</div>
-					<% end %>
-				<% end %>
-			</div>
-	
-			<div class="row">
-			  <% category.sources.active.each do |source| %>
-			    <% if @user.citations_count(source) > 0 %>
-				    <div class="span3">
-						  <legend><%= @user.citations_count(source) %></legend>
-					  </div>
+			
+			<ul class="thumbnails">    
+				<% category.sources.active.each do |source| %>
+				  <% if @user.citations_count(source) > 0 %>
+				    <li class="span3">
+					    <div class="thumbnail">
+						    <%= image_tag source.class.to_s.downcase + ".gif" %>
+						    <div class="count">
+						      <%= @user.citations_count(source) %>
+						    </div>
+						  </div>
+						</li>
 				  <% end %>
 				<% end %>
-			</div>
+			</ul>
+			
 		<% end %>
 	<% end %>
 <% else %>

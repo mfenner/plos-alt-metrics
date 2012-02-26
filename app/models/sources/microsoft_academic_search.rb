@@ -16,7 +16,7 @@
 # Specify range of citations returned with { :startidx => 1, :endidx => 50 }
 
 class MicrosoftAcademicSearch < Source
-  
+
   def uses_partner_id; true; end
 
   def perform_query(work, options = {})

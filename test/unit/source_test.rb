@@ -38,7 +38,7 @@ class SourceTest < ActiveSupport::TestCase
     s.update_attribute :disable_delay, delay
     assert_nil s.disable_until
 
-    s.expects(:perform_query).raises.then.returns(12345).twice
+    s.expects(:perform).raises.then.returns(12345).twice
 
     assert_raise RuntimeError do
       s.query works(:stale)
@@ -52,7 +52,7 @@ class SourceTest < ActiveSupport::TestCase
   def test_source_sends_notification_email_on_long_delay
     s = sources(:citeulike)
     s.update_attribute :disable_delay, 2.days
-    s.expects(:perform_query).raises.once
+    s.expects(:perform).raises.once
     assert_raise RuntimeError do
       s.query works(:stale)
     end

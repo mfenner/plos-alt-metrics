@@ -35,9 +35,6 @@ class Mendeley < Source
     
     # Workaround as mendeley_url required to link to Mendeley page. Also fetch Mendeley internal id
     work.update_attributes(:mendeley => results["uuid"], :mendeley_url => results["mendeley_url"])
-    
-    # Fetch public Mendeley groups this work belongs to, and create them if necessary
-    Work.update_groups(work, :groups => results["groups"]) unless results["groups"].blank?
 
     stats["readers"].to_i
   end

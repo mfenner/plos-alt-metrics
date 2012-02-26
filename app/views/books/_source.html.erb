@@ -2,26 +2,24 @@
 	<% active_categories.each do |category| %>
 	  <% unless @book.get_cites_by_category(category.name).empty? %>
 	  	<h3><%= h(category.name) %> <small><%= h(category.group_description) %></small></h3>
-
-		  <div class="row">
-		    <% category.sources.reusable.each do |source| %>
-		      <% if @book.citations_count(source) > 0 %>
-		      <div class="span3 source">
-					  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
-					</div>
-			    <% end %>
-			  <% end %>
-			</div>
 	
-			<div class="row">
-		    <% category.sources.reusable.each do |source| %>
+			<ul class="thumbnails">    
+				<% category.sources.reusable.each do |source| %>
 		      <% if @book.citations_count(source) > 0 %>
-		      <div class="span3">
-		        <legend><%= @book.citations_count(source) %></legend>
-		      </div>
-		    <% end %>
-		   <% end %>
-			</div>
+				    <li class="span3">
+					    <div class="thumbnail">
+						    <%= image_tag source.class.to_s.downcase + ".gif" %>
+						    <% if @book.citations_count(source) > 0 %>
+						      <div class="count">
+						        <%= @book.citations_count(source) %>
+						      </div>
+						    <% end %>
+						  </div>
+						</li>
+				  <% end %>
+				<% end %>
+			</ul>
+
 		<% end %>	
 	<% end %>
 <% else %>

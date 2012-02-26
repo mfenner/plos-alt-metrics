@@ -334,38 +334,16 @@ class Work < ActiveRecord::Base
     names = names.empty? ? "" : names.join(" and ")
   end
   
+  def perform
+    
+  end
+  
   def self.fetch_from_mendeley(uuid, options={})
     # Fetch work information, return nil if no response 
     url = "http://api.mendeley.com/oapi/documents/details/#{uuid}?consumer_key=#{APP_CONFIG['mendeley_key']}"
     Rails.logger.info "Mendeley query: #{url}"
     
     result = SourceHelper.get_json(url, options)
-  end
-  
-  def self.update_groups(work, options={})
-    options[:groups] ||= []
-    
-    # Fetch group information from Mendeley if not provided, requires Mendeley uuid
-    if options[:groups].empty?
-      return nil if work.mendeley.blank?
-      options[:groups] = self.fetch_from_mendeley(work.mendeley)["groups"] 
-    end
-    return nil if options[:groups].blank?
-    
-    options[:groups].each do |group_id|
-      group = Group.find_by_mendeley(group_id["group_id"])
-      
-      # Create group if it doesn't exist and fetch name from Mendeley
-      group = Group.update_via_mendeley(group_id["group_id"]) if group.nil?
-      
-      # If there was an error, e.g. group is private
-      next if group.nil?
-      
-      work.groups << group unless work.groups.include?(group)
-      Rails.logger.debug "Groups updated for work #{work.doi})"
-    end
-    
-    work
   end
   
   def self.update_via_crossref(work, options={})

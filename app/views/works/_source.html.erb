@@ -2,29 +2,23 @@
   <% unless @work.get_cites_by_category(category.name).blank? %>
 		<h3><%= h(category.name) %> <small><%= h(category.work_description) %></small></h3>
 	 
-		<div class="row">       
+		<ul class="thumbnails">    
 			<% category.sources.active.each do |source| %>
 			  <% if @work.citations_by_source(source)[:total] > 0 %>
-			    <div class="span3 source">
-					  <%= image_tag source.class.to_s.downcase + ".gif", :class => "source" %>
-					</div>
+			    <li class="span3">
+				    <div class="thumbnail">
+					    <%= image_tag source.class.to_s.downcase + ".gif" %>
+					    <div class="count">
+							<% if @work.citations_by_source(source) and @work.citations_by_source(source)[:public_url] and @work.citations_by_source(source)[:total] > 0 %>
+		            <%= link_to h(@work.citations_by_source(source)[:total]), @work.citations_by_source(source)[:public_url] %>
+		          <% else %>
+		            <%= @work.citations_by_source(source) ? @work.citations_by_source(source)[:total] : 0 %>
+		          <% end %>
+		          </div>
+					  </div>
+					</li>
 			  <% end %>
 			<% end %>
-		</div>
-  
-	  <div class="row">
-			<% category.sources.active.each do |source| %>
-			  <% if @work.citations_by_source(source)[:total] > 0 %>
-			    <div class="span3">
-						<legend><% if @work.citations_by_source(source) and @work.citations_by_source(source)[:public_url] and @work.citations_by_source(source)[:total] > 0 %>
-	            <%= link_to h(@work.citations_by_source(source)[:total]), @work.citations_by_source(source)[:public_url] %>
-	          <% else %>
-	            <%= @work.citations_by_source(source) ? @work.citations_by_source(source)[:total] : 0 %>
-	          <% end %>
-	          </legend>
-			    </div>
-			  <% end %>
-		  <% end %>
-		</div>
+		</ul>
 	<% end %>
 <% end %>

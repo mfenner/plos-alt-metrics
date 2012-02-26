@@ -77,7 +77,7 @@ class WorksController < ApplicationController
     load_work #load_work(eager_includes)
     
     if params[:refresh] == "now"
-      Retriever.new(:lazy => false, :only_source => false).delay.update(@work)      
+      Retriever.new(:lazy => false, :only_source => false).update(@work)      
     end
 
     format_options = params.slice :citations, :history, :source

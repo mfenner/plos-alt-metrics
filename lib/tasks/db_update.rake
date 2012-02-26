@@ -24,49 +24,49 @@ namespace :db do
   
   task :update => :"db:update:stale"
   namespace :update do
-    desc "Update stale articles"
+    desc "Update stale works"
     task :stale => :environment do
       puts "Start: #{Time.now.strftime("%Y-%m-%d %H:%M:%S")}"
       limit = (ENV["LIMIT"] || 0).to_i
-      articles = if ENV["DOI"]
+      works = if ENV["DOI"]
         doi = ENV["DOI"]
         ENV["LAZY"] ||= "0"
-        article = Article.find_by_doi(doi) or abort("Article not found: #{doi}")
-        [article]
+        work = Work.find_by_doi(doi) or abort("Work not found: #{doi}")
+        [work]
       elsif ENV["LAZY"] == "0"
-        Article.limit(limit)
+        Work.limit(limit)
       else
-        Article.stale_and_published.limit(limit)
+        Work.stale_and_published.limit(limit)
       end
       
-      puts "Found #{articles.size} stale articles."
+      puts "Found #{works.size} stale works."
 
-      Retriever.update_articles(articles)
+      Retriever.update_works(works)
       
       puts "Done: #{Time.now.strftime("%Y-%m-%d %H:%M:%S")}"
     end
 
-    desc "Update all articles"
+    desc "Update all works"
     task :all => :environment do
       ENV["LAZY"] = "0"
       limit = (ENV["LIMIT"] || 0).to_i
-      articles = Article.limit(limit)
-      Retriever.update_articles(articles)
+      works = Work.limit(limit)
+      Retriever.update_works(works)
     end
 
-    desc "Update cited articles"
+    desc "Update cited works"
     task :cited => :environment do
       limit = (ENV["LIMIT"] || 0).to_i
-      articles = Article.cited.limit(limit)
-      Retriever.update_articles(articles, "cited")
+      works = Work.cited.limit(limit)
+      Retriever.update_works(works, "cited")
     end
 
-    desc "Update one specified article"
+    desc "Update one specified work"
     task :one => :environment do
       url = ENV["url"] or abort("URL not specified (eg, 'url=http://dx.doi.org/10.1/foo')")
-      article = Article.find_by_url(url) or abort("Article not found: #{url}")
+      work = Work.find_by_url(url) or abort("Work not found: #{url}")
       ENV["LAZY"] ||= "0"
-      Retriever.update_articles([article])
+      Retriever.update_works([work])
     end
     
     desc "Update all users"
@@ -84,32 +84,16 @@ namespace :db do
       ENV["LAZY"] ||= "0"
       Retriever.update_users([user])
     end
-    
-    desc "Update all groups"
-    task :groups => :environment do
-      ENV["LAZY"] = "0"
-      limit = (ENV["LIMIT"] || 0).to_i
-      groups = Group.limit(limit)
-      Retriever.update_groups(groups)
-    end
-    
-    desc "Update one specified group"
-    task :one_group => :environment do
-      mendeley = ENV["mendeley"] or abort("Mendeley id for Group not specified (eg, 'mendeley=586171')")
-      group = Group.find_by_mendeley(mendeley) or abort("Group not found: #{mendeley}")
-      ENV["LAZY"] ||= "0"
-      Retriever.update_groups([group])
-    end
 
-    desc "Count stale articles"
+    desc "Count stale works"
     task :count => :environment do
-      article_count = Article.stale_and_published.count
-      puts "#{article_count} stale articles found"
+      work_count = Work.stale_and_published.count
+      puts "#{work_count} stale works found"
     end
 
-    desc "Reset articles so individual sources' dates will be reconsidered"
+    desc "Reset works so individual sources' dates will be reconsidered"
     task :reset => :environment do
-      Article.update_all("retrieved_at = '1970-01-01 00:00:00'")
+      Work.update_all("retrieved_at = '1970-01-01 00:00:00'")
       Retrieval.update_all("retrieved_at = '1970-01-01 00:00:00'")
     end
 
@@ -118,7 +102,7 @@ namespace :db do
       Retrieval.delete_all
       Citation.delete_all
       History.delete_all
-      Article.update_all("retrieved_at = '1970-01-01 00:00:00'")
+      Work.update_all("retrieved_at = '1970-01-01 00:00:00'")
     end
 
     desc "Reenable all disabled sources"
@@ -138,7 +122,7 @@ namespace :db do
         end
         unless dups.empty?
           dups.each do |citation|
-            puts "#{retrieval.article.doi} from #{retrieval.source.name} includes extra #{citation.uri}: #{citation.id}"
+            puts "#{retrieval.work.doi} from #{retrieval.source.name} includes extra #{citation.uri}: #{citation.id}"
             if ENV['CLEANUP']
               puts "deleting citation #{citation.id}"
               retrieval.citations.delete(citation)
