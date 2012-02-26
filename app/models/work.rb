@@ -29,6 +29,8 @@ class Work < ActiveRecord::Base
   
   validates :url, :title, :type, :presence => true
   validates :url, :uniqueness => true
+  
+  attr_accessible :first_page, :title, :short_doi, :volume, :last_page, :year, :journal_id, :issue, :book_id, :doi, :type, :url, :mas
 
   after_create :create_retrievals
 

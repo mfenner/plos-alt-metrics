@@ -53,7 +53,7 @@ class UsersController < ApplicationController
     load_user
     
     if params[:refresh] == "now"
-      Retriever.new(:lazy => false, :only_source => false).update_works_by_user(@user)   
+      Resque.enqueue(User, user.id)
     end
         
     respond_to do |format|

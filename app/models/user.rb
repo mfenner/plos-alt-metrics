@@ -17,6 +17,7 @@ require 'oauth'
 require "twitter"
 
 class User < ActiveRecord::Base
+  @queue = :users
   
   devise :rememberable, :omniauthable, :trackable
   
@@ -316,6 +317,39 @@ class User < ActiveRecord::Base
       end.compact
     end
     citations = citations.sum
+  end
+  
+  # Use Resque to asynchronously update all works by user
+  def self.perform(user_id)
+    user = User.find(user_id)
+    Rails.logger.info "Updating user #{user.inspect}..."
+
+    # Fetch works from user, return nil if no response
+    results = User.fetch_works_from_mas(user)
+    return nil if results.nil?
+
+    results.each do |result|
+      # Only add works with DOI and title
+      unless result["DOI"].nil? or result["Title"].nil?
+        result["DOI"] = DOI::clean(result["DOI"])
+        work = Work.find_or_create_by_doi(:doi => result["DOI"], :url => "http://dx.doi.org/" + result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
+        # Check that DOI is valid
+        if work.valid?
+          Work.update_via_crossref(work)
+          unless user.works.include?(work)
+            user.works << work 
+          end
+          # Create shortDOI if it doesn't exist yet
+          if work.short_doi.blank?
+            #work.update_attributes(:short_doi => DOI::shorten(work.doi)) 
+          end
+          Rails.logger.debug "Work is#{" (new)" if work.new_record?} #{work.inspect}"
+        end
+      end
+    end  
+
+    user.refreshed!.save!
+    Rails.logger.info "Refreshed user #{user.mas}"
   end
   
 end

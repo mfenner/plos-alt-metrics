@@ -42,4 +42,5 @@ class Contributor < ActiveRecord::Base
       surname + " " + given_name[0..0]
     end
   end
+
 end
