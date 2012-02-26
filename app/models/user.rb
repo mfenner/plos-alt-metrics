@@ -332,7 +332,8 @@ class User < ActiveRecord::Base
       # Only add works with DOI and title
       unless result["DOI"].nil? or result["Title"].nil?
         result["DOI"] = DOI::clean(result["DOI"])
-        work = Work.find_or_create_by_doi(:doi => result["DOI"], :url => "http://dx.doi.org/" + result["DOI"], :mas => result["ID"], :title => result["Title"], :year => result["Year"])
+        url = result["DOI"].blank? ? nil : "http://dx.doi.org/" + result["DOI"]
+        work = Work.find_or_create_by_doi(:doi => result["DOI"], :url => url, :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
         if work.valid?
           Work.update_via_crossref(work)
