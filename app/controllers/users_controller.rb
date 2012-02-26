@@ -53,7 +53,7 @@ class UsersController < ApplicationController
     load_user
     
     if params[:refresh] == "now"
-      Resque.enqueue(User, user.id)
+      Resque.enqueue(User, @user.id)
     end
         
     respond_to do |format|
