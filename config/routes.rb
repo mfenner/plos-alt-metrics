@@ -35,9 +35,6 @@ PlosAltMetrics::Application.routes.draw do
   get '/docs(/:action)', :controller => :docs, :format => false
   get 'about', :to => 'index#index', :as => "about"
   
-  # Monitor resque background processes
-  mount Resque::Server.new, :at => "/resque"
-  
   # Authors are in default path, should therefore be defined after admin resources. 
   # Root goes to works#index, needs to be defined.
   resources :users, :path => "/"
