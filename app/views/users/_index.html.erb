@@ -12,7 +12,7 @@
 			      <% unless user.nil? %>
 							<%= image_tag "http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_mini" %>
 		      	  <h4><%= link_to user.display_name, user_path(user.username) %></h4>
-		          <%= link_to "@#{user.username}", "http://twitter.com/#{user.username}" %>
+		          <p><%= link_to "@#{user.username}", "http://twitter.com/#{user.username}" %></p>
 		        <% end %>
 	      	</td>
 		    <% end %>  

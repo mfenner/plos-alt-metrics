@@ -1,12 +1,17 @@
 @import "bootstrap";
 
 body { padding-top: 60px; }
-h4 { line-height: normal; }
+h2, h4 { line-height: normal; }
+h4 { font-size: 13px; }
+h4 small { font-size: 11px; }
+div.page-header { padding-bottom: 8px; margin-bottom: 8px; }
 div.count { font-size: large; text-align: center; padding-bottom: 5px;}
 .photo { width: 150px; padding-right: 0.5em; padding-bottom: 2em; margin-top: 0; }
 .photo_mini { width: 48px; float: left; padding-right: 1em; padding-bottom: 0.5em; }
 .photo_works { width: 48px; float: left; padding-top: 0.5em; padding-right: 0.5em; padding-bottom: 0.5em; }
 .photo_nav { height: 21px;}
-th.source { width: 24px; }
+th.source, td.source { width: 24px; text-align: right; }
+.table th { border-top: 0; border-bottom-color:#DDDDDD; border-bottom-style:solid; border-bottom-width:1px; }
+.table td { border-top: 0; }
 div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar { padding-top: 0.5em; clear: both; }
 div#admin { padding-bottom: 12px; }

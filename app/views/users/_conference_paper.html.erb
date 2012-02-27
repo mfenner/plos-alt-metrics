@@ -15,7 +15,7 @@
 
 <% unless @user.conference_papers.empty? %>
 	<div class="work">
-		<table class="table table-striped">
+		<table class="table">
 		  <thead>
 			<th>
 				<h2><%= pluralize(@user.conference_papers.count, 'Conference Paper') %></h2>
@@ -32,18 +32,19 @@
 	    <% @user.conference_papers.each do |work| %>
 	      <tr>
 	      	<td>	
-	      	  <h4 itemprop="name" class="name"><%= link_to work.title, work_path(work.id) %></h4>
-	          <%= formatted_citation(work).html_safe %>
+	      	  <h4 itemprop="name"><%= link_to work.title, work_path(work.id) %></h4>
+	          <p><%= formatted_citation(work).html_safe %>
 	          <% unless work.short_doi.blank? %>
 	            <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
 	           <% end %>
 						<% unless work.published_on.blank? %>
 					    <br /><%= time_ago_in_words(work.published_on) + " ago" %>
 					  <% end %>
+					  </p>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
-				        <td>
+				        <td class="source">
 					        <% citation = work.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
 	                 <% if citation[:public_url] %>

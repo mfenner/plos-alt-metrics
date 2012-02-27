@@ -2,7 +2,7 @@
   <% unless @journals.empty? %>
 	<table class="table">
 		<thead>
-		<th><h2><%= pluralize(@journals.total_entries, 'Journal') %> </h2></th>
+		<th colspan="2"><h2><%= pluralize(@journals.total_entries, 'Journal') %> </h2></th>
 		</thead>
 		<tbody>
 		<% @journals.in_groups_of(2, false) do |journals| %> 
@@ -10,8 +10,8 @@
 		    <% journals.each do |journal| %>  
 		    	<td>
 			      <% unless journal.nil? %>
-							<span><%= link_to journal.title, journal_path(journal.issn_print) %></span><br/>
-							<%= journal.issn_print %>
+							<h4><%= link_to journal.title, journal_path(journal.issn_print) %></h4>
+							<p><%= journal.issn_print %></p>
 		        <% end %>
 	      	</td>
 		    <% end %>  
