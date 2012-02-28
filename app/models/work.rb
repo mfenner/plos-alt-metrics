@@ -19,6 +19,7 @@
 require 'bibtex'
 
 class Work < ActiveRecord::Base
+  @queue = :works
   
   has_many :retrievals, :dependent => :destroy, :order => "retrievals.source_id"
   has_many :sources, :through => :retrievals 
