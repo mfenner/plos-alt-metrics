@@ -86,7 +86,7 @@ class Retriever
     end
   end
 
-  def async_update_one(retrieval)
+  def async_update_one(retrieval, options={})
     Resque.enqueue(Retrieval, retrieval.id)
   end
 
@@ -98,7 +98,7 @@ class Retriever
     result
   end
   
-  def async_update_works_by_user(user)
+  def async_update_works_by_user(user, options={})
     Resque.enqueue(User, user.id)
   end
   

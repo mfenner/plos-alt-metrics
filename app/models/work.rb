@@ -336,10 +336,6 @@ class Work < ActiveRecord::Base
     names = names.empty? ? "" : names.join(" and ")
   end
   
-  def perform
-    
-  end
-  
   def self.fetch_from_mendeley(uuid, options={})
     # Fetch work information, return nil if no response 
     url = "http://api.mendeley.com/oapi/documents/details/#{uuid}?consumer_key=#{APP_CONFIG['mendeley_key']}"

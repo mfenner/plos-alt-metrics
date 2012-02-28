@@ -99,13 +99,6 @@
     </p>
   <% end %>
   
-  <% if Group.find(:all).size > 0 %>
-    <p>
-      <%= f.label :category  %><br/>
-      <%= select "source", "category_id", Category.find(:all).collect { |g| [ g.name, g.id ] },{:include_blank => true} %>
-    </p>
-  <% end %>
-  
   <p>
     <%= f.label :timeout, "Time to wait for a response from each source. (seconds)" %><br />
     <%= f.text_field :timeout, :size => 3 %>

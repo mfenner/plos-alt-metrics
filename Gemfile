@@ -21,6 +21,7 @@ gem 'rdiscount', "1.6.8"
 gem 'soap4r', '>=1.5.8', :require => 'soap/rpc/driver'
 gem 'resque', :require => "resque/server"
 gem 'resque-scheduler', :require => 'resque_scheduler/tasks' 
+gem 'resque-restriction'
 gem 'SystemTimer', '1.2.3'
 gem 'formatize'
 gem 'devise', '1.4.7'

@@ -108,7 +108,7 @@ class Retrieval < ActiveRecord::Base
   end
   
   # Use Resque to asynchronously update retrieval
-  def self.perform(retrieval_id)
+  def self.perform(retrieval_id, options={})
     retrieval = Retrieval.find(retrieval_id)
     Rails.logger.info "Asking #{retrieval.source.name} about #{retrieval.work.id}; last updated #{retrieval.retrieved_at}"
     
@@ -120,6 +120,8 @@ class Retrieval < ActiveRecord::Base
       if raw_citations == false
         Rails.logger.info "Skipping disabled source."
         success = false
+      elsif raw_citations == nil
+        Rails.logger.info "No citations found."
       elsif raw_citations.is_a? Numeric  # Scopus returns a numeric count
         Rails.logger.info "Got a count of #{raw_citations.inspect} citations."
           

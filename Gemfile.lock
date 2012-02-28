@@ -153,6 +153,8 @@ GEM
       redis-namespace (~> 1.0.2)
       sinatra (>= 0.9.2)
       vegas (~> 0.1.2)
+    resque-restriction (0.3.0)
+      resque (>= 1.7.0)
     resque-scheduler (1.9.9)
       redis (>= 2.0.1)
       resque (>= 1.8.0)
@@ -239,6 +241,7 @@ DEPENDENCIES
   rake (= 0.9.2.2)
   rdiscount (= 1.6.8)
   resque
+  resque-restriction
   resque-scheduler
   ruby-debug
   sass-rails (~> 3.1.4)

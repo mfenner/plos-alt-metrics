@@ -320,7 +320,7 @@ class User < ActiveRecord::Base
   end
   
   # Use Resque to asynchronously update all works by user
-  def self.perform(user_id)
+  def self.perform(user_id, options={})
     user = User.find(user_id)
     Rails.logger.info "Updating user #{user.inspect}..."
 
