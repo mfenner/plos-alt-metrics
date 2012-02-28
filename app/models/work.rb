@@ -344,8 +344,10 @@ class Work < ActiveRecord::Base
     result = SourceHelper.get_json(url, options)
   end
   
-  def self.update_via_crossref(work, options={})
+  def self.perform(work_id, options={})
     # Update work information via CrossRef
+    
+    work = Work.find(work_id)
     
     # First make sure you have correct DOI
     doi = DOI::clean(work.doi)

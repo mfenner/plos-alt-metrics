@@ -336,7 +336,7 @@ class User < ActiveRecord::Base
         work = Work.find_or_create_by_doi(:doi => result["DOI"], :url => url, :mas => result["ID"], :title => result["Title"], :year => result["Year"])
         # Check that DOI is valid
         if work.valid?
-          Work.update_via_crossref(work)
+          Resque.enqueue(Work, work.id)
           unless user.works.include?(work)
             user.works << work 
           end

@@ -154,7 +154,7 @@ class UsersController < ApplicationController
                                                             :given_name => user["FirstName"]) 
                     contributor.update_attributes(:user_id => @user.id) if (user["ID"].to_s == @user.mas)
                   end
-                  Work.update_via_crossref(work)
+                  Resque.enqueue(Work, work.id)
                 end
               end
             end
@@ -184,7 +184,7 @@ class UsersController < ApplicationController
                                                           :service => "userclaim",
                                                           :userclaim => @user.userclaim)
                 end
-                Work.update_via_crossref(work)
+                Resque.enqueue(Work, work.id)
               end
             end
           end
@@ -215,7 +215,7 @@ class UsersController < ApplicationController
                                                             :given_name => user["FirstName"]) 
                     contributor.update_attributes(:user_id => @user.id) if (user["ID"].to_s == @user.mas)
                   end
-                  Work.update_via_crossref(work)
+                  Resque.enqueue(Work, work.id)
                 end
               end
             end
