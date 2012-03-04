@@ -26,7 +26,10 @@ class Work < ActiveRecord::Base
   has_many :citations, :through => :retrievals
   has_many :users, :through => :contributors
   has_many :contributors, :order => :position, :dependent => :destroy
-  has_and_belongs_to_many :groups
+  has_many :likes
+  has_many :likers, :class_name => 'User', :source => 'user', :through => :likes
+  has_many :comments
+  has_many :commenters, :class_name => 'User', :source => 'user', :through => :comments
   
   validates :url, :title, :type, :presence => true
   validates :url, :uniqueness => true

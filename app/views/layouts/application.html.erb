@@ -25,7 +25,7 @@
 		<![endif]-->
 		<%= stylesheet_link_tag :application %>
 		<%= javascript_include_tag :application %>
-    <%= csrf_meta_tag %>
+    <%= csrf_meta_tags %>
     <%= yield(:head) %>
 	</head>
   <body>
@@ -89,7 +89,7 @@
 		<div class="container">
 		  <% [ :error, :notice, :warning, :message ].each do |name| %>
 		    <% if flash[name] %>
-		      <div class="alert">
+		      <div class="alert alert-success">
 		        <%= flash[name] %>
 	        </div>
 			  <% end %>

@@ -30,6 +30,9 @@ class User < ActiveRecord::Base
   has_many :conference_papers, :through => :contributors, :foreign_key => :work_id
   has_many :book_contents, :through => :contributors, :foreign_key => :work_id
   
+  has_many :likes
+  has_many :comments
+  
   has_many :friendships
   has_many :friends, :through => :friendships, :order => 'sort_name, username'
   

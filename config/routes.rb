@@ -20,7 +20,10 @@ PlosAltMetrics::Application.routes.draw do
     match 'sign_out', :to => 'users/sessions#destroy', :as => :destroy_user_session, :via => [:get, :delete]
   end
   
-  resources :works
+  resources :works do
+    resources :likes, :comments
+  end
+  
   resources :articles
   #match "/group/articles(/:id)(.:format)" => "groups#groupArticleSummaries"
   

@@ -5,29 +5,8 @@
 	
   <% unless @works.empty? %>
 		<% @works.each do |work| %>
-			<div class="row">
-				<% unless work.users.empty? %>
-				  <div class="span1">
-				  	<% work.users.each do |user| %>
-						  <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
-						<% end %>
-					</div>
-				<% end %>
-		    <div class="span8">
-				  <div itemscope itemtype="http://schema.org/ScholarlyArticle">
-					  <h4><%= link_to work.title, work_path(work.id) %></h4>
-			      <p><%= formatted_citation(work).html_safe %>
-				    <br/>
-				    <% unless work.short_doi.blank? %>
-					    <%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
-					  <% end %>
-					  <span class="label"><%= work.type.underscore.humanize %></span>
-					  <% unless work.published_on.blank? %>
-					    <br /><%= time_ago_in_words(work.published_on) + " ago" %>
-					  <% end %>
-					</p>
-		      </div>
-		    </div>
+			<div class="row" id="work_<%= work.id %>">
+				<%= render :partial => "works/work", :object => work %>
 		  </div>
     <% end %>	
 		<%= will_paginate @works %>

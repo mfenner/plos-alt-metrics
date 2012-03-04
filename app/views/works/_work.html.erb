@@ -1,0 +1,44 @@
+<div class="span1">
+  <% unless work.users.empty? %>
+  	<% work.users.each do |user| %>
+		  <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
+		<% end %>
+	<% else %>
+	  &nbsp;
+	<% end %>
+</div>
+<div class="span8 work">
+  <div itemscope itemtype="http://schema.org/ScholarlyArticle">
+	  <h4><%= link_to work.title, work_path(work.id) %></h4>
+    <p><%= formatted_citation(work).html_safe %>
+    <br/>
+    <% unless work.short_doi.blank? %>
+	    <%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	  <% end %>
+	  <span class="label"><%= work.type.underscore.humanize %></span>
+	  <br />
+	  <% unless work.published_on.blank? %>
+	    <%= time_ago_in_words(work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
+	  <% end %>
+	  <% if user_signed_in? %>
+      <%= link_to "Comment", new_work_comment_path(work.id), :remote => :true %> - 
+      <% unless work.likers.include?(current_user) %>
+        <%= link_to "Like", work_likes_path(work.id, :q => params[:q]), :method => :post, :remote => :true %> -
+      <% end %> 
+    <% end %>
+		<%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + work.url, :target => "_blank" %> - 
+    <%= link_to "Share on CiteULike", "http://www.citeulike.org/posturl?url=" + work.url + "&title=" + work.title, :target => "_blank" %>
+	  </p>
+	  <% unless work.likes.empty? %>
+	    <p><i class="icon-star"></i> 
+		  <% work.likers.each do |liker| %>
+			  <%= link_to liker.name, user_path(liker.username) %>
+		  <% end.to_sentence %> liked this 
+	    <% if user_signed_in? and work.likers.include?(current_user) %>
+	      <% like = work.likes.detect { |l| l.user_id == current_user.id } %>
+	      <%= like.user.username %>
+	      <%= link_to " (Un-like)", work_like_path(work.id, like.id, :q => params[:q]), :method => :delete, :remote => :true %>
+	    <% end %></p>
+	<% end %>
+  </div>
+</div>

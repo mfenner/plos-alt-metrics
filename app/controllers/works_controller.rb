@@ -29,7 +29,7 @@ class WorksController < ApplicationController
     # order=doi|published_on (whitelist, default to doi)
     # source=source_type
     if !params[:username].blank?
-      @user = Author.find_by_username!(params[:username])
+      @user = User.find_by_username!(params[:username])
       @works = @user.works.paginate :page => params[:page], :per_page => 10, :include => [:users, :retrievals], 
         :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]],
         :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
