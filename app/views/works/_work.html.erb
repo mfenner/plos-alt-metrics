@@ -21,7 +21,6 @@
 	    <%= time_ago_in_words(work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
 	  <% end %>
 	  <% if user_signed_in? %>
-      <%= link_to "Comment", new_work_comment_path(work.id), :remote => :true %> - 
       <% unless work.likers.include?(current_user) %>
         <%= link_to "Like", work_likes_path(work.id, :q => params[:q]), :method => :post, :remote => :true %> -
       <% end %> 
@@ -36,7 +35,6 @@
 		  <% end.to_sentence %> liked this 
 	    <% if user_signed_in? and work.likers.include?(current_user) %>
 	      <% like = work.likes.detect { |l| l.user_id == current_user.id } %>
-	      <%= like.user.username %>
 	      <%= link_to " (Un-like)", work_like_path(work.id, like.id, :q => params[:q]), :method => :delete, :remote => :true %>
 	    <% end %></p>
 	<% end %>
