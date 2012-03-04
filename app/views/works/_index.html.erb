@@ -1,6 +1,6 @@
 <div class="content">
 	<div class="page-header">
-    <h2><h2><%= "Works" + (user_signed_in? ? ' by Users you are Following' : "") %></h2></h2>
+    <h2>Works</h2>
   </div>
 	
   <% unless @works.empty? %>
@@ -9,7 +9,7 @@
 				<%= render :partial => "works/work", :object => work %>
 		  </div>
     <% end %>	
-		<%= will_paginate @works %>
+		<%= will_paginate @works, :params => { :controller => :works, :authenticity_token => nil } %>
   <% else %>
     <div class="alert alert-info">
       No works found.

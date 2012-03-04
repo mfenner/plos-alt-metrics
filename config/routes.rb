@@ -14,6 +14,8 @@
 # limitations under the License.
 
 PlosAltMetrics::Application.routes.draw do
+  root :to => "users#index"
+    
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" } do
     get '/users/auth/:provider' => 'users/omniauth_callbacks#passthru'
     get 'sign_in', :to => 'users/sessions#new', :as => :new_users_session
@@ -41,6 +43,5 @@ PlosAltMetrics::Application.routes.draw do
   # Authors are in default path, should therefore be defined after admin resources. 
   # Root goes to works#index, needs to be defined.
   resources :users, :path => "/"
-  root :to => "works#index"
 
 end

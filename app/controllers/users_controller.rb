@@ -19,6 +19,7 @@ class UsersController < ApplicationController
 
   # GET /users
   # GET /users.xml
+  
   def index
     if !params[:q].blank?
       @users = User.paginate :page => params[:page], 
