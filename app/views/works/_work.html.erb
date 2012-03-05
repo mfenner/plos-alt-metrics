@@ -21,9 +21,9 @@
 	    <%= time_ago_in_words(work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
 	  <% end %>
 	  <% if user_signed_in? %>
-      <%= link_to "Comment", new_work_comment_path(work.id), :remote => :true %> - 
+      <%= link_to "Comment", new_work_comment_path(work.id, :page => params[:page], :q => params[:q]), :remote => :true %> - 
       <% unless work.likers.include?(current_user) %>
-        <%= link_to "Like", work_likes_path(work.id, :q => params[:q]), :method => :post, :remote => :true %> -
+        <%= link_to "Like", work_likes_path(work.id, :page => params[:page], :q => params[:q]), :method => :post, :remote => :true %> -
       <% end %> 
     <% end %>
 		<%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + work.url, :target => "_blank" %> - 
