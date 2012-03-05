@@ -21,6 +21,7 @@
 	    <%= time_ago_in_words(work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
 	  <% end %>
 	  <% if user_signed_in? %>
+      <%= link_to "Comment", new_work_comment_path(work.id), :remote => :true %> - 
       <% unless work.likers.include?(current_user) %>
         <%= link_to "Like", work_likes_path(work.id, :q => params[:q]), :method => :post, :remote => :true %> -
       <% end %> 
@@ -35,8 +36,34 @@
 		  <% end.to_sentence %> liked this 
 	    <% if user_signed_in? and work.likers.include?(current_user) %>
 	      <% like = work.likes.detect { |l| l.user_id == current_user.id } %>
-	      <%= link_to " (Un-like)", work_like_path(work.id, like.id, :q => params[:q]), :method => :delete, :remote => :true %>
+	      <%= link_to " (Un-like)", work_like_path(work.id, like.id, :page => params[:page], :q => params[:q]), :method => :delete, :remote => :true %>
 	    <% end %></p>
-	<% end %>
+	  <% end %>
+	  <% unless work.comments.empty? %>
+			<p>
+		  <% work.comments.each do |comment| %>
+			  <% if controller.action_name == "edit" and comment.id == @comment.id %>
+			 		<%= form_for(@comment, :url => work_comment_url(work.id, comment.id, :page => params[:page], :q => params[:q]), :remote => true) do |form| %>
+			      <%= form.hidden_field :user_id, :value => current_user.id %>
+		        <%= form.text_field :text, :class => "span5" %>
+		        <br /><%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", works_path(:page => params[:page], :q => params[:q]), :remote => true %>
+		      <% end %>
+		    <% else %>
+			    <%= comment.text %> - <%= link_to comment.user.name, user_path(comment.user.username) %>
+			    <% if comment.user == current_user %>
+			      ( <%= link_to "edit", edit_work_comment_path(work.id, comment.id, :page => params[:page], :q => params[:q]), :remote => true %> | <%= link_to "delete", work_comment_path(work.id, comment.id, :page => params[:page], :q => params[:q]), :method => :delete, :remote => true %> )
+		      <% end %>
+			  <% end %>
+			  <br />
+		  <% end %>
+      </p>
+	  <% end %>
+	  <% if controller.action_name == "new" and work.id == @work.id %>
+	    <%= form_for(@comment, :url => work_comments_url(work.id, :page => params[:page], :q => params[:q]), :remote => true) do |form| %>
+	      <%= form.hidden_field :user_id, :value => current_user.id %>
+        <%= form.text_field :text, :class => "span5" %>
+        <br /><%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", works_path(:page => params[:page], :q => params[:q]), :remote => true %>
+      <% end %>
+	  <% end %>
   </div>
 </div>

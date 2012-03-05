@@ -3,13 +3,8 @@ class CommentsController < ApplicationController
   before_filter :load_work
 
   def new
-    if !params[:username].blank?
-      @user = User.find_by_username!(params[:username])
-      @works = @user.works.paginate :page => params[:page], :per_page => 10, :include => [:users, :retrievals], 
-        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]],
-        :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
-      render :partial => "users/work" and return
-    elsif !params[:q].blank?
+    @comment = Comment.new
+    if !params[:q].blank?
       @works = Work.paginate :page => params[:page], 
         :per_page => 10,
         :include => :users,
@@ -29,19 +24,130 @@ class CommentsController < ApplicationController
     end
     
     @source = Source.find_by_type(params[:source]) if params[:source]
+    
     respond_to do |format|
-      format.js { render "works/index" }
+      format.js
     end
   end
   
   def create
     @comment = Comment.new(params[:comment])
-    @work.comments << @comment 
+    @work.comments << @comment unless @comment.text.blank?
+    
+    if !params[:q].blank?
+      @works = Work.paginate :page => params[:page], 
+        :per_page => 10,
+        :include => :users,
+        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
+    else
+      collection = Work
+      collection = collection.cited(params[:cited])  if params[:cited]
+      collection = collection.query(params[:query])  if params[:query]
+      collection = collection.order(params[:order])  if params[:order]
+      
+      if user_signed_in?
+        # Fetch all works by the users you are following
+        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
+      else
+        @works = collection.paginate :page => params[:page], :per_page => 10
+      end
+    end
+    
+    @source = Source.find_by_type(params[:source]) if params[:source]
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def edit
+    @comment = Comment.find(params[:id])
+    
+    if !params[:q].blank?
+      @works = Work.paginate :page => params[:page], 
+        :per_page => 10,
+        :include => :users,
+        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
+    else
+      collection = Work
+      collection = collection.cited(params[:cited])  if params[:cited]
+      collection = collection.query(params[:query])  if params[:query]
+      collection = collection.order(params[:order])  if params[:order]
+      
+      if user_signed_in?
+        # Fetch all works by the users you are following
+        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
+      else
+        @works = collection.paginate :page => params[:page], :per_page => 10
+      end
+    end
+    
+    @source = Source.find_by_type(params[:source]) if params[:source]
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+  def update
+    @comment = Comment.find(params[:id])
+    @comment.update_attributes(params[:comment])
+    @comment.destroy if @comment.text.blank?
+    
+    if !params[:q].blank?
+      @works = Work.paginate :page => params[:page], 
+        :per_page => 10,
+        :include => :users,
+        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
+    else
+      collection = Work
+      collection = collection.cited(params[:cited])  if params[:cited]
+      collection = collection.query(params[:query])  if params[:query]
+      collection = collection.order(params[:order])  if params[:order]
+      
+      if user_signed_in?
+        # Fetch all works by the users you are following
+        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
+      else
+        @works = collection.paginate :page => params[:page], :per_page => 10
+      end
+    end
+    
+    @source = Source.find_by_type(params[:source]) if params[:source]
+    
+    respond_to do |format|
+      format.js
+    end
   end
 
   def destroy
     @comment = Comment.find(params[:id])
-    @comment.destroy  
+    @comment.destroy
+    
+    if !params[:q].blank?
+      @works = Work.paginate :page => params[:page], 
+        :per_page => 10,
+        :include => :users,
+        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
+    else
+      collection = Work
+      collection = collection.cited(params[:cited])  if params[:cited]
+      collection = collection.query(params[:query])  if params[:query]
+      collection = collection.order(params[:order])  if params[:order]
+      
+      if user_signed_in?
+        # Fetch all works by the users you are following
+        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
+      else
+        @works = collection.paginate :page => params[:page], :per_page => 10
+      end
+    end
+    
+    @source = Source.find_by_type(params[:source]) if params[:source]
+    
+    respond_to do |format|
+      format.js
+    end  
   end
 
 protected

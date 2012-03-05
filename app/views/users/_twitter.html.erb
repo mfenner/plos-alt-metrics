@@ -2,7 +2,7 @@
 	<%= form_for :user, :url => user_path(@user.username, :partial => "twitter", :service => "twitter"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
 	  <label>Name</label>
 	  <%= f.text_field :name %><br />
-    <%= link_to "Cancel", user_path(@user.username, :partial => "twitter"), :remote => true, :class => "btn" %>
+    <%= button_to "Cancel", user_path(@user.username, :partial => "twitter"), :remote => true, :class => "btn" %>
 	  <%= f.submit("Submit", :class => "btn-primary") %>
 	<% end %>
 <% else %>

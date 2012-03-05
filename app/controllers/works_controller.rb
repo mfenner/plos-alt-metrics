@@ -68,6 +68,7 @@ class WorksController < ApplicationController
       format.json { render :json => @works, :callback => params[:callback] }
       format.csv  { render :csv => @works }
       format.rss { render :rss => @works }
+      format.js
     end
   end
 
