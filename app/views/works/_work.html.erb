@@ -56,6 +56,7 @@
 			    <% if comment.user == current_user %>
 			      ( <%= link_to "edit", edit_work_comment_path(@work.id, comment.id), :remote => true %> | <%= link_to "delete", work_comment_path(@work.id, comment.id), :method => :delete, :remote => true %> )
 		      <% end %>
+		      <br />
 			  <% end %>
 		  <% end %>
       </p>
