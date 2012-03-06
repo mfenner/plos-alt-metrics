@@ -35,7 +35,7 @@
 	      <tr>
 					<td>	
 	      	  <h4 itemprop="name"><%= link_to conference_paper.title, work_path(conference_paper.id) %></h4>
-	          <p><%= formatted_citation(conference_paper).html_safe %>
+	          <p class="citation"><%= formatted_citation(conference_paper).html_safe %>
 	          <% unless conference_paper.short_doi.blank? %>
 	            <br/><%= link_to "http://doi.org/" + conference_paper.short_doi, "http://doi.org/" + conference_paper.short_doi, :itemprop => "url" %>
 	          <% end %>

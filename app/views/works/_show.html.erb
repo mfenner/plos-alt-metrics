@@ -6,7 +6,7 @@
 	<div class="row">
 	  <div class="span8">
 			<div itemscope itemtype="http://schema.org/ScholarlyArticle">
-		    <p><%= formatted_citation(@work).html_safe %>
+		    <p class="citation"><%= formatted_citation(@work).html_safe %>
 				<br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
 				<span class="label"><%= @work.type.underscore.humanize %></span>
 				<div id="comment_<%= @work.id %>">
