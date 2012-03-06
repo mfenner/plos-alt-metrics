@@ -1,6 +1,6 @@
-<% unless work.users.empty? %>
+<% unless @work.users.empty? %>
   <div class="span1">
-  	<% work.users.each do |user| %>
+  	<% @work.users.each do |user| %>
 		  <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
 		<% end %>
 	</div>
@@ -9,60 +9,65 @@
   <div class="span8 offset1 work">
 <% end %>
   <div itemscope itemtype="http://schema.org/ScholarlyArticle">
-	  <h4><%= link_to work.title, work_path(work.id) %></h4>
-    <p><%= formatted_citation(work).html_safe %>
+	  <h4><%= link_to @work.title, work_path(@work.id) %></h4>
+    <p><%= formatted_citation(@work).html_safe %>
     <br/>
-    <% unless work.short_doi.blank? %>
-	    <%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+    <% unless @work.short_doi.blank? %>
+	    <%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
 	  <% end %>
-	  <span class="label"><%= work.type.underscore.humanize %></span>
+	  <span class="label"><%= @work.type.underscore.humanize %></span>
 	  <br />
-	  <% unless work.published_on.blank? %>
-	    <%= time_ago_in_words(work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
+	  <% unless @work.published_on.blank? %>
+	    <%= time_ago_in_words(@work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
 	  <% end %>
 	  <% if user_signed_in? %>
-      <%= link_to "Comment", new_work_comment_path(work.id, :page => params[:page], :q => params[:q]), :remote => :true %> - 
-      <% unless work.likers.include?(current_user) %>
-        <%= link_to "Like", work_likes_path(work.id, :page => params[:page], :q => params[:q]), :method => :post, :remote => :true %> -
+      <%= link_to "Comment", new_work_comment_path(@work.id), :remote => :true %> - 
+      <% unless @work.likers.include?(current_user) %>
+        <%= link_to "Like", work_likes_path(@work.id), :method => :post, :remote => :true %> -
       <% end %> 
     <% end %>
-		<%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + work.url, :target => "_blank" %> - 
-    <%= link_to "Share on CiteULike", "http://www.citeulike.org/posturl?url=" + work.url + "&title=" + work.title, :target => "_blank" %>
+		<%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + @work.url, :target => "_blank" %> - 
+    <%= link_to "Share on CiteULike", "http://www.citeulike.org/posturl?url=" + @work.url + "&title=" + @work.title, :target => "_blank" %>
 	  </p>
-	  <% unless work.likes.empty? %>
+	  <% unless @work.likes.empty? %>
 	    <p><i class="icon-star"></i> 
-		  <% work.likers.each do |liker| %>
+		  <% @work.likers.each do |liker| %>
 			  <%= link_to liker.name, user_path(liker.username) %>
 		  <% end.to_sentence %> liked this 
-	    <% if user_signed_in? and work.likers.include?(current_user) %>
-	      <% like = work.likes.detect { |l| l.user_id == current_user.id } %>
-	      <%= link_to " (Un-like)", work_like_path(work.id, like.id, :page => params[:page], :q => params[:q]), :method => :delete, :remote => :true %>
+	    <% if user_signed_in? and @work.likers.include?(current_user) %>
+	      <% like = @work.likes.detect { |l| l.user_id == current_user.id } %>
+	      <%= link_to " (Un-like)", work_like_path(@work.id, like.id), :method => :delete, :remote => :true %>
 	    <% end %></p>
 	  <% end %>
-	  <% unless work.comments.empty? %>
+	  <% unless @work.comments.empty? %>
 			<p>
-		  <% work.comments.each do |comment| %>
+		  <% @work.comments.each do |comment| %>
 			  <% if controller.action_name == "edit" and comment.id == @comment.id %>
-			 		<%= form_for(@comment, :url => work_comment_url(work.id, comment.id, :page => params[:page], :q => params[:q]), :remote => true) do |form| %>
+			 		<%= form_for(@comment, :url => work_comment_url(@work.id, comment.id), :remote => true) do |form| %>
 			      <%= form.hidden_field :user_id, :value => current_user.id %>
-		        <%= form.text_field :text, :class => "span5" %>
-		        <br /><%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", works_path(:page => params[:page], :q => params[:q]), :remote => true %>
+		        <div class="input-prepend">
+			        <span class="add-on"><i class="icon-comment"></i>
+				      </span><%= form.text_field :text, :class => "span6" %>
+				    </div>
+		        <%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", work_comments_path(@work.id), :remote => true %>
 		      <% end %>
 		    <% else %>
 			    <%= comment.text %> - <%= link_to comment.user.name, user_path(comment.user.username) %>
 			    <% if comment.user == current_user %>
-			      ( <%= link_to "edit", edit_work_comment_path(work.id, comment.id, :page => params[:page], :q => params[:q]), :remote => true %> | <%= link_to "delete", work_comment_path(work.id, comment.id, :page => params[:page], :q => params[:q]), :method => :delete, :remote => true %> )
+			      ( <%= link_to "edit", edit_work_comment_path(@work.id, comment.id), :remote => true %> | <%= link_to "delete", work_comment_path(@work.id, comment.id), :method => :delete, :remote => true %> )
 		      <% end %>
 			  <% end %>
-			  <br />
 		  <% end %>
       </p>
 	  <% end %>
-	  <% if controller.action_name == "new" and work.id == @work.id %>
-	    <%= form_for(@comment, :url => work_comments_url(work.id, :page => params[:page], :q => params[:q]), :remote => true) do |form| %>
+	  <% if controller.action_name == "new" %>
+	    <%= form_for(@comment, :url => work_comments_url(@work.id), :remote => true) do |form| %>
 	      <%= form.hidden_field :user_id, :value => current_user.id %>
-        <%= form.text_field :text, :class => "span5" %>
-        <br /><%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", works_path(:page => params[:page], :q => params[:q]), :remote => true %>
+	      <div class="input-prepend">
+	        <span class="add-on"><i class="icon-comment"></i>
+		      </span><%= form.text_field :text, :class => "span6" %>
+		    </div>
+        <%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", work_comments_path(@work.id), :remote => true %>
       <% end %>
 	  <% end %>
   </div>

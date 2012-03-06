@@ -20,10 +20,16 @@
 			 <p><%= link_to "JSON", work_path(@work.id, :format => :json) %> | <%= link_to "XML", work_path(@work.id, :format => :xml) %> | <%= link_to "BibTeX", work_path(@work.id, :format => :bib) %> | <%= link_to "RIS", work_path(@work.id, :format => :ris) %> | <%= link_to "CSV", work_path(@work.id, :format => :csv) %></p>
 		 </div>
 	</div>
-
-  <% if @work.citations_count > 0 %>
-		<div id="source">
-	    <%= render :partial => 'source'%>
-	  </div>
-  <% end %>
+	
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#source" data-toggle="tab">Metrics</a></li>
+	</ul>
+	
+	<div class="tab-content">		
+    <% if @work.citations_count > 0 %>
+		  <div class="tab-pane active" id="source">
+	      <%= render :partial => 'source'%>
+	    </div>
+    <% end %>
+  </div>
 </div>

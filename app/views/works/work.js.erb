@@ -1,0 +1,1 @@
+$("#work_<%= @work.id %>").html("<%= escape_javascript(render "works/work", :locals => { :work => @work }) %>");

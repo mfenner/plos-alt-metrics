@@ -4,9 +4,9 @@
   </div>
 	
   <% unless @works.empty? %>
-		<% @works.each do |work| %>
-			<div class="row" id="work_<%= work.id %>">
-				<%= render :partial => "works/work", :object => work %>
+		<% @works.each do |@work| %>
+			<div class="row" id="work_<%= @work.id %>">
+				<%= render :partial => "works/work" %>
 		  </div>
     <% end %>	
 		<%= will_paginate @works, :params => { :controller => :works, :authenticity_token => nil } %>
