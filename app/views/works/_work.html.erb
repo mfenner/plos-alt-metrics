@@ -16,10 +16,6 @@
 	    <%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
 	  <% end %>
 	  <span class="label"><%= @work.type.underscore.humanize %></span>
-	  <br />
-	  <% unless @work.published_on.blank? %>
-	    <%= time_ago_in_words(@work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
-	  <% end %>
 		<div id="comment_<%= @work.id %>">
 			<%= render :partial => "works/comment" %>
 	  </div>

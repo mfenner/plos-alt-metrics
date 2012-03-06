@@ -1,3 +1,6 @@
+<% unless @work.published_on.blank? %>
+  <%= time_ago_in_words(@work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
+<% end %>
 <% if user_signed_in? %>
   <%= link_to "Comment", new_work_comment_path(@work.id), :remote => :true %> - 
   <% unless @work.likers.include?(current_user) %>

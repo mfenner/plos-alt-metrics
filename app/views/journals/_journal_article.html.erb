@@ -39,9 +39,6 @@
 	          <% unless @work.short_doi.blank? %>
 	            <br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
 	          <% end %>
-						<% unless @work.published_on.blank? %>
-					    <br /><%= time_ago_in_words(@work.published_on) + " ago" %>
-					  <% end %>
 						<div id="comment_<%= @work.id %>">
 							<%= render :partial => "works/comment" %>
 					  </div>
