@@ -3,8 +3,8 @@
 	  <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "googlescholar"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
       <label>Google Scholar</label>
 		  <%= f.text_field :googlescholar %><br />
-		  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true, :class => "btn" %>
-		  <%= f.submit("Submit", :class => "btn-primary") %>
+		  <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+		  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
 		<% end %>
 	</div>
 <% else %>

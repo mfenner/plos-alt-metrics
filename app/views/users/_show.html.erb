@@ -1,11 +1,13 @@
 <div class="content">
 	<div class="row">
-	  <div class="span2" id="photo">
-			<% unless @user.image.blank? %>
+		<% unless @user.image.blank? %>
+	    <div class="span2" id="photo">
 		    <%= image_tag @user.image, :class => "photo" %>
-		  <% end %>
-		</div>
-		<div class="span6" id="twitter">
+			</div>
+			<div class="span6" id="twitter">
+		<% else %>
+		  <div class="span6 offset2" id="twitter">
+		<% end %>
 		  <%= render :partial => 'twitter' %>
 		</div>
 		<div class="span3 offset1">

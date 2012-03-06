@@ -1,13 +1,13 @@
-<div class="span1">
-  <% unless work.users.empty? %>
+<% unless work.users.empty? %>
+  <div class="span1">
   	<% work.users.each do |user| %>
 		  <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
 		<% end %>
-	<% else %>
-	  &nbsp;
-	<% end %>
-</div>
-<div class="span8 work">
+	</div>
+	<div class="span8 work">
+<% else %>
+  <div class="span8 offset1 work">
+<% end %>
   <div itemscope itemtype="http://schema.org/ScholarlyArticle">
 	  <h4><%= link_to work.title, work_path(work.id) %></h4>
     <p><%= formatted_citation(work).html_safe %>

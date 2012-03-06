@@ -8,8 +8,8 @@
         <%= f.select(:mas, mas_choices(@user), :include_blank => 'None', :prompt => 'Please Select:') %>
       <% end %>
       <br />
-      <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true, :class => "btn" %>
-      <%= f.submit("Submit", :class => "btn-primary") %>
+      <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+      <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
 		<% end %>
 	</div>
 <% else %>
