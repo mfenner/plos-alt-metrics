@@ -12,14 +12,17 @@
 				<% unless @work.published_on.blank? %>
 			    <br /><%= time_ago_in_words(@work.published_on) + " ago" %>
 			  <% end %>
-			 </p>
-	     </div>
-	   </div>
+				<div id="comment_<%= @work.id %>">
+					<%= render :partial => "works/comment" %>
+			  </div>
+			  </p>
+	    </div>
+	  </div>
 
-		 <div class="span3 offset1">
-			 <p><%= link_to "JSON", work_path(@work.id, :format => :json) %> | <%= link_to "XML", work_path(@work.id, :format => :xml) %> | <%= link_to "BibTeX", work_path(@work.id, :format => :bib) %> | <%= link_to "RIS", work_path(@work.id, :format => :ris) %> | <%= link_to "CSV", work_path(@work.id, :format => :csv) %></p>
-		 </div>
-	</div>
+	  <div class="span3 offset1">
+		  <p><%= link_to "JSON", work_path(@work.id, :format => :json) %> | <%= link_to "XML", work_path(@work.id, :format => :xml) %> | <%= link_to "BibTeX", work_path(@work.id, :format => :bib) %> | <%= link_to "RIS", work_path(@work.id, :format => :ris) %> | <%= link_to "CSV", work_path(@work.id, :format => :csv) %></p>
+	  </div>
+  </div>
 	
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#source" data-toggle="tab">Metrics</a></li>

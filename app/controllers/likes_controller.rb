@@ -7,7 +7,7 @@ class LikesController < ApplicationController
     @work.likes << @like
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
   
@@ -16,7 +16,7 @@ class LikesController < ApplicationController
     @like.destroy
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
   

@@ -1,0 +1,52 @@
+<% if user_signed_in? %>
+  <%= link_to "Comment", new_work_comment_path(@work.id), :remote => :true %> - 
+  <% unless @work.likers.include?(current_user) %>
+    <%= link_to "Like", work_likes_path(@work.id), :method => :post, :remote => :true %> -
+  <% end %> 
+<% end %>
+<%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + @work.url, :target => "_blank" %> - 
+<%= link_to "Share on CiteULike", "http://www.citeulike.org/posturl?url=" + @work.url + "&title=" + @work.title, :target => "_blank" %>
+</p>
+<% unless @work.likes.empty? %>
+  <p><i class="icon-star"></i> 
+  <% @work.likers.each do |liker| %>
+	  <%= link_to liker.name, user_path(liker.username) %>
+  <% end.to_sentence %> liked this 
+  <% if user_signed_in? and @work.likers.include?(current_user) %>
+    <% like = @work.likes.detect { |l| l.user_id == current_user.id } %>
+    <%= link_to " (Un-like)", work_like_path(@work.id, like.id), :method => :delete, :remote => :true %>
+  <% end %></p>
+<% end %>
+<% unless @work.comments.empty? %>
+	<p>
+  <% @work.comments.each do |comment| %>
+	  <% if controller.action_name == "edit" and comment.id == @comment.id %>
+	 		<%= form_for(@comment, :url => work_comment_url(@work.id, comment.id), :remote => true) do |form| %>
+	      <%= form.hidden_field :user_id, :value => current_user.id %>
+        <div class="input-prepend">
+	        <span class="add-on"><i class="icon-comment"></i></span>
+		      <%= form.text_field :text, :class => "span7" %>
+		    </div>
+		    <span class="help-inline">Test help text.</span>
+        <%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", work_comments_path(@work.id), :remote => true %>
+      <% end %>
+    <% else %>
+	    <%= comment.text %> - <%= link_to comment.user.name, user_path(comment.user.username) %>
+	    <% if comment.user == current_user %>
+	      ( <%= link_to "edit", edit_work_comment_path(@work.id, comment.id), :remote => true %> | <%= link_to "delete", work_comment_path(@work.id, comment.id), :method => :delete, :remote => true %> )
+      <% end %>
+      <br />
+	  <% end %>
+  <% end %>
+  </p>
+<% end %>
+<% if controller.action_name == "new" %>
+  <%= form_for(@comment, :url => work_comments_url(@work.id), :remote => true) do |form| %>
+    <%= form.hidden_field :user_id, :value => current_user.id %>
+    <div class="input-prepend">
+      <span class="add-on"><i class="icon-comment"></i></span>
+      <%= form.text_field :text, :class => "span7" %>
+    </div>
+    <%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", work_comments_path(@work.id), :remote => true %>
+  <% end %>
+<% end %>

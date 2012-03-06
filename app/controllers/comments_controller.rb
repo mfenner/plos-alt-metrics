@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
 
   def index
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
   
@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
     @comment = Comment.new
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
   
@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
     @work.comments << @comment unless @comment.text.blank?
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
   
@@ -29,7 +29,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
   
@@ -39,7 +39,7 @@ class CommentsController < ApplicationController
     @comment.destroy if @comment.text.blank?
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end
   end
 
@@ -48,7 +48,7 @@ class CommentsController < ApplicationController
     @comment.destroy
     
     respond_to do |format|
-      format.js { render "works/work" }
+      format.js { render "works/comment" }
     end  
   end
 

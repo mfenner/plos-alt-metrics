@@ -31,24 +31,27 @@
 	    <% end %>
 	    </thead>
 	    <tbody>
-	    <% @journal_articles.each do |journal_article| %>
+	    <% @journal_articles.each do |@work| %>
 	      <tr>
 					<td>	
-	      	  <h4 itemprop="name"><%= link_to journal_article.title, work_path(journal_article.id) %></h4>
-	          <p><%= formatted_citation(journal_article).html_safe %>
-	          <% unless journal_article.short_doi.blank? %>
-	            <br/><%= link_to "http://doi.org/" + journal_article.short_doi, "http://doi.org/" + journal_article.short_doi, :itemprop => "url" %>
+	      	  <h4 itemprop="name"><%= link_to @work.title, work_path(@work.id) %></h4>
+	          <p><%= formatted_citation(@work).html_safe %>
+	          <% unless @work.short_doi.blank? %>
+	            <br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
 	          <% end %>
-						<% unless journal_article.published_on.blank? %>
-					    <br /><%= time_ago_in_words(journal_article.published_on) + " ago" %>
+						<% unless @work.published_on.blank? %>
+					    <br /><%= time_ago_in_words(@work.published_on) + " ago" %>
 					  <% end %>
+						<div id="comment_<%= @work.id %>">
+							<%= render :partial => "works/comment" %>
+					  </div>
 					  </p>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
-					      <% if source.prefix.blank? or journal_article.doi.match(/^#{source.prefix}/) %>
+					      <% if source.prefix.blank? or @work.doi.match(/^#{source.prefix}/) %>
 				        <td class="source">
-					        <% citation = journal_article.citations_by_source(source) %>
+					        <% citation = @work.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
 	                 <% if citation[:public_url] %>
 	                   <%= link_to h(citation[:total]), citation[:public_url]  %>

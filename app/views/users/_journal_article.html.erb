@@ -29,23 +29,26 @@
 	    <% end %>
 			</thead>
 			<tbody>
-	    <% @user.journal_articles.each do |work| %>
+	    <% @user.journal_articles.each do |@work| %>
 	      <tr>
 	      	<td>	
-	      	  <h4><%= link_to work.title, work_path(work.id) %></h4>
-	          <p><%= formatted_citation(work).html_safe %>
-	          <% unless work.short_doi.blank? %>
-	            <br/><%= link_to "http://doi.org/" + work.short_doi, "http://doi.org/" + work.short_doi, :itemprop => "url" %>
+	      	  <h4><%= link_to @work.title, work_path(@work.id) %></h4>
+	          <p><%= formatted_citation(@work).html_safe %>
+	          <% unless @work.short_doi.blank? %>
+	            <br/><%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
 	          <% end %>
-						<% unless work.published_on.blank? %>
-					    <br /><%= time_ago_in_words(work.published_on) + " ago" %>
+						<% unless @work.published_on.blank? %>
+					    <br /><%= time_ago_in_words(@work.published_on) + " ago" %>
 					  <% end %>
+						<div id="comment_<%= @work.id %>">
+							<%= render :partial => "works/comment" %>
+					  </div>
 					  </p>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>
 				        <td class="source">
-					        <% citation = work.citations_by_source(source) %>
+					        <% citation = @work.citations_by_source(source) %>
 								  <% if citation and citation[:total] > 0 %>
 	                 <% if citation[:public_url] %>
 	                   <%= link_to h(citation[:total]), citation[:public_url]  %>
