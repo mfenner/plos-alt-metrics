@@ -3,9 +3,16 @@
 ENV['RAILS_ENV'] ||= 'development'
 APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
+require File.expand_path('../../config/environment',  __FILE__)
 require 'daemon_spawn'
 require 'resque'
 require 'resque_scheduler'
+
+if ENV['RAILS_ENV'] == "development"
+  pid_file = File.expand_path("tmp/resque_worker.pid")
+else
+  pid_file = File.expand_path("../../shared/pids/resque_worker.pid")
+end
 
 class ResqueSchedulerDaemon < DaemonSpawn::Base
   def start(args)
