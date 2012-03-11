@@ -20,7 +20,7 @@ end
 ResqueWorkerDaemon.spawn!({
   :processes => 5,
   :log_file => File.expand_path("log/resque_worker.log"),
-  :pid_file => File.expand_path("tmp/resque_worker.pid"),
+  :pid_file => File.expand_path("../shared/pids/resque_worker.pid"),
   :sync_log => true,
   :working_dir => File.expand_path("../../", __FILE__),
   :singleton => true
