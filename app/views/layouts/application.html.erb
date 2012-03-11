@@ -34,7 +34,7 @@
 		  <div class="navbar-inner">
 				<div class="container">
 				  <a class="brand" href="<%= root_path %>"><%= APP_CONFIG['application'] %></a>
-				  <%= render_navigation %>
+				  <%= tabs %>
 				  <% if ["works", "users", "groups", "journals", "books"].include?(controller.controller_name) and ["index"].include?(controller.action_name) %>
 			      <%= form_tag({:controller => controller.controller_name, :action => "index"}, :method => "get", :class => "navbar-search pull-left") do %>
 			        <%= search_field_tag :q, params[:q], :placeholder => "Search", :class => "search-query" %>
@@ -43,7 +43,7 @@
 					<ul class="nav pull-right">
 						<% if user_signed_in? %>
 						  <li class="dropdown">
-						    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_user.name %><%= image_tag "http://api.twitter.com/1/users/profile_image/#{current_user.username}", :class => "photo_nav" %></a>
+						    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= image_tag "http://api.twitter.com/1/users/profile_image/#{current_user.username}", :class => "photo_nav" %></a>
 					      <ul class="dropdown-menu">
 			            <li><%= link_to '<i class="icon-user"></i> Your Card'.html_safe, user_path(current_user.username) %></li>
 			            <li class="divider"></li>
@@ -57,7 +57,7 @@
 					<% if current_user.try(:admin?) %>
 						<ul class="nav pull-right">
 							<li class="dropdown">
-							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration</a>
+							  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration<b class="caret"></b></a>
 						    <ul class="dropdown-menu">
 					        <li><%= link_to '<i class="icon-inbox"></i> Sources'.html_safe, sources_path %></li>
 						      <li><%= link_to '<i class="icon-list-alt"></i> Categories'.html_safe, categories_path %></li>

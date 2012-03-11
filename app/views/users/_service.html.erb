@@ -1,25 +1,104 @@
-<div class="row">
-		<% if !@user.mas.blank? or current_user == @user or current_user.try(:admin?) %>
-		  <% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) and ["mendeley", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
-			  <%= render :partial => 'mas' %>
-			<% end %>
-		<% end %>
-	
-		<% if !@user.authorclaim.blank? or current_user == @user or current_user.try(:admin?) %>
-			<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) and ["mendeley", "mas", "scopus", "googlescholar"].include?(params[:service]) %>
-			  <%= render :partial => 'authorclaim' %>
-			<% end %>
-		<% end %>
+<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) and ["mas", "mendeley", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
 
+  <ul class="thumbnails">
+	
+		<% if !@user.mas.blank? or current_user == @user or current_user.try(:admin?) %>
+		  <li class="span3">
+	      <div class="thumbnail">
+			    <%= image_tag "mas.png", :class => "photo_mini", :title => "Microsoft Academic Search" %>
+				  <div class="service"><%= @user.mas.blank? ? "not set" : link_to(@user.mas, "http://academic.research.microsoft.com/Author/" + @user.mas) %>
+				  	<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to '<i class="icon-pencil"></i>'.html_safe, edit_user_path(@user.username, :partial => "service", :service => "mas"),
+						                                     :remote => true,
+					                                       :method => :get,
+					                                       :title => "Edit Microsoft Academic Search" %>
+					 <% end %>
+				 </div>
+			 </div>
+			</li>
+		<% end %>
+		
+		<% if !@user.authorclaim.blank? or current_user == @user or current_user.try(:admin?) %>
+			<li class="span3">
+	      <div class="thumbnail">
+			    <%= image_tag "authorclaim.png", :class => "photo_mini", :title => "AuthorClaim" %>
+					<div class="service"><%= @user.authorclaim.blank? ? "not set" : link_to(@user.authorclaim, "http://authorclaim.org/profile/" + @user.authorclaim) %>
+					<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to '<i class="icon-pencil"></i>'.html_safe, edit_user_path(@user.username, :partial => "service", :service => "authorclaim"),
+					                                       :remote => true,
+																								 :method => :get,
+					                                       :title => "Edit AuthorClaim" %>
+					<% end %>
+					</div>
+				</div>
+			</li>
+		<% end %>
+		
 		<% if !@user.mendeley.blank? or current_user == @user or current_user.try(:admin?) %>
-			<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) and ["mas", "authorclaim", "scopus", "googlescholar"].include?(params[:service]) %>
-			  <%= render :partial => 'mendeley' %>
-			<% end %>
+		  <li class="span3">
+        <div class="thumbnail">
+			  	<%= image_tag "mendeley.png", :class => "photo_mini", :title => "Mendeley" %>
+					<div class="service"><%= @user.mendeley.blank? ? "not set" : link_to(@user.mendeley, "http://www.mendeley.com/profiles/" + @user.mendeley) %>
+					<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to '<i class="icon-pencil"></i>'.html_safe, edit_user_path(@user.username, :partial => "service", :service => "mendeley"),
+					                                       :remote => true,
+																								 :method => :get,
+					                                       :title => "Edit Mendeley" %>
+					<% end %>
+					</div>
+			  </div>
+		  </li>
 		<% end %>
 
 		<% if !@user.googlescholar.blank? or current_user == @user or current_user.try(:admin?) %>
-			<% unless (controller.action_name == "edit" or (controller.action_name == "update" and !@user.errors.empty?)) and ["mas", "authorclaim", "scopus", "mendeley"].include?(params[:service]) %>
-			  <%= render :partial => 'googlescholar' %>
-			<% end %>
+	    <li class="span3">
+        <div class="thumbnail">
+					<%= image_tag "googlescholar.png", :class => "photo_mini", :title => "Google Scholar" %>
+					<div class="service"><%= @user.googlescholar.blank? ? "not set" : link_to(@user.googlescholar, "http://scholar.google.com/citations?user=" + @user.googlescholar) %>
+						<% if current_user == @user or current_user.try(:admin?) %>&nbsp;<%= link_to '<i class="icon-pencil"></i>'.html_safe, edit_user_path(@user.username, :partial => "service", :service => "googlescholar"),
+						                                       :remote => true,
+																									 :method => :get,
+						                                       :title => "Edit Google Scholar" %>
+						<% end %>
+					</div>
+	      </div>
+	    </li>
 		<% end %>
-</div>
+  </ul>
+<% else %>
+  <div class="row">
+	  <div class="span6">
+		  <% if params[:service] == "mas" %>
+		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mas"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+			    <label>Microsoft Academic Search</label>
+		      <% if mas_choices(@user).nil? or mas_choices(@user).empty? %>
+		        <%= f.text_field :mas %>
+		      <% else %>
+		        <%= f.select(:mas, mas_choices(@user), :include_blank => 'None', :prompt => 'Please Select:') %>
+		      <% end %>
+		      <br />
+		      <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+		      <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+				<% end %>
+		  <% elsif params[:service] == "authorclaim" %>
+		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "authorclaim"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+				    <label>AuthorClaim</label>
+				  <%= f.text_field :authorclaim %><br />
+				  <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+				  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+				<% end %>
+		  <% elsif params[:service] == "mendeley" %>
+		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mendeley"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+		      <label>Mendeley</label>
+				  <%= f.text_field :mendeley %><br />
+				  <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+				  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+			  <% end %>
+		  <% elsif params[:service] == "googlescholar" %>
+		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "googlescholar"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
+		      <label>Google Scholar</label>
+				  <%= f.text_field :googlescholar %><br />
+				  <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+				  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+				<% end %>
+		  <% end %>
+		</div>
+	</div>
+<% end %>
