@@ -5,7 +5,7 @@ APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
 require 'daemon_spawn'
 require 'resque'
-require 'resque/tasks'
+require 'resque_scheduler'
 
 class ResqueSchedulerDaemon < DaemonSpawn::Base
   def start(args)
