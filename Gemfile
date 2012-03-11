@@ -32,6 +32,7 @@ gem "addressable"
 gem "bibtex-ruby", "~> 2.0.1"
 gem "acts_as_list"
 gem "builder"
+gem 'daemon-spawn'
 
 group :development do
   gem 'ruby-debug'
