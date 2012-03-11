@@ -27,7 +27,7 @@ gem 'formatize'
 gem 'devise', '1.4.7'
 gem "oa-oauth", :require => "omniauth/oauth"
 gem 'twitter', '1.7.2'
-gem "tabulous"
+gem "simple-navigation"
 gem "addressable"
 gem "bibtex-ruby", "~> 2.0.1"
 gem "acts_as_list"
