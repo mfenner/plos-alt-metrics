@@ -18,7 +18,7 @@ end
 
 ResqueSchedulerDaemon.spawn!({
   :log_file => File.expand_path("log/resque_scheduler.log"),
-  :pid_file => File.expand_path("../shared/pids/resque_scheduler.pid"),
+  :pid_file => File.expand_path("../../shared/pids/resque_scheduler.pid"),
   :sync_log => true,
   :working_dir => File.expand_path("../../", __FILE__),
   :singleton => true
