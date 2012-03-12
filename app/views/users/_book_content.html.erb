@@ -33,14 +33,9 @@
 	      <tr>
 	      	<td>	
 	      	  <h4 itemprop="name"><%= link_to @work.title, work_path(@work.id) %></h4>
-	          <p class="citation"><%= formatted_citation(@work).html_safe %>.
-	          <% unless @work.short_doi.blank? %>
-	            <%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
-	          <% end %>
 						<div id="comment_<%= @work.id %>">
 							<%= render :partial => "works/comment" %>
 					  </div>
-					  </p>
 	      	</td>
 	          <% active_categories.each do |category| %>
 					    <% category.sources.active.each do |source| %>

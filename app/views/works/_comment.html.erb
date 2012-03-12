@@ -1,3 +1,8 @@
+<p class="citation"><%= formatted_citation(@work).html_safe %>.
+<% unless @work.doi.blank? %>
+  <br /><%= link_to "http://dx.doi.org/" + @work.doi, "http://dx.doi.org/" + @work.doi, :itemprop => "url" %>
+<% end %>
+<br />
 <% unless @work.published_on.blank? %>
   <%= time_ago_in_words(@work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
 <% end %>

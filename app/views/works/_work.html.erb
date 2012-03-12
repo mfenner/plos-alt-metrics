@@ -8,15 +8,13 @@
 <% else %>
   <div class="span8 offset1 work">
 <% end %>
-  <div itemscope itemtype="http://schema.org/ScholarlyArticle">
-	  <h4><%= link_to @work.title, work_path(@work.id) %></h4>
-    <p class="citation"><%= formatted_citation(@work).html_safe %>.
-    <% unless @work.short_doi.blank? %>
-	    <%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
-	  <% end %>
-		<span class="label"><%= @work.type.underscore.humanize %></span>
-		<div id="comment_<%= @work.id %>">
-			<%= render :partial => "works/comment" %>
-	  </div>
+    <div itemscope itemtype="http://schema.org/ScholarlyArticle">
+	    <h4><%= link_to @work.title, work_path(@work.id) %></h4>
+		  <div id="comment_<%= @work.id %>">
+			  <%= render :partial => "works/comment" %>
+	    </div>
+    </div>
   </div>
-</div>
+  <div class="span3">
+	  <span class="label"><%= @work.type.underscore.humanize %></span>
+	</div>
