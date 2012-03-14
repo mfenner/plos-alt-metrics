@@ -3,9 +3,8 @@
   	<% @work.users.each do |user| %>
       <% if @user.nil? or @user.id != user.id %>
 		    <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
-		  <% else %>
-		    &nbsp;
 		  <% end %>
+		  <%= "&nbsp;".html_safe if @user and [@user] == @work.users %>
 		<% end %>
 	</div>
 	<div class="span8 work">
