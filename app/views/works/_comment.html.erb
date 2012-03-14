@@ -15,6 +15,7 @@
 <% end %>
 <%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + @work.url, :target => "_blank" %> - 
 <%= link_to "Share on CiteULike", "http://www.citeulike.org/posturl?url=" + @work.url + "&title=" + @work.title, :target => "_blank" %>
+<span class="label"><%= @work.type.underscore.humanize %></span>
 <% active_categories.each do |category| %>
   <% if @work.citations_count(category.name) > 0 %>
     <span class="label label-<%= category.name.downcase %>"><%= pluralize(@work.citations_count(category.name), category.name.singularize) %></span>
