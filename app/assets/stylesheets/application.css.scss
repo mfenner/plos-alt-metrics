@@ -17,4 +17,10 @@ th.source, td.source { width: 24px; text-align: right; }
 div#mas, div#mendeley, div#authorclaim, div#scopus, div#googlescholar { padding-top: 0.5em; clear: both; }
 div.service { padding-top: 1em; padding-bottom: 1.6em; }
 div#admin { padding-bottom: 12px; }
-p.citation { margin-bottom: 0;}
+
+.label-views { background-color: #333333; }
+.label-views:hover { background-color: #1a1a1a; }
+.label-shares { background-color: #468847; }
+.label-shares:hover { background-color: #356635; }
+.label-citations { background-color: #3a87ad; }
+.label-citations:hover { background-color: #2d6987; }

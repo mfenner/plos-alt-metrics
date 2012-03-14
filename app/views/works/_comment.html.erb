@@ -1,11 +1,12 @@
-<p class="citation"><%= formatted_citation(@work).html_safe %>.
-<% unless @work.doi.blank? %>
-  <br /><%= link_to "http://dx.doi.org/" + @work.doi, "http://dx.doi.org/" + @work.doi, :itemprop => "url" %>
-<% end %>
+<p><%= formatted_citation(@work).html_safe %>.
 <br />
 <% unless @work.published_on.blank? %>
-  <%= time_ago_in_words(@work.published_on) + " ago" + (user_signed_in? ? " - " : "")%> 
+	<%= time_ago_in_words(@work.published_on) + " ago" + (user_signed_in? ? " - " : "") %>
 <% end %>
+<% unless @work.doi.blank? %>
+  <%= link_to "http://dx.doi.org/" + @work.doi, "http://dx.doi.org/" + @work.doi, :itemprop => "url" %>
+<% end %>
+<br />
 <% if user_signed_in? %>
   <%= link_to "Comment", new_work_comment_path(@work.id), :remote => :true %> - 
   <% unless @work.likers.include?(current_user) %>
@@ -14,6 +15,11 @@
 <% end %>
 <%= link_to "Share on Mendeley", "http://www.mendeley.com/import/?url=" + @work.url, :target => "_blank" %> - 
 <%= link_to "Share on CiteULike", "http://www.citeulike.org/posturl?url=" + @work.url + "&title=" + @work.title, :target => "_blank" %>
+<% active_categories.each do |category| %>
+  <% if @work.citations_count(category.name) > 0 %>
+    <span class="label label-<%= category.name.downcase %>"><%= pluralize(@work.citations_count(category.name), category.name.singularize) %></span>
+  <% end %>
+<% end %>
 </p>
 <% unless @work.likes.empty? %>
   <p><i class="icon-star"></i> 
@@ -35,7 +41,6 @@
 	        <span class="add-on"><i class="icon-comment"></i></span>
 		      <%= form.text_field :text, :class => "span7" %>
 		    </div>
-		    <span class="help-inline">Test help text.</span>
         <%= form.submit("Submit", :class => "btn-primary btn-mini") %> <%= link_to "Cancel", work_comments_path(@work.id), :remote => true %>
       <% end %>
     <% else %>

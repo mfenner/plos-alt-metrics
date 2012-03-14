@@ -17,10 +17,10 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#source" data-toggle="tab">Metrics</a></li>
 		<% unless @book.book_contents.empty? %>
-		  <li><a href="#book_content" data-toggle="tab">Book Chapters</a></li>
+		  <li><a href="#book_content" data-toggle="tab">Book Chapters (<%= @book.book_contents.count %>)</a></li>
 		<% end %>
 		<% unless @book.conference_papers.empty? %>
-		  <li><a href="#conference_paper" data-toggle="tab">Conference Papers</a></li>
+		  <li><a href="#conference_paper" data-toggle="tab">Conference Papers (<%= @book.conference_papers.count %>)</a></li>
 		<% end %>
 	</ul>	
 	

@@ -14,60 +14,14 @@
 -%>
 
 <% unless @book.conference_papers.empty? %>
-	<div class="conference_paper">
-		<table class="table">
-			<thead>
-			<th>
-				<h2><%= pluralize(@book.conference_papers.count, 'Conference Paper') %></h2>
-			</th>
-			<% active_categories.each do |category| %>
-		    <% category.sources.active.each do |source| %>
-		      <% if source.prefix.blank? or @book.title.match(/^PLoS/) %>
-		      <th class="source">
-				    <%= image_tag source.class.to_s.downcase + "_sm.gif", :title => source.category.work_description + ": " + source.name %>
-			    </th>
-			  <% end %>	
-			  <% end %>
-	    <% end %>
-	    </thead>
-	    <tbody>
-	    <% @book.conference_papers.each do |@work| %>
-	      <tr>
-					<td>	
-	      	  <h4 itemprop="name"><%= link_to @work.title, work_path(@work.id) %></h4>
-	          <p class="citation"><%= formatted_citation(@work).html_safe %>.
-	          <% unless @work.short_doi.blank? %>.
-	            <%= link_to "http://doi.org/" + @work.short_doi, "http://doi.org/" + @work.short_doi, :itemprop => "url" %>
-	          <% end %>
-	          <span class="label"><%= @work.type.underscore.humanize %></span>
-						<div id="comment_<%= @work.id %>">
-							<%= render :partial => "works/comment" %>
-					  </div>
-					  </p>
-	      	</td>
-	          <% active_categories.each do |category| %>
-					    <% category.sources.active.each do |source| %>
-					      <% if source.prefix.blank? or @work.doi.match(/^#{source.prefix}/) %>
-				        <td class="source">
-					        <% citation = @work.citations_by_source(source) %>
-								  <% if citation and citation[:total] > 0 %>
-	                 <% if citation[:public_url] %>
-	                   <%= link_to h(citation[:total]), citation[:public_url]  %>
-	                 <% else %>
-	                   <%= h(citation[:total]) %>
-	                 <% end %>
-	               <% end %>
-					    </td>
-					    <% end %>
-				    <% end %>
-	   	  <% end %>
-		  </tr>
-	    <% end %>
-		</tbody>
-		</table>
-	</div>
+	<% @book.conference_papers.each do |@work| %>
+	  <div class="row" id="work_<%= @work.id %>">
+		  <%= render :partial => "works/work" %>
+	  </div>
+  <% end %>	
 <% else %>
-  <div class="alert alert-info">
-    No book content found.
+	<div class="alert alert-info">
+		No conference papers found.
   </div>
 <% end %>
+<br />

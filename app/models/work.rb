@@ -162,8 +162,23 @@ class Work < ActiveRecord::Base
     end.compact
   end
   
-  def citations_count
-    retrievals.inject(0) {|sum, r| sum + r.total_citations_count }
+  def citations_count(categoryname = nil)
+    if categoryname.nil?
+      retrievals.inject(0) {|sum, r| sum + r.total_citations_count }
+    else
+      categoryname = categoryname.downcase
+      retrievals.inject(0) do |result, ret|
+        if ret.source.category.name.downcase == categoryname
+          if ret.source.category.add_sources
+            result = result + ret.total_citations_count 
+          else
+            result = ret.total_citations_count > result ? ret.total_citations_count : result
+          end
+        end
+        result
+      end
+    end
+    
     # retrievals.sum(:citations_count) + retrievals.sum(:other_citations_count)
   end
 

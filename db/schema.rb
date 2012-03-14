@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120304070723) do
+ActiveRecord::Schema.define(:version => 20120313222600) do
 
   create_table "affiliations", :force => true do |t|
     t.string   "name"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20120304070723) do
     t.text     "user_description"
     t.text     "group_description"
     t.text     "journal_description"
+    t.boolean  "add_sources",         :default => true
   end
 
   create_table "citations", :force => true do |t|

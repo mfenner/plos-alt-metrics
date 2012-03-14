@@ -11,7 +11,7 @@
 
 	<ul class="nav nav-tabs">
 		<li class="<%= params[:page].blank? ? 'active' : '' %>"><a href="#source" data-toggle="tab">Metrics</a></li>
-		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#journal_article" data-toggle="tab">Journal Articles</a></li>
+		<li class="<%= params[:page].blank? ? '' : 'active' %>" ><a href="#journal_article" data-toggle="tab">Journal Articles (<%= @journal.journal_articles.count %>)</a></li>
 	</ul>	
 	
 	<div class="tab-content">		

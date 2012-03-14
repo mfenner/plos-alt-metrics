@@ -1,7 +1,11 @@
 <% unless @work.users.empty? %>
   <div class="span1">
   	<% @work.users.each do |user| %>
-		  <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
+      <% if @user.nil? or @user.id != user.id %>
+		    <%= link_to image_tag("http://api.twitter.com/1/users/profile_image/#{user.username}", :class => "photo_works"), user_path(user.username) %>
+		  <% else %>
+		    &nbsp;
+		  <% end %>
 		<% end %>
 	</div>
 	<div class="span8 work">
@@ -15,6 +19,3 @@
 	    </div>
     </div>
   </div>
-  <div class="span3">
-	  <span class="label"><%= @work.type.underscore.humanize %></span>
-	</div>
