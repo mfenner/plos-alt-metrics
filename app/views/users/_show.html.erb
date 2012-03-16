@@ -28,6 +28,9 @@
 		<% unless @user.book_contents.empty? %>
 		  <li><a href="#book_content" data-toggle="tab">Book Chapters (<%= @user.book_contents.count %>)</a></li>
 		<% end %>
+		<% unless @user.friends.empty? %>
+		  <li><a href="#friend" data-toggle="tab">Friends (<%= @user.friends.count %>)</a></li>
+		<% end %>
 		<% end %>
 	</ul>	
 	
@@ -51,6 +54,10 @@
 			
 			<div class="tab-pane" id="book_content">
 			  <%= render :partial => 'book_content' %>
+			</div>
+			
+			<div class="tab-pane" id="friend">
+			  <%= render :partial => 'friend' %>
 			</div>
 		<% end %>
 	</div>

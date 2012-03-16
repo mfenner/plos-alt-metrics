@@ -1,0 +1,23 @@
+<% unless @user.friends.empty? %>
+	<% @user.friends.each do |friend| %>
+	  <div class="row">
+		  <div class="span1">
+			  <%= image_tag "http://api.twitter.com/1/users/profile_image/#{friend.username}", :class => "photo_works" %>
+			</div>
+		  <div class="span8 work">
+				<h4><%= link_to friend.display_name, user_path(friend.username) %></h4>
+	      <p><%= link_to "@#{friend.username}", "http://twitter.com/#{friend.username}" %>
+		    <br />
+				<% unless friend.description.blank? %>
+					<%= friend.description %>
+				<% end %>
+				</p>
+	    </div>
+	  </div>
+  <% end %>	
+<% else %>
+	<div class="alert alert-info">
+		No friends found.
+  </div>
+<% end %>
+<br />

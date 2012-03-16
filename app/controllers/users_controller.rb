@@ -21,31 +21,42 @@ class UsersController < ApplicationController
   # GET /users.xml
   
   def index
-    if !params[:q].blank?
-      @users = User.paginate :page => params[:page], 
-        :per_page => 12,
-        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or users.mas REGEXP ?", params[:q],params[:q],params[:q],params[:q]],
-        :order => 'users.sort_name, users.username' 
-    else
-      if user_signed_in?
-        @users = current_user.friends.paginate :page => params[:page], :per_page => 12, :order => 'sort_name, username'
-      else
-        @users = []
-      end
-    end
-    
-    respond_to do |format|
-      format.html do 
-        if request.xhr?
-          render :partial => "index" 
-        end
-      end
-      format.mobile
-      format.js
-      format.xml  { render :xml => @users }
-      format.json { render :json => @users, :callback => params[:callback] }
-      format.csv  { render :csv => @users }
-    end
+   if !params[:q].blank?
+     @works = Work.paginate :page => params[:page], 
+       :per_page => 10,
+       :include => :users,
+       :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
+   else
+     collection = Work
+     collection = collection.cited(params[:cited])  if params[:cited]
+     collection = collection.query(params[:query])  if params[:query]
+     collection = collection.order(params[:order])  if params[:order]
+     
+     if user_signed_in?
+       # Fetch all works by the users you are following
+       @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
+     else
+       @works = collection.paginate :page => params[:page], :per_page => 10
+     end
+   end
+   
+   @source = Source.find_by_type(params[:source]) if params[:source]
+
+   respond_to do |format|
+     format.html do 
+       if request.xhr?
+         render :partial => "index" 
+       end
+     end
+     format.mobile do 
+       render :index if request.xhr?
+     end
+     format.xml  { render :xml => @works }
+     format.json { render :json => @works, :callback => params[:callback] }
+     format.csv  { render :csv => @works }
+     format.rss { render :rss => @works }
+     format.js
+   end
   end
 
   # GET /users/1
