@@ -21,55 +21,8 @@ class WorksController < ApplicationController
   before_filter :load_work, 
                 :only => [ :edit, :update, :destroy ]
   
-  # GET /works
-  # GET /works.xml
   def index
-    # cited=0|1
-    # query=(doi fragment)
-    # order=doi|published_on (whitelist, default to doi)
-    # source=source_type
-    if !params[:username].blank?
-      @user = User.find_by_username!(params[:username])
-      @works = @user.works.paginate :page => params[:page], :per_page => 10, :include => [:users, :retrievals], 
-        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]],
-        :order => "IF(works.published_on IS NULL, works.year, works.published_on) desc"
-      render :partial => "users/work" and return
-    elsif !params[:q].blank?
-      @works = Work.paginate :page => params[:page], 
-        :per_page => 10,
-        :include => :users,
-        :conditions => ["users.name REGEXP ? or users.username REGEXP ? or users.native_name REGEXP ? or works.title REGEXP ? or works.doi REGEXP ?", params[:q], params[:q], params[:q], params[:q], params[:q]]
-    else
-      collection = Work
-      collection = collection.cited(params[:cited])  if params[:cited]
-      collection = collection.query(params[:query])  if params[:query]
-      collection = collection.order(params[:order])  if params[:order]
-      
-      if user_signed_in?
-        # Fetch all works by the users you are following
-        @works = collection.paginate :conditions => ["FIND_IN_SET(contributors.user_id, '?')",current_user.friends], :include => [:users, :contributors], :page => params[:page], :per_page => 10
-      else
-        @works = collection.paginate :page => params[:page], :per_page => 10
-      end
-    end
-    
-    @source = Source.find_by_type(params[:source]) if params[:source]
-
-    respond_to do |format|
-      format.html do 
-        if request.xhr?
-          render :partial => "index" 
-        end
-      end
-      format.mobile do 
-        render :index if request.xhr?
-      end
-      format.xml  { render :xml => @works }
-      format.json { render :json => @works, :callback => params[:callback] }
-      format.csv  { render :csv => @works }
-      format.rss { render :rss => @works }
-      format.js
-    end
+    redirect_to users_path
   end
 
   # GET /works/1

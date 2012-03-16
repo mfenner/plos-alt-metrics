@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   
   def index
-    redirect_to works_path
+    redirect_to users_path
   end
 
   def show
