@@ -1,8 +1,4 @@
-<div class="content">
-	<div class="page-header">
-    <h2>Works</h2>
-  </div>
-	
+<div class="content">	
   <% unless @works.empty? %>
 		<% @works.each do |@work| %>
 			<div class="row" id="work_<%= @work.id %>">
@@ -10,7 +6,7 @@
 		  </div>
     <% end %>
     <div class="row">
-	    <div class="span8 offset1">
+	    <div class="span9">
 		    <%= will_paginate @works, :params => { :controller => :works, :authenticity_token => nil } %>
 		  </div>
 		</div>
