@@ -1,7 +1,7 @@
 <% if @user.has_profile %>
   <div data-role="collapsible-set">
 	<div data-role="collapsible">
-		<h3>Author Identifiers</h3>
+		<h3>Identifiers</h3>
 	<ul data-role="listview" data-theme="c" data-inset="true">
 	  <% unless @user.mas.blank? %>
 	    <li class="inset"><a href="<%= "http://academic.research.microsoft.com/Author/#{@user.mas}" %>" class="inset">

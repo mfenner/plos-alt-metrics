@@ -4,33 +4,21 @@
   <% else %>
     <%= link_to 'Your Card', user_path(current_user.username), "data-role" => "button", "data-icon" => "gear" %>
   <% end %>
-	<h1>Users</h1>
-	<%= link_to 'Works', works_path, "data-role" => "button", "data-icon" => "grid" %>
+	<h1>Works</h1>
+	<%= link_to 'About', about_path, "data-role" => "button", "data-icon" => "info" %>
 </div>
 
 <div data-role="content">
-	<% unless @users.empty? %>
-	  <%= form_tag users_path, :method => :get, :remote => false, :class => "ui-listview-filter ui-bar-c", "data-ajax" => "true", "data-transition" => "none", :role => "search" do %>
-    <input name="q" value="<%= params[:q] %>" placeholder="Filter users..." data-type="search" class="ui-input-text ui-body-c"/>
+	<%= form_tag works_path, :method => :get, :remote => false, :class => "ui-listview-filter ui-bar-c", "data-ajax" => "true", "data-transition" => "none", :role => "search" do %>
+    <input name="q" value="<%= params[:q] %>" placeholder="Filter works..." data-type="search" class="ui-input-text ui-body-c"/>
   <% end %>
-	  <ul data-role="listview" data-theme="c">
-	    <% @users.each do |user| %>
-		    <li><a href="<%= user_path(user.username) %>" class="signed_in">
-		      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{user.username}" %>
-	        <h3><%= "#{user.display_name}" %></h3>
-	        <%= "@#{user.username}" %>
-	        </a>
-	      </li>
-	    <% end %>
-	  </ul>
-	<% else %>
-	  <h2>Welcome to ScienceCard</h2>
-		<div class="show">ScienceCard allows a researcher to create and maintain a researcher profile with minimal effort. ScienceCard will list all your publications, and will automatically collect citations, bookmarks and other work-level metrics for these publications.<p></div>
-			
 	<ul data-role="listview" data-theme="c">
-		<li class="normal">To create your own ScienceCard, simply sign in with your Twitter account.</li>
-		<li class="normal">Then optionally link your ScienceCard to your Microsoft Academic Search and/or AuthorClaim profile on the ScienceCard profile page.</li>
-		<li class="normal">ScienceCard automatically lists the available ScienceCards of the people you follow on Twitter.</li>
-	</ol>
-	<% end %>
+    <% @works.each do |work| %>
+	    <li><a href="<%= work_path(work.id) %>" class="normal">
+        <h3><%= work.title %></h3>
+        <%= formatted_citation(work, :without_links => true).html_safe %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
 </div>

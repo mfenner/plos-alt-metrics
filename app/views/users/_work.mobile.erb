@@ -20,6 +20,20 @@
   </div>
 <% end %>
 
+<div data-role="collapsible">
+  <h3 class="show">Friends</h3>
+		  <ul data-role="listview" data-theme="c" data-filter="true" data-filter-placeholder="Filter friends...">
+		    <% @user.friends.each do |user| %>
+			    <li><a href="<%= user_path(user.username) %>" class="signed_in">
+			      <%= image_tag "http://api.twitter.com/1/users/profile_image/#{user.username}" %>
+		        <h3><%= "#{user.display_name}" %></h3>
+		        <%= "@#{user.username}" %>
+		        </a>
+		      </li>
+		    <% end %>
+		  </ul>
+</div>
+
 <% if @user.has_profile and !@user.works.empty? %>
 	</div>
 <% end %>
