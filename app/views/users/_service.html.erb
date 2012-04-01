@@ -80,8 +80,8 @@
 		  <% elsif params[:service] == "authorclaim" %>
 		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "authorclaim"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
 				    <label>AuthorClaim</label>
-				  <div class="input-prepend input-append">
-				  	<span class="add-on">http://authorclaim.org/profile/</span><%= f.text_field :authorclaim %><span class="add-on">/</span>
+				  <div class="input-prepend">
+				  	<span class="add-on">http://authorclaim.org/profile/</span><%= f.text_field :authorclaim %>
 				  </div>
 				  <p class="help-block">This is the user-specific component of your "Permanent URL", which can also be found as your "Short-id" when logged in on the profile overview page.</p>
 				  <br />
@@ -91,8 +91,8 @@
 		  <% elsif params[:service] == "mendeley" %>
 		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mendeley"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
 		      <label>Mendeley</label>
-				  <div class="input-prepend input-append">
-				  	<span class="add-on">http://www.mendeley.com/profiles/</span><%= f.text_field :mendeley %><span class="add-on">/</span>
+				  <div class="input-prepend">
+				  	<span class="add-on">http://www.mendeley.com/profiles/</span><%= f.text_field :mendeley %>
 				  </div>
 				  <p class="help-block">This is the user-specific component of your Mendeley profile URL.</p>
 				  <br />
