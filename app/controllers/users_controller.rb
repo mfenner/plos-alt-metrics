@@ -233,7 +233,7 @@ class UsersController < ApplicationController
             end
           end
         elsif params[:service] == "twitter"
-          Resque.enqueue(Service, user.id)
+          Resque.enqueue(Service, @user.id)
         end
         format.html { render :show }
         format.js { render :show }
