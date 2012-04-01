@@ -73,7 +73,7 @@
 		      <% else %>
 		        <%= f.select(:mas, mas_choices(@user), { :include_blank => 'None', :prompt => 'Please Select:' }, { :class => 'span7' }) %>
 		      <% end %>
-			  <p class="help-block">The names are pulled from Microsoft Academic Search selected based on the name in your profile.</p>
+			  <p class="help-block">The names are pulled from Microsoft Academic Search based on the name in your profile.</p>
 		      <br />
 		      <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
 		      <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
