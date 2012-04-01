@@ -64,7 +64,7 @@
   </ul>
 <% else %>
   <div class="row">
-	  <div class="span6">
+	  <div class="span8">
 		  <% if params[:service] == "mas" %>
 		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "mas"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
 			    <label>Microsoft Academic Search</label>
@@ -102,10 +102,14 @@
 		  <% elsif params[:service] == "googlescholar" %>
 		    <%= form_for :user, :url => user_path(@user.username, :partial => "service", :service => "googlescholar"), :html => { :class => "well", :method => :put, :remote => true } do |f| %>
 		      <label>Google Scholar</label>
-				  <%= f.text_field :googlescholar %><br />
-				  <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
-				  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
-				<% end %>
+			  <div class="input-prepend input-append">
+			    <span class="add-on">http://scholar.google.com/citations?user=</span><%= f.text_field :googlescholar %>
+			  </div>
+			  <p class="help-block">This is the user-specific component of your Google Scholar profile URL.</p>
+			  <br />
+			  <%= f.submit("Submit", :class => "btn-primary btn-mini") %>
+			  <%= link_to "Cancel", user_path(@user.username, :partial => "service"), :remote => true %>
+			<% end %>
 		  <% end %>
 		</div>
 	</div>
