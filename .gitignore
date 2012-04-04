@@ -1,6 +1,6 @@
+config/deploy/*
 config/database.yml
 config/settings.yml
-config/resque.yml
 db/*.sqlite3
 *.rbc
 *.sassc

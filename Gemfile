@@ -13,15 +13,13 @@ gem 'will_paginate', '>=3.0'
 gem 'bootstrap-will_paginate'
 gem 'bundler'
 gem "rake", "0.9.2.2"
+gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'fastercsv', "1.5.4"
 gem 'i18n', ">=0.5.0"
 gem 'libxml-ruby', '2.2.2', :require => 'xml'
 gem 'rdiscount', "1.6.8"
 gem 'soap4r', '>=1.5.8', :require => 'soap/rpc/driver'
-gem 'resque', :require => "resque/server"
-gem 'resque-scheduler', :require => 'resque_scheduler/tasks' 
-gem 'resque-restriction'
 gem 'SystemTimer', '1.2.3'
 gem 'formatize'
 gem 'devise', '1.4.7'
@@ -47,6 +45,10 @@ end
 
 group :test do
   gem 'mocha'
+end
+
+group :test, :development do
+  gem "rspec-rails", "~> 2.6"
 end
 
 group :production do
