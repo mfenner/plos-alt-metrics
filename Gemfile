@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
+gem 'rails', '3.2.0'
 
 gem 'mysql2'
-gem 'rack'
+gem 'rack', "1.3.5"
 # Rails 3.1 - Asset Pipeline
 gem 'json'
 gem "jquery-rails"
@@ -37,8 +37,8 @@ group :development do
 end
 
 group :assets do
-  gem 'sass-rails',   '~> 3.1.4'
-  gem 'coffee-rails', '~> 3.1.1'
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
   gem 'bootstrap-sass', '~> 2.0.1'
 end
