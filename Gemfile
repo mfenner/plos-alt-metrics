@@ -35,6 +35,8 @@ gem 'daemon-spawn'
 
 group :development do
   gem 'ruby-debug'
+  gem 'capistrano'
+  gem 'capistrano-ext'
 end
 
 group :assets do
