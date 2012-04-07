@@ -1,15 +1,16 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.0'
+gem 'rails', '3.2.3'
 
 gem 'mysql2'
-gem 'rack', "1.3.5"
-# Rails 3.1 - Asset Pipeline
+gem 'rack', "1.4.0"
+gem 'journey'
+# Rails 3.1+ - Asset Pipeline
 gem 'json'
 gem "jquery-rails"
 gem 'therubyracer'
 
-gem 'will_paginate', '>=3.0'
+gem 'will_paginate'
 gem 'bootstrap-will_paginate'
 gem 'bundler'
 gem "rake", "0.9.2.2"
@@ -21,10 +22,10 @@ gem 'libxml-ruby', '2.2.2', :require => 'xml'
 gem 'rdiscount', "1.6.8"
 gem 'soap4r', '>=1.5.8', :require => 'soap/rpc/driver'
 gem 'SystemTimer', '1.2.3'
-gem 'formatize'
-gem 'devise', '1.4.7'
-gem "oa-oauth", :require => "omniauth/oauth"
-gem 'twitter', '1.7.2'
+gem 'formatize', '1.1.0'
+gem "devise", "~> 2.0.4"
+gem "omniauth-twitter"
+gem "twitter", "~> 2.2.0"
 gem "simple-navigation"
 gem "addressable"
 gem "bibtex-ruby", "~> 2.0.1"

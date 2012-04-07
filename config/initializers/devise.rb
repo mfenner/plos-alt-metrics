@@ -1,13 +1,6 @@
 # Use this hook to configure devise mailer, warden hooks and so forth. The first
 # four configuration values can also be set straight in your models.
 
-# Patch Omniauth to include custom strategy for Mendeley
-module OmniAuth
-  module Strategies
-    autoload :OauthMendeley, 'lib/oauth_mendeley'
-  end
-end
-
 Devise.setup do |config|
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,

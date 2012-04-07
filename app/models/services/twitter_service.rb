@@ -1,3 +1,6 @@
+require 'omniauth-twitter'
+require "twitter"
+
 class TwitterService < Service
   # Use Resque to asynchronously update all works by user
   def self.perform(user_id, options={})

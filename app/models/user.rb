@@ -13,7 +13,7 @@
 # limitations under the License.
 
 require "source_helper"
-require 'oauth'
+require 'omniauth-twitter'
 require "twitter"
 
 class User < ActiveRecord::Base
