@@ -5,6 +5,7 @@ gem 'rails', '3.2.3'
 gem 'mysql2'
 gem 'rack', "1.4.0"
 gem 'journey'
+gem 'mime-types'
 # Rails 3.1+ - Asset Pipeline
 gem 'json'
 gem "jquery-rails"
