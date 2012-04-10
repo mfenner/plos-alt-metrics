@@ -233,7 +233,7 @@ class UsersController < ApplicationController
             end
           end
         elsif params[:service] == "twitter"
-          TwitterService.delay.update_via_twitter(user)
+          TwitterService.delay.update_via_twitter(@user)
         end
         format.html { render :show }
         format.js { render :show }
