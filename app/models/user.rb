@@ -69,8 +69,8 @@ class User < ActiveRecord::Base
        user.authentications << authentication
        user.save
 
-       # Fetch additional properties from Twitter, using Resque
-       Resque.enqueue(Service, user.id)
+       # Fetch additional properties from Twitter
+       TwitterService.delay.update_via_twitter(user)
        
        user
      end

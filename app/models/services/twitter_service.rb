@@ -2,9 +2,8 @@ require 'omniauth-twitter'
 require "twitter"
 
 class TwitterService < Service
-  # Use Resque to asynchronously update all works by user
-  def self.perform(user_id, options={})
-    user = User.find(user_id)
+
+  def self.update_via_twitter(user)
   
     begin
       # Update user info. Leave image empty if Twitter provides only default profile image
