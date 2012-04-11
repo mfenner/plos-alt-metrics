@@ -86,8 +86,8 @@ class Retriever
     end
   end
 
-  def async_update_one(retrieval, options={})
-    Resque.enqueue(Retrieval, retrieval.id)
+  def update_one(retrieval, options={})
+    Retrieval.delay.update_one(retrieval)
   end
 
   def symbolize_keys_deeply(h)
@@ -98,8 +98,8 @@ class Retriever
     result
   end
   
-  def async_update_works_by_user(user, options={})
-    Resque.enqueue(User, user.id)
+  def update_works_by_user(user, options={})
+    User.delay.update_works(user, options={})
   end
   
   def update_user(user)

@@ -65,7 +65,7 @@ class UsersController < ApplicationController
     load_user
     
     if params[:refresh] == "now"
-      Resque.enqueue(User, @user.id)
+      Retriever.new(:lazy => false, :only_source => false).delay.update_works_by_user(@user)  
     end
         
     respond_to do |format|
@@ -145,8 +145,8 @@ class UsersController < ApplicationController
             contributor.update_attributes(:user_id => nil)
           end
           
-          # Fetch works from user, return nil if no response
-          results = User.fetch_works_from_mas(@user)
+          # Get works from user, return nil if no response
+          results = MicrosoftAcademicSearchService.get_works(@user)
           
           unless results.empty?
             results.each do |result|
@@ -166,19 +166,19 @@ class UsersController < ApplicationController
                                                             :given_name => user["FirstName"]) 
                     contributor.update_attributes(:user_id => @user.id) if (user["ID"].to_s == @user.mas)
                   end
-                  Resque.enqueue(Work, work.id)
+                  Work.delay.update_via_crossref(work)
                 end
               end
             end
           end
-        elsif params[:service] == "userclaim"
-          # First remove all userclaim work claims, e.g. because AuthorClaim ID was changed or set to empty
-          @user.contributors.where(:service => "userclaim").each do |contributor|
+        elsif params[:service] == "authorclaim"
+          # First remove all authorclaim work claims, e.g. because AuthorClaim ID was changed or set to empty
+          @user.contributors.where(:service => "authorclaim").each do |contributor|
             contributor.update_attributes(:user_id => nil)
           end
           
           # Fetch works from user, return nil if no response
-          results = User.fetch_works_from_userclaim(@user)
+          results = AuthorClaimService.get_works(@user)
           
           unless results.blank?
             results[:works].each do |result|
@@ -196,7 +196,7 @@ class UsersController < ApplicationController
                                                           :service => "userclaim",
                                                           :userclaim => @user.userclaim)
                 end
-                Resque.enqueue(Work, work.id)
+                Work.delay.update_via_crossref(work)
               end
             end
           end
@@ -207,7 +207,7 @@ class UsersController < ApplicationController
           end
 
           # Fetch works from user, return nil if no response
-          results = User.fetch_works_from_scopus(@user)
+          results = ScopusService.delay.get_works(@user)
 
           unless results.empty?
             results.each do |result|
@@ -227,7 +227,7 @@ class UsersController < ApplicationController
                                                             :given_name => user["FirstName"]) 
                     contributor.update_attributes(:user_id => @user.id) if (user["ID"].to_s == @user.mas)
                   end
-                  Resque.enqueue(Work, work.id)
+                  Work.delay.update_via_crossref(work)
                 end
               end
             end

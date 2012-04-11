@@ -107,9 +107,8 @@ class Retrieval < ActiveRecord::Base
     end
   end
   
-  # Use Resque to asynchronously update retrieval
-  def self.perform(retrieval_id, options={})
-    retrieval = Retrieval.find(retrieval_id)
+  # Update retrieval
+  def self.update_one(retrieval, options={})
     Rails.logger.info "Asking #{retrieval.source.name} about #{retrieval.work.id}; last updated #{retrieval.retrieved_at}"
     
     success = true
