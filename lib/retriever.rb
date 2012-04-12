@@ -65,7 +65,7 @@ class Retriever
         if (not lazy) or retrieval.stale?
           Rails.logger.info "Refreshing source: #{source.inspect}"
           
-          async_update_one(retrieval)
+          Retrieval.delay.update_one(retrieval)
           # TODO: handle async retrieval
           sources_count = sources_count + 1
         else
@@ -86,7 +86,7 @@ class Retriever
     end
   end
 
-  def update_one(retrieval, options={})
+  def self.update_one(retrieval, options={})
     Retrieval.delay.update_one(retrieval)
   end
 
@@ -96,10 +96,6 @@ class Retriever
       result[k] = symbolize_keys_deeply(v) if v.is_a? Hash
     end
     result
-  end
-  
-  def update_works_by_user(user, options={})
-    User.delay.update_works(user, options={})
   end
   
   def update_user(user)
@@ -112,7 +108,7 @@ class Retriever
     user = User.update_properties(user, properties)
     
     # Update Twitter properties
-    User.update_via_twitter(user)
+    TwitterService.delay.update_via_twitter(user)
     
     user.refreshed!.save!
     Rails.logger.info "Refreshed user #{user.username}"
@@ -176,7 +172,7 @@ class Retriever
           retriever.update_user(user)
           if include_works
             old_count = user.works_count || 0
-            retriever.async_update_works_by_user(user)
+            User.delay.update_works(user, options={})
             #new_count = user.works_count || 0
             #Rails.logger.debug "MAS: #{user.mas} count now #{new_count} (#{new_count - old_count})"
           end

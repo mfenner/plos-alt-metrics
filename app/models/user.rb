@@ -39,11 +39,11 @@ class User < ActiveRecord::Base
   # Check that no duplicate position is created
   has_many :affiliations, :through => :positions do
     def <<(*items)
-      super( items - proxy_owner.affiliations )
+      super( items - @association.owner.affiliations )
     end
   end
   
-  attr_accessible :username, :name, :mas, :mendeley, :authorclaim, :googlescholar, :twitter, :location, :description, :image, :website, :remember_me
+  attr_accessible :username, :name, :mas, :mendeley, :authorclaim, :googlescholar, :twitter, :location, :description, :image, :website, :remember_me, :sort_name, :native_name
   
   validates_numericality_of :mas, :allow_blank => true
   validates_uniqueness_of :mas, :allow_blank => true
