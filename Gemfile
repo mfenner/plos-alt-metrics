@@ -48,12 +48,12 @@ group :assets do
 end
 
 group :test do
-  gem 'mocha'
+  gem 'cucumber-rails'
 end
 
 group :test, :development do
   gem "rspec-rails", "~> 2.6"
-  gem "capybara"
+  gem 'database_cleaner'
   #gem 'factory_girl'
 end
 
